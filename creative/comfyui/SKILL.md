@@ -48,6 +48,10 @@ for workflow execution.
   you're starting from an official template.
 - `animatediff.md` — AnimateDiff video generation on ComfyUI 0.27.0+: correct
   node chain, deprecated-node errors, PYTHONPATH workaround, test workflow.
+- `windows-tqdm-flush-bug.md` — Windows-specific OSError [Errno 22] when
+  KSampler calls tqdm via API: root cause (LogInterceptor + asyncio tqdm),
+  SafeStderr fix, logger patch fallback, bytecode cache cleanup, and
+  standalone-env Python path on Comfy Desktop.
 
 **Scripts (`scripts/`):**
 
@@ -666,6 +670,15 @@ ADE node output.
 12. **`tracking` prompt** — first run of `comfy` may prompt for analytics.
     Use `comfy --skip-prompt tracking disable` to skip non-interactively.
     `comfyui_setup.sh` does this for you.
+
+13. **Windows tqdm OSError on API workflows** — On Windows (Comfy Desktop
+    0.27.0+), API-triggered KSampler execution crashes with
+    `OSError: [Errno 22] Invalid argument` because ComfyUI's `LogInterceptor`
+    wraps `sys.stderr` and tqdm's asyncio `flush()` fails on Windows.
+    **Fix:** see `references/windows-tqdm-flush-bug.md` — create
+    `fix_stderr.py` with a `SafeStderr` wrapper, import it before
+    `setup_logger()` in `main.py`, clean `__pycache__`, and use
+    `PYTHONDONTWRITEBYTECODE=1` + `standalone-env/python.exe` to restart.
 
 ## Verification Checklist
 

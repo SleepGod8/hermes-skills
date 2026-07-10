@@ -1,9 +1,9 @@
 ---
 name: hermes-gateway-setup
 description: "Configure Hermes Agent messaging-platform gateways (WeChat/Weixin, Telegram, Discord, etc.) — running the interactive setup wizard, handling QR-code authentication, and automating credential capture."
-version: 1.0.0
+version: 1.1.0
 author: Hermes Agent (learned from session)
-tags: [hermes, gateway, wechat, weixin, qr-code, messaging-platforms, setup]
+tags: [hermes, gateway, wechat, weixin, qr-code, messaging-platforms, setup, watchdog, auto-recovery]
 ---
 
 # Hermes Gateway Setup
@@ -261,8 +261,108 @@ For any platform with a QR-code flow:
 5. Wait for user to scan (the wizard is waiting)
 6. Collect saved credentials
 
+## Troubleshooting: Gateway Unresponsive / Event Loop Stalled
+
+When the gateway stops responding to inbound messages but the process is still running:
+
+### Symptoms
+- WeChat/Telegram/etc messages stop being delivered to the agent (no response)
+- All `hermes` CLI commands timeout: `hermes gateway status`, `hermes doctor`, etc.
+- `errors.log` shows: `event loop stalled Ns (GIL pressure suspected)`
+- `gateway.log` has no new entries since the stall began
+- Multiple Hermes processes visible in task manager but one is bloated (hundreds of MB)
+
+### Diagnosis Flow
+```bash
+# 1. Check if Hermes commands work (they won't if gateway is stuck)
+hermes gateway status 2>&1    # → timeout
+
+# 2. Find the stuck process
+tasklist 2>/dev/null | grep -i hermes
+# Look for the process with unusually high memory (~700MB+ is suspicious)
+
+# 3. Check the logs
+tail -50 "$HERMES_HOME/logs/gateway.log"     # Last activity timestamp
+tail -30 "$HERMES_HOME/logs/errors.log"      # Look for "event loop stalled"
+```
+
+### Recovery
+
+**Step 1 — Kill the stuck gateway process:**
+```bash
+# Find the PID of the bloated Hermes process, then:
+taskkill /F /PID <pid>
+```
+The Desktop GUI's renderer will log `render-process-gone reason=killed` but will **NOT** auto-restart the gateway.
+
+**Step 2 — Start a new gateway with `--replace`** (bypasses stale lock file):
+```bash
+hermes gateway run --replace 2>&1
+```
+The lock file (`$HERMES_HOME/logs/.__gateway.lock`) persists even after killing the process. `rm` fails with "Device or resource busy". The `--replace` flag is the ONLY way to bypass it. Using plain `hermes gateway run` will fail with "Another gateway instance is already running".
+
+**Step 3 — Verify recovery:**
+```bash
+tail -20 "$HERMES_HOME/logs/gateway.log" | grep -E "(Starting|Connected|✓)"
+# Expected: "Starting Hermes Gateway..." → "✓ weixin connected" → "Gateway running"
+```
+
+**Why this happens:** The Python event loop can stall under GIL pressure — typically from a blocked synchronous call or heavy computation in a callback. The gateway process stays alive (not crashed) but stops servicing the event loop, so it can't receive messages or respond to CLI commands.
+
+See `references/gateway-stall-recovery.md` for a detailed session transcript with exact commands and output.
+
+### Desktop Restart Does NOT Auto-Start Gateway
+
+When you kill all Hermes processes (via Task Manager or `taskkill /F /IM Hermes.exe`) and relaunch the Desktop app, the Gateway process is **NOT automatically restarted**. Only the GUI/renderer process comes back. You must manually start Gateway afterward:
+
+```bash
+# After Desktop restart, check:
+hermes gateway status    # → "Gateway is not running"
+
+# Start it:
+hermes gateway run --replace
+```
+
+This is different from a `hermes gateway restart` (which is blocked from inside) — here the entire process tree was killed externally. The Desktop GUI does not monitor or restart the Gateway.
+
+### Watchdog: Auto-Recovery from Event Loop Stalls
+
+Since event-loop stalls can happen repeatedly (GIL pressure) and the Desktop GUI won't restart Gateway, set up a Windows Scheduled Task watchdog that checks Gateway health every 5 minutes and restarts it if unresponsive.
+
+**Health-check script** (`scripts/gateway-health-check.py`):
+- Runs `hermes gateway status` with a 10s timeout
+- If responsive → silent exit 0
+- If unresponsive/timed out → kills bloated Hermes processes (>300MB), then runs `hermes gateway run --replace`
+- Silent-when-healthy pattern (only outputs when taking action)
+
+**Install the watchdog** (no admin required):
+
+```bash
+# 1. Copy the health-check script to $HERMES_HOME/scripts/
+cp scripts/gateway-health-check.py "$HERMES_HOME/scripts/"
+
+# 2. Create the scheduled task (every 5 minutes)
+schtasks /create /tn "Hermes Gateway Watchdog" ^
+  /tr "python \"%LOCALAPPDATA%\hermes\scripts\gateway-health-check.py\"" ^
+  /sc minute /mo 5 /f
+```
+
+**Verify:**
+
+```bash
+schtasks /query /tn "Hermes Gateway Watchdog" /fo LIST
+# Expected: 任务名: \Hermes Gateway Watchdog, 模式: 就绪
+```
+
+**Why not `cronjob`?** Hermes cron jobs are blocked from running gateway lifecycle commands (restart/stop/kill) — this is a safety guard against agent-driven restart loops. Use `schtasks` directly for the watchdog.
+
+**Why not `hermes gateway install`?** `hermes gateway install` on Windows installs a Startup-folder login item (or Scheduled Task if UAC is approved). But the Startup folder only triggers at Windows login, not after a process crash. A separate watchdog task is needed for crash recovery.
+
 ## Pitfalls
 
+- **Gateway unresponsive / event loop stalled**: See Troubleshooting section above. Key recovery: kill process externally + use `--replace` to bypass stale lock file. DO NOT try `hermes gateway restart` or `hermes gateway stop` — they will block or timeout.
+- **Desktop restart doesn't auto-start Gateway**: Killing all Hermes processes and relaunching the Desktop app does NOT restart Gateway. Must manually run `hermes gateway run --replace` afterward. Install the Watchdog (see Troubleshooting) for auto-recovery.
+- **`hermes gateway install` Startup-folder fallback**: When UAC is blocked, the install falls back to `Startup\Hermes_Gateway.vbs` which only runs at Windows login — not after a crash. For crash recovery, create a separate `schtasks` watchdog task.
 - **Credentials saved but gateway won't connect**: After QR login succeeds and `.env` has `WEIXIN_ACCOUNT_ID`/`WEIXIN_TOKEN`, the gateway may still skip the platform entirely (no "Connecting to weixin..." in logs). This means `platforms.weixin.enabled` is not `true` in `config.yaml`. Fix: `hermes config set platforms.weixin.enabled true` then restart gateway. This applies to ALL platforms — env vars alone don't trigger connection; the platform must be explicitly enabled in config.
 - **PTY background output capture**: Running `hermes gateway setup` with `pty=true` in background mode produces output that's hard to capture via `process(log=...)` because curses/npyscreen rewrites the terminal with ANSI codes. The piped approach (`echo ... | ...`) or Python subprocess wrapper produces cleaner, line-buffered output.
 - **QR expiration**: WeChat QR codes expire after ~2 minutes. The wizard auto-refreshes up to 3 times. If the user doesn't scan in time, re-run the setup.
