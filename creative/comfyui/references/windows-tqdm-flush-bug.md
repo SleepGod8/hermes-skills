@@ -30,19 +30,28 @@ the desktop GUI render thread may interfere with the flush handle.
 
 ## Fix Recipe (Two-Part)
 
-### ⚠️ Known Limitation
+### ⚠️ Known Limitation — Fix Often Fails
 
-On some Windows/Comfy Desktop 0.27.0 setups, **neither approach fully resolves
-the bug**. The `SafeStderr` wrapper is overridden by `setup_logger()` which
-re-wraps `sys.stderr` with `LogInterceptor` on top of `SafeStderr` — the
-`LogInterceptor.__init__` calls `super().__init__(buffer=stream.buffer, ...)`
-which may fail if `SafeStderr.buffer` doesn't play well with `TextIOWrapper`.
-The `logger.py` patch (skip `super().flush()`) often fails to take effect
-because stale `.pyc` bytecode persists even after clearing `__pycache__`.
+On Comfy Desktop 0.27.0 Windows, **the fix frequently does not take effect**
+even after applying all steps correctly. Common failure modes:
 
-**If both fixes fail, use the ComfyUI Desktop GUI** to run workflows
-interactively — the GUI path doesn't trigger tqdm's asyncio variant and
-works reliably on Windows.
+1. **Python loads stale bytecode from an unknown location** — clearing
+   `__pycache__` and using `PYTHONDONTWRITEBYTECODE=1` is often insufficient.
+   The traceback will show the **comment line** from the patched file as the
+   error source, proving old bytecode is executing despite cleanup.
+
+2. **Comfy Desktop auto-restarts** — killing `python.exe` in Task Manager
+   may not be enough; the Desktop app can respawn the backend process from
+   its own copy of the code, undoing any file patches.
+
+3. **Hermes venv contamination** — starting ComfyUI from a Hermes bash
+   session can cause the standalone Python to import `tqdm` from Hermes's
+   own venv instead of its bundled copy, producing different behavior.
+
+**Practically, when all fixes fail, use the ComfyUI Desktop GUI instead**
+of the REST API. The GUI-triggered KSampler path doesn't call tqdm's asyncio
+variant and works reliably on Windows. Workflow JSON files can be
+drag-and-dropped into the Desktop canvas.
 
 ### Part 1: SafeStderr wrapper (try first — may not work on all setups)
 

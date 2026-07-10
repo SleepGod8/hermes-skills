@@ -42,6 +42,28 @@ soft lighting
 ### Artist Style Injection
 Add to prompt: `((artist:melon22)), artist:ikarin`
 
+### Full Lewd Variant (sweat, open clothes, erotic)
+The maximal-sexy version combining all the above with explicit tags:
+```
+1girl, maid, sexy, huge breasts, curvy, wide hips, thick thighs, tall,
+white hair, short hair, narrowed eyes, lustful expression, looking at viewer,
+heavy blush, seductive smile, tongue out, sweat, shiny skin, open clothes,
+underboob, sideboob, navel, apron, frilled headband, pantyhose, garter belt,
+thighhighs, cleavage, leaning forward, bedroom, dim lighting, erotic, lewd,
+((artist:melon22)), artist:ikarin
+```
+
+**Ero/lewd tags glossary:**
+
+| Tag | Effect |
+|-----|--------|
+| `lustful expression`, `heavy blush`, `tongue out` | Ahegao-adjacent face |
+| `sweat`, `shiny skin` | Glossy wet-look skin |
+| `open clothes`, `underboob`, `sideboob`, `navel` | Partial undress with strategic exposure |
+| `pantyhose`, `garter belt` | Lingerie accents |
+| `leaning forward` | Inviting pose |
+| `dim lighting`, `erotic`, `lewd` | Mood and content tone |
+
 ## Tags Reference
 
 | Trait | Tags |
@@ -49,9 +71,12 @@ Add to prompt: `((artist:melon22)), artist:ikarin`
 | Hair | `white hair`, `short hair`, `long hair`, `twintails`, `ponytail` |
 | Eyes | `narrowed eyes`, `closed eyes`, `sharp eyes`, `looking at viewer` |
 | Body | `huge breasts`, `curvy`, `wide hips`, `thick thighs`, `tall`, `petite` |
-| Outfit | `maid`, `apron`, `frilled headband`, `thighhighs`, `cleavage` |
-| Expression | `blush`, `seductive smile`, `embarrassed`, `smirk`, `looking away` |
-| Setting | `bedroom`, `soft lighting`, `night`, `candlelight` |
+| Outfit | `maid`, `apron`, `frilled headband`, `thighhighs`, `cleavage`, `pantyhose`, `garter belt`, `open clothes` |
+| Expression | `blush`, `seductive smile`, `embarrassed`, `smirk`, `looking away`, `lustful expression`, `heavy blush`, `tongue out` |
+| Skin | `sweat`, `shiny skin` |
+| Exposure | `underboob`, `sideboob`, `navel`, `cleavage`, `leaning forward` |
+| Setting | `bedroom`, `soft lighting`, `night`, `candlelight`, `dim lighting` |
+| Mood | `erotic`, `lewd`, `sexy` |
 | Artist | `artist:melon22`, `artist:ikarin`, `artist:wlop`, `artist:ask` |
 
 ## Notes
