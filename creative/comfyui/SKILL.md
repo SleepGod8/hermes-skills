@@ -46,6 +46,8 @@ for workflow execution.
   free-tier job, 1080p VRAM ceiling), Discord-compatible ffmpeg stitch.
   Authored by [@purzbeats](https://github.com/purzbeats). Load this whenever
   you're starting from an official template.
+- `animatediff.md` — AnimateDiff video generation on ComfyUI 0.27.0+: correct
+  node chain, deprecated-node errors, PYTHONPATH workaround, test workflow.
 
 **Scripts (`scripts/`):**
 
@@ -547,53 +549,121 @@ curl -X POST http://127.0.0.1:8188/free \
 python3 scripts/fetch_logs.py --tail-queue --host https://cloud.comfy.org
 ```
 
+## AnimateDiff Video Generation
+
+**Prerequisites:**
+- SD1.5 checkpoint (e.g. Realistic Vision V5.1, DreamShaper 8)
+- Motion module `.ckpt` (e.g. `mm_sd_v15_v2.ckpt`) in `models/animatediff_models/`
+- Custom nodes: `ComfyUI-AnimateDiff-Evolved`, `ComfyUI-VideoHelperSuite`
+
+### Correct node chain (ComfyUI 0.27.0+)
+
+Do NOT use deprecated nodes (`ADE_AnimateDiffLoaderV1Advanced`). Use the newer
+patcher API: motion model is loaded, applied to the execution context (no
+output connection to KSampler), and KSampler takes model directly from the
+checkpoint loader.
+
+```
+CheckpointLoaderSimple
+  ├── model  →  KSampler.model
+  ├── clip   →  CLIPTextEncode (pos + neg)
+  └── vae    →  VAEEncode + VAEDecode
+
+LoadImage → VAEEncode → KSampler.latent_image
+ADE_LoadAnimateDiffModel → ADE_ApplyAnimateDiffModelSimple  (context patching)
+KSampler → VAEDecode → VHS_VideoCombine
+```
+
+### API format workflow structure
+
+```json
+{
+  "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "..."}},
+  "2": {"class_type": "ADE_LoadAnimateDiffModel", "inputs": {"model_name": "mm_sd_v15_v2.ckpt"}},
+  "3": {"class_type": "ADE_ApplyAnimateDiffModelSimple", "inputs": {"motion_model": ["2", 0]}},
+  "4": {"class_type": "LoadImage", "inputs": {"image": "input.png"}},
+  "5": {"class_type": "CLIPTextEncode", "inputs": {"text": "positive prompt", "clip": ["1", 1]}},
+  "6": {"class_type": "CLIPTextEncode", "inputs": {"text": "negative prompt", "clip": ["1", 1]}},
+  "7": {"class_type": "VAEDecode", "inputs": {"samples": ["9", 0], "vae": ["1", 2]}},
+  "10":{"class_type": "VAEEncode", "inputs": {"pixels": ["4", 0], "vae": ["1", 2]}},
+  "9": {"class_type": "KSampler", "inputs": {"seed": 42, "steps": 20, "cfg": 4.0,
+         "sampler_name": "euler", "scheduler": "normal", "denoise": 1.0,
+         "model": ["1", 0], "positive": ["5", 0], "negative": ["6", 0],
+         "latent_image": ["10", 0]}},
+  "11":{"class_type": "VHS_VideoCombine", "inputs": {"frame_rate": 8,
+         "filename_prefix": "AnimateDiff", "format": "video/h264-mp4",
+         "pingpong": false, "save_output": true, "images": ["7", 0]}}
+}
+```
+
+**Key detail:** `ADE_ApplyAnimateDiffModelSimple` has NO output slot — it
+patches the model through the execution context. `KSampler`'s `model` input
+connects directly to `CheckpointLoaderSimple`'s output index 0, NOT to any
+ADE node output.
+
+### Subtle motion effects
+- Lower batch_size / context_length (8–16) for gentler motion
+- Prompt: "subtle gentle motion, slight hair movement, soft breathing, gentle sway"
+- cfg: 4.0–5.0, steps: 20, sampler: euler
+
 ## Pitfalls
 
-1. **API format required** — every script and the `/api/prompt` endpoint expect
+1. **PYTHONPATH contamination from Hermes** — When running ComfyUI's Python
+   from within a Hermes session, the `PYTHONPATH` env var includes Hermes's
+   own `venv/Lib/site-packages`. This causes ComfyUI to import PIL, pydantic,
+   and other packages from the wrong location, producing cryptic import errors
+   or `AttributeError`. **Fix:** prefix the command with `PYTHONPATH=""`:
+   ```bash
+   cd /path/to/ComfyUI && PYTHONPATH="" ./.venv/Scripts/python main.py --listen 127.0.0.1 --port 8188
+   ```
+   On Windows, prefer the standalone Python bundled with Comfy Desktop
+   (`standalone-env/python.exe`) or ensure `.venv` packages match.
+
+2. **API format required** — every script and the `/api/prompt` endpoint expect
    API-format workflow JSON. The scripts detect editor format (top-level
    `nodes` and `links` arrays) and tell you to re-export via
    "Workflow → Export (API)" (newer UI) or "Save (API Format)" (older UI).
 
-2. **Server must be running** — all execution requires a live server.
+3. **Server must be running** — all execution requires a live server.
    `comfy launch --background` starts one. Verify with
    `curl http://127.0.0.1:8188/system_stats`.
 
-3. **Model names are exact** — case-sensitive, includes file extension.
+4. **Model names are exact** — case-sensitive, includes file extension.
    `check_deps.py` does fuzzy matching (with/without extension and folder
    prefix), but the workflow itself must use the canonical name. Use
    `comfy model list` to discover what's installed.
 
-4. **Missing custom nodes** — "class_type not found" means a required node
+5. **Missing custom nodes** — "class_type not found" means a required node
    isn't installed. `check_deps.py` reports which package to install;
    `auto_fix_deps.py` runs the install for you.
 
-5. **Working directory** — `comfy-cli` auto-detects the ComfyUI workspace.
+6. **Working directory** — `comfy-cli` auto-detects the ComfyUI workspace.
    If commands fail with "no workspace found", use
    `comfy --workspace /path/to/ComfyUI <command>` or
    `comfy set-default /path/to/ComfyUI`.
 
-6. **Cloud free-tier API limits** — `/api/prompt`, `/api/view`, `/api/upload/*`,
+7. **Cloud free-tier API limits** — `/api/prompt`, `/api/view`, `/api/upload/*`,
    `/api/object_info` all return 403 on free accounts. `health_check.py` and
    `check_deps.py` handle this gracefully and surface a clear message.
 
-7. **Timeout for video/audio workflows** — auto-detected when an output node
+8. **Timeout for video/audio workflows** — auto-detected when an output node
    is `VHS_VideoCombine`, `SaveVideo`, etc.; the default jumps from 300 s to
    900 s. Override explicitly with `--timeout 1800`.
 
-8. **Path traversal in output filenames** — server-supplied filenames are
+9. **Path traversal in output filenames** — server-supplied filenames are
    passed through `safe_path_join` to refuse anything escaping `--output-dir`.
    Keep this protection on — workflows with custom save nodes can produce
    arbitrary paths.
 
-9. **Workflow JSON is arbitrary code** — custom nodes run Python, so
-   submitting an unknown workflow has the same trust profile as `eval`.
-   Inspect workflows from untrusted sources before running.
+10. **Workflow JSON is arbitrary code** — custom nodes run Python, so
+    submitting an unknown workflow has the same trust profile as `eval`.
+    Inspect workflows from untrusted sources before running.
 
-10. **Auto-randomized seed** — pass `seed: -1` in `--args` (or use
+11. **Auto-randomized seed** — pass `seed: -1` in `--args` (or use
     `--randomize-seed` and omit the seed) to get a fresh seed per run.
     The actual seed is logged to stderr.
 
-11. **`tracking` prompt** — first run of `comfy` may prompt for analytics.
+12. **`tracking` prompt** — first run of `comfy` may prompt for analytics.
     Use `comfy --skip-prompt tracking disable` to skip non-interactively.
     `comfyui_setup.sh` does this for you.
 
