@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "nodes": [
+    {"id": 1, "type": "CheckpointLoaderSimple", "widgets_values": ["animagine-xl-4.0.safetensors"]},
+    {"id": 2, "type": "CLIPTextEncode", "widgets_values": ["REPLACE_WITH_YOUR_PROMPT"], "title": "Positive Prompt"},
+    {"id": 3, "type": "CLIPTextEncode", "widgets_values": ["lowres, bad anatomy, bad hands, extra fingers, missing fingers, worst quality, low quality, normal quality, censored, mosaic, watermark, signature, ugly, deformed"], "title": "Negative Prompt"},
+    {"id": 4, "type": "EmptyLatentImage", "widgets_values": [896, 1152, 1]},
+    {"id": 5, "type": "KSampler", "widgets_values": [0, "randomize", 25, 7, "euler_ancestral", "normal", 1]},
+    {"id": 6, "type": "VAEDecode"},
+    {"id": 7, "type": "PreviewImage"}
+  ]
+}

@@ -30,7 +30,21 @@ the desktop GUI render thread may interfere with the flush handle.
 
 ## Fix Recipe (Two-Part)
 
-### Part 1: SafeStderr wrapper (most reliable)
+### ⚠️ Known Limitation
+
+On some Windows/Comfy Desktop 0.27.0 setups, **neither approach fully resolves
+the bug**. The `SafeStderr` wrapper is overridden by `setup_logger()` which
+re-wraps `sys.stderr` with `LogInterceptor` on top of `SafeStderr` — the
+`LogInterceptor.__init__` calls `super().__init__(buffer=stream.buffer, ...)`
+which may fail if `SafeStderr.buffer` doesn't play well with `TextIOWrapper`.
+The `logger.py` patch (skip `super().flush()`) often fails to take effect
+because stale `.pyc` bytecode persists even after clearing `__pycache__`.
+
+**If both fixes fail, use the ComfyUI Desktop GUI** to run workflows
+interactively — the GUI path doesn't trigger tqdm's asyncio variant and
+works reliably on Windows.
+
+### Part 1: SafeStderr wrapper (try first — may not work on all setups)
 
 Create `ComfyUI/fix_stderr.py` in the ComfyUI source directory:
 
@@ -140,3 +154,33 @@ ls "<ComfyUI_root>/.venv/Scripts/python.exe"    # Manual/custom installations
 Running with the wrong Python will import packages from a different
 environment (e.g., the system Python or Hermes venv), causing cryptic
 import errors or the tqdm bug to re-surface.
+
+### Hermes venv contamination
+
+When starting ComfyUI from within a Hermes agent session on Windows, the
+`standalone-env/python.exe` may still resolve packages from Hermes' own venv
+(`C:\Users\<user>\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages`).
+Verify with:
+
+```bash
+"<ComfyUI_root>/standalone-env/python.exe" -c "import tqdm; print(tqdm.__file__)"
+```
+
+If the output points to `hermes-agent/venv/...` instead of
+`standalone-env/Lib/...`, use `PYTHONPATH=""` when launching:
+
+```bash
+cd "<ComfyUI_root>/ComfyUI"
+PYTHONPATH="" "<ComfyUI_root>/standalone-env/python.exe" main.py --listen 127.0.0.1 --port 8188
+```
+
+### Diagnosing stale bytecode
+
+If the traceback shows a **comment line** as the error source (e.g.,
+`File "logger.py", line 69, in flush     # Skip super().flush()...`),
+stale `.pyc` bytecode is being loaded. Even after clearing `__pycache__`,
+check:
+- `standalone-env/Lib/site-packages/` for cached `.pyc` of installed packages
+- Whether `PYTHONDONTWRITEBYTECODE=1` was actually set in the launch command
+- If the ComfyUI process auto-restarted from the Desktop app (killing
+  `python.exe` may not be enough — close the Desktop app too)

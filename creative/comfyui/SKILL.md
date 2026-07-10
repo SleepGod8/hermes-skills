@@ -46,9 +46,7 @@ for workflow execution.
   free-tier job, 1080p VRAM ceiling), Discord-compatible ffmpeg stitch.
   Authored by [@purzbeats](https://github.com/purzbeats). Load this whenever
   you're starting from an official template.
-- `animatediff.md` — AnimateDiff video generation on ComfyUI 0.27.0+: correct
-  node chain, deprecated-node errors, PYTHONPATH workaround, test workflow.
-- `windows-tqdm-flush-bug.md` — Windows-specific OSError [Errno 22] when
+- `animatediff.md` — AnimateDiff video generation on ComfyUI 0.27.0+: correct\n  node chain, deprecated-node errors, PYTHONPATH workaround, test workflow.\n- `animagine-prompts.md` — Animagine-XL 4.0 Danbooru tag prompt cookbook:\n  maid, mature, expressions, artist styles, tested parameter settings.\n- `windows-tqdm-flush-bug.md` — Windows-specific OSError [Errno 22] when
   KSampler calls tqdm via API: root cause (LogInterceptor + asyncio tqdm),
   SafeStderr fix, logger patch fallback, bytecode cache cleanup, and
   standalone-env Python path on Comfy Desktop.
@@ -69,9 +67,7 @@ for workflow execution.
 | `health_check.py` | Verification checklist runner — comfy-cli + server + models + smoke test |
 | `fetch_logs.py` | Pull traceback / status messages for a given prompt_id |
 
-**Example workflows (`workflows/`):** SD 1.5, SDXL, Flux Dev, SDXL img2img,
-SDXL inpaint, ESRGAN upscale, AnimateDiff video, Wan T2V. See
-`workflows/README.md`.
+**Example workflows (`workflows/`):** SD 1.5, SDXL, Flux Dev, SDXL img2img,\nSDXL inpaint, ESRGAN upscale, AnimateDiff video, Wan T2V. See\n`workflows/README.md`.\n\n**Templates (`templates/`):**\n- `animagine-xl-txt2img.json` — Animagine XL 4.0 text-to-image: checkpoint\n  loader → CLIP encode (pos + neg) → empty latent 896×1152 → KSampler\n  (euler_ancestral, 25 steps, CFG 7) → VAE decode → preview. Replace the\n  placeholder prompt in the Positive Prompt node.
 
 ## When to Use
 
