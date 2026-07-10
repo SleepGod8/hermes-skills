@@ -131,7 +131,7 @@ The code appears in the gateway logs: `grep "Unauthorized" "$HERMES_HOME/logs/ga
 - User IDs are numeric (e.g. `6552494345`), found via @userinfobot
 - **Comma-separate multiple user IDs** for access control
 
-**Required env vars (in `~/.hermes/.env`):**
+**Required env vars (in `$HERMES_HOME/.env`):**
 ```bash
 TELEGRAM_ENABLED=true                   # Required for gateway to detect Telegram
 TELEGRAM_BOT_TOKEN=123456789:ABCdef...  # Your bot token
@@ -168,7 +168,7 @@ Supported schemes: `http://`, `https://`, `socks5://`
   ```
   Find the PID via `hermes gateway status` or `wmic process where 'name="python.exe"' get ProcessId,CommandLine`
 - After changing config, always restart the gateway to pick up changes
-- Check connection status: `tail -f ~/.hermes/logs/gateway.log | grep -E "(Telegram|Connected|running with)"`
+- Check connection status: `tail -f "$HERMES_HOME/logs/gateway.log" | grep -E "(Telegram|Connected|running with)"`
 - Successful connection log: `✓ telegram connected`
 
 **Blocked connection symptoms:**
@@ -188,7 +188,7 @@ Uses the Tencent QQ Official Bot API (v2) with WebSocket + REST.
 - Enable intents: C2C messages, Group @-messages, Guild messages (as needed)
 - Sandbox mode works for testing; publish for production
 
-**Environment variables** (in `~/.hermes/.env`):
+**Environment variables** (in `$HERMES_HOME/.env`):
 ```bash
 QQ_APP_ID=your-app-id
 QQ_CLIENT_SECRET=your-app-secret
@@ -248,7 +248,7 @@ The QQ Bot adapter's `connect()` method was written before the base class added 
 
 **Verification:**
 ```bash
-tail -f ~/.hermes/logs/gateway.log | grep -E "(qqbot|✓)"
+tail -f "$HERMES_HOME/logs/gateway.log" | grep -E "(qqbot|✓)"
 ```
 Expected: `[QQBot:*] Connected` followed by `✓ qqbot connected`
 
@@ -268,11 +268,11 @@ For any platform with a QR-code flow:
 - **QR expiration**: WeChat QR codes expire after ~2 minutes. The wizard auto-refreshes up to 3 times. If the user doesn't scan in time, re-run the setup.
 - **No vision model**: The `vision_analyze` and `browser_vision` tools may not be available to show the QR PNG to the user. Always provide the URL as a fallback.
 - **iLink bot limitations**: The QR-login connects an iLink bot identity, not a personal account. The bot cannot be invited to ordinary WeChat groups in most cases.
-- **Gateway env file protected**: `~/.hermes/.env` is protected from `read_file` and `patch` (defense-in-depth). Use terminal with `grep`, `echo ... >>`, or shell tools to read/write it. The error says "credential store" but terminal bypasses this.
+- **Gateway env file protected**: `$HERMES_HOME/.env` is protected from `read_file` and `patch` (defense-in-depth). Use terminal with `grep`, `echo ... >>`, or shell tools to read/write it. The error says "credential store" but terminal bypasses this.
 - **config.yaml also protected** from `patch` — use `hermes config set <key> <value>` for config.yaml changes, or terminal redirection.
 - **Restart blocked from inside**: `hermes gateway restart` / `stop` are blocked when called from within the gateway process tree. Use external kill + start instead.
 - **Platform TUI sub-menus**: Some platforms (Telegram) have a sub-menu (Automatic [1] vs Manual [2]) after selection. The piped input must account for this: append extra values like `22\\n2\\n<token>\\n<user_id>\\n\\n`.
-- **Wizard "configured" status is unreliable**: The wizard may show a platform as "(configured)" even when no credentials exist in `~/.hermes/.env` or the platform accounts directory. Always verify with actual file checks: `grep -i WEIXIN ~/.hermes/.env` and `ls ~/.hermes/weixin/accounts/`. Don't trust the wizard's status badge alone.
+- **Wizard "configured" status is unreliable**: The wizard may show a platform as "(configured)" even when no credentials exist in `$HERMES_HOME/.env` or the platform accounts directory. Always verify with actual file checks: `grep -i WEIXIN "$HERMES_HOME/.env"` and `ls "$HERMES_HOME/weixin/accounts/"`. Don't trust the wizard's status badge alone.
 - **`hermes config get` does not exist**: Use `hermes config show` to view config, or `hermes config set <key> <value>` to set values. There is no `get` subcommand.
 
 ## Post-Setup Verification (Full Workflow)
