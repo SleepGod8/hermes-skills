@@ -53,7 +53,11 @@ thighhighs, cleavage, leaning forward, bedroom, dim lighting, erotic, lewd,
 ((artist:melon22)), artist:ikarin
 ```
 
-**Ero/lewd tags glossary:**
+### Bending Over Pose Variant (suggestive)
+Add to the lewd base: `bending over, hands on knees, apron barely covering, suggestive pose`
+This creates an inviting bent-over pose with the apron strategically failing.
+
+**Pose/attire tags glossary (extended):**
 
 | Tag | Effect |
 |-----|--------|
@@ -76,7 +80,9 @@ thighhighs, cleavage, leaning forward, bedroom, dim lighting, erotic, lewd,
 | Skin | `sweat`, `shiny skin` |
 | Exposure | `underboob`, `sideboob`, `navel`, `cleavage`, `leaning forward` |
 | Setting | `bedroom`, `soft lighting`, `night`, `candlelight`, `dim lighting` |
-| Mood | `erotic`, `lewd`, `sexy` |
+| Mood | `erotic`, `lewd`, `sexy`, `suggestive pose` |
+| Pose | `bending over`, `hands on knees`, `leaning forward` |
+| Attire | `apron barely covering` |
 | Artist | `artist:melon22`, `artist:ikarin`, `artist:wlop`, `artist:ask` |
 
 ## Notes
