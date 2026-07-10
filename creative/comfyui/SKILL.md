@@ -676,6 +676,17 @@ ADE node output.
     `setup_logger()` in `main.py`, clean `__pycache__`, and use
     `PYTHONDONTWRITEBYTECODE=1` + `standalone-env/python.exe` to restart.
 
+14. **PreviewImage does NOT auto-save — use SaveImage**: ComfyUI has two
+    output image nodes with very different behavior:
+    - `PreviewImage` — shows the result in the Web UI but does **NOT** write
+      to disk. Users must right-click → Save Image manually.
+    - `SaveImage` — writes to `output/` automatically on every run.
+    If you can see the image in ComfyUI's panel but can't find the file on
+    disk, your workflow is using `PreviewImage` instead of `SaveImage`.
+    **Fix:** add a `SaveImage` node connected to the same VAE Decode output
+    (or replace `PreviewImage`). Double-click canvas → search "SaveImage" →
+    connect `IMAGE` input from VAE Decode's output. Both nodes can coexist.
+
 ## Verification Checklist
 
 Use `python3 scripts/health_check.py` to run the whole list at once. Manual:
