@@ -1,0 +1,9 @@
+# Hermes Skills Sync — 排除运行时文件，只同步 skill 内容
+
+.bundled_manifest
+.curator_state
+.usage.json
+.usage.json.lock
+.archive/
+__pycache__/
+*.pyc
