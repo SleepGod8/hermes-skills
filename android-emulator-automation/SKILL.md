@@ -23,10 +23,13 @@ template matching.
 ## Quick Start
 
 ```bash
-# Install deps
-pip install opencv-python pillow numpy
+# 1. Install ADB
+winget install Google.PlatformTools
 
-# Run the template script (copy from templates/wc4_conquest.py)
+# 2. Install Python deps (use system Python, Hermes venv has no pip)
+C:\Users\<user>\AppData\Local\Python\pythoncore-3.14-64\python -m pip install opencv-python pillow numpy
+
+# 3. Run the template script
 python wc4_conquest.py
 ```
 
@@ -41,21 +44,31 @@ python wc4_conquest.py
 
 ## MuMu Emulator ADB Setup
 
-MuMu 12 uses a different ADB port than older versions:
+MuMu 12 changed architecture — it does NOT bundle adb.exe. Install Android Platform
+Tools separately:
 
-| Version | Default ADB Port |
-|---------|-----------------|
-| MuMu 6  | `7555` |
-| MuMu 12 | `16384` or `21503` |
-
-Find the port: MuMu → Settings → Network → ADB port.
-
-Enable ADB: MuMu → Settings → Other → "Enable ADB debugging" must be ON.
-
-Connect:
 ```bash
-adb connect 127.0.0.1:16384
-adb devices  # verify
+winget install Google.PlatformTools
+# Full path after install:
+# %LOCALAPPDATA%\Microsoft\WinGet\Packages\Google.PlatformTools_*\platform-tools\adb.exe
+```
+
+### Finding the port
+
+MuMu may expose **multiple** ADB ports simultaneously. Set up ADB debugging
+(MuMu → Settings → Other → "Enable ADB debugging" ON), then probe all ports:
+
+| Version | Common Ports |
+|---------|-------------|
+| MuMu 12 | `16416`, `16384`, `7555`, `5557` |
+| MuMu 6  | `7555` |
+
+```bash
+# Probe all common ports
+for port in 16416 5557 7555 16384 21503; do
+    adb connect 127.0.0.1:$port
+done
+adb devices  # verify — should show at least one device
 ```
 
 ## Template Matching Workflow
@@ -85,21 +98,29 @@ adb devices  # verify
 
 ## Pitfalls
 
-1. **ADB path**: On Windows, `adb` may not be in PATH. Either install Android SDK
-   Platform Tools or find MuMu's built-in adb at `MuMuPlayer-12.0/shell/adb.exe`.
+1. **ADB not found after winget install** — winget adds to PATH but bash sessions
+   need restart. Use full path:
+   `%LOCALAPPDATA%\Microsoft\WinGet\Packages\Google.PlatformTools_*\platform-tools\adb.exe`
 
-2. **Python environment**: Hermes venv has no pip. Use system Python
+2. **MuMu 12 doesn't bundle adb.exe** — unlike older versions. Install Platform
+   Tools separately. MuMu's `shell/` directory won't have it.
+
+3. **Multiple ADB ports** — MuMu exposes several simultaneously. Probe all:
+   `16416`, `5557`, `7555`, `16384`, `21503`. The script's `adb_connect()` does this
+   automatically.
+
+4. **Python environment**: Hermes venv has no pip. Use system Python
    (`C:\Users\<user>\AppData\Local\Python\pythoncore-3.14-64\python`) or install
    deps globally.
 
-3. **Template resolution**: Templates must match the emulator's resolution
+5. **Template resolution**: Templates must match the emulator's resolution
    exactly. Different emulator window sizes need new templates.
 
-4. **Game-specific logic**: Each game needs its own strategy (produce units,
+6. **Game-specific logic**: Each game needs its own strategy (produce units,
    move, attack). The script provides a framework — game logic is in the
    `conquest_loop()` / `simple_conquest_loop()` functions.
 
-5. **Timing**: Always add `time.sleep()` between actions. ADB commands are
+7. **Timing**: Always add `time.sleep()` between actions. ADB commands are
    fast; the game UI needs time to animate.
 
 ## WC4 Conquest Mode Template
