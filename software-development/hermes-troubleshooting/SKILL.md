@@ -1,7 +1,7 @@
 ---
 name: hermes-troubleshooting
 description: "Troubleshoot Hermes Agent — Desktop connectivity, gateway stalls, platform startup issues, stale lock files. Quick-reference recovery patterns for common failure modes."
-version: 1.0.0
+version: 1.1.0
 author: agent
 license: MIT
 tags: [hermes, troubleshooting, desktop, gateway, recovery]
@@ -73,6 +73,30 @@ On Windows machines that default to PowerShell:
 - `echo "text" >> file` writes the **quotes** into the file — use `printf` instead
 - `grep` doesn't exist — use `Select-String -Path <file> -Pattern "<pattern>"`
 - `~` works in PowerShell paths but prefer `$env:USERPROFILE`
+
+## Scenario 5: One computer works, another doesn't (多台电脑)
+
+**Symptom**: Hermes Desktop works fine on computer A, but computer B shows "Timed out connecting to Hermes backend after 15000ms" even after following Scenario 1.
+
+**Root cause**: Each computer has independent state. Computer B may have different platforms enabled, a stale lock file, or different network conditions.
+
+**Fix** — run on the broken computer:
+```bash
+# Kill all Hermes processes
+taskkill /F /IM Hermes.exe
+
+# Disable slow/unused platforms
+hermes config set platforms.telegram.enabled false
+printf 'WHATSAPP_ENABLED=false\n' >> ~/AppData/Local/hermes/.env
+
+# Open Desktop — let it auto-start
+```
+
+**Verify** Gateway came up:
+```bash
+cat ~/AppData/Local/hermes/gateway_state.json
+# Look for "gateway_state": "running"
+```
 
 ## References
 
