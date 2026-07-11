@@ -687,6 +687,21 @@ ADE node output.
     (or replace `PreviewImage`). Double-click canvas → search "SaveImage" →
     connect `IMAGE` input from VAE Decode's output. Both nodes can coexist.
 
+15. **Workflow JSON must use flat top-level node IDs** — ComfyUI API format
+    expects `{"1": {...}, "2": {...}}` — string node IDs directly at root,
+    NO `"nodes": {...}` wrapper, no `description`/`version`/`_meta` fields.
+    A `"nodes": {...}` wrapper causes Comfy Desktop to show "无法找到工作流"
+    (workflow not found). The API format is a flat object keyed by numeric
+    node IDs as strings. Each node needs `class_type` and `inputs`.
+
+16. **Hand-fix prompt recipe for anime models** — Common hand deformities
+    reduced by: (a) Positive: `good hands, perfect hands, detailed hands` +
+    explicit hand-position tags (`hands on thighs`, `hands clasped`, `hands
+    on ground`); (b) Negative: `fused fingers, too many fingers, poorly drawn
+    hands, mutated hands, malformed hands`; (c) Increase steps to 30; (d) Add
+    `simple background` to reduce scene complexity for the model. Multiple
+    random seeds may be needed — hands remain probabilistic.
+
 ## Verification Checklist
 
 Use `python3 scripts/health_check.py` to run the whole list at once. Manual:
