@@ -17,7 +17,7 @@ custom_providers:
 
 ```bash
 hermes config set auxiliary.vision.provider "custom:DashScope"
-hermes config set auxiliary.vision.model "qwen-vl-max"
+hermes config set auxiliary.vision.model "qwen-vl-plus"
 ```
 
 ## Available Vision Models
