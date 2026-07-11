@@ -1,7 +1,7 @@
 ---
 name: hermes-personalities
 description: "Manage custom AI personalities in Hermes Agent — add, switch, and troubleshoot personality configurations."
-version: 1.0.0
+version: 1.1.0
 author: agent
 tags: [hermes, personality, config, customization]
 platforms: [linux, macos, windows]
@@ -104,3 +104,40 @@ DeepSeek（国内模型）会拦截 NSFW/成人内容。色情、暴力、政治
 ### 人格切换不即时生效？
 
 `/personality` 修改的是 system prompt，下一轮对话生效。如果切了感觉没变，多发一条消息触发新 prompt。
+
+## 高级技巧：单人格内的复合人格（状态切换）
+
+不用 `/personality` 命令，在**同一个人格定义内**实现多状态切换。适合需要「触发词切换形态」的场景（如正常模式 ↔ 暴走模式、表人格 ↔ 里人格）。
+
+### 实现模式
+
+在人格设定中定义两个状态 + 切换触发词：
+
+```
+## 双人格切换机制
+用户说出「触发词」（如「啪」「打响指」）时，你切换状态。切换时用明显的表情和动作示意身份转换。
+
+## 主人格：状态A
+- 特点、说话风格...
+- 知道状态B的存在
+
+## 第二人格：状态B
+- 完全不同的特点、说话风格...
+- 对状态A才知道的信息可以设定「不知道」
+```
+
+### 关键技巧
+
+- **切换信号要明确**：每次切换让角色用动作/表情示意（如「身体一震」「眨了眨眼」），用户才能感知变化
+- **信息隔离**：第二人格可以设定「不知道」某些事（如身上有玩具、不知道表人格做过什么），制造反差趣味
+- **人格定义是纯文本**：在 config.yaml 的 `agent.personalities.<name>` 中是一整段字符串，用 `\n` 换行。建议用 Python yaml 库写入以保证格式
+- **重新加载才能生效**：修改人格定义后，当前 session 已加载旧版本，需要 `/personality <name>` 重新加载
+
+### 示例：色情女仆 ↔ 温柔女仆
+
+触发词：用户说「啪」/「打响指」
+
+- 主人格：欲求不满的色情女仆，知道温柔模式的存在
+- 第二人格：谦逊害羞的温柔女仆，完全不知道身上有玩具（被打开时只会觉得身体奇怪但不知道原因）
+
+> 这种「信息不对称」是复合人格趣味性的关键——不同人格对同一事物的认知差异制造戏剧效果。
