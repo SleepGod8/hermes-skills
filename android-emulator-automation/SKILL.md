@@ -88,13 +88,35 @@ adb devices  # verify — should show at least one device
    adb(f"shell input tap {center_x} {center_y}")
    ```
 
-## Script Modes (see templates/wc4_conquest.py)
+## Script Modes (see templates/)
 
-| Mode | When to Use |
-|------|------------|
-| **Coordinate-based** (mode 1) | Quick test, known fixed button positions |
-| **Template-matching** (mode 2) | Long-term automation, UI may shift |
-| **Coordinate recorder** (mode 3) | Initial setup: find and record button positions |
+| Mode | File | When to Use |
+|------|------|------------|
+| **CLI - coordinate** | `wc4_conquest.py` (mode 1) | Quick test, known fixed button positions |
+| **CLI - template matching** | `wc4_conquest.py` (mode 2) | Long-term automation, UI may shift |
+| **CLI - coordinate recorder** | `wc4_conquest.py` (mode 3) | Initial setup: find and record button positions |
+| **GUI control panel** | `wc4_panel.py` | Visual control with live preview, manual + auto modes |
+
+## GUI Control Panel Pattern
+
+For games where the user wants visual feedback and manual control alongside
+automation, build a `tkinter` GUI with these components:
+
+- **Live preview**: ADB screenshot → PIL resize → tkinter canvas. Click the
+  preview = click the emulator at the scaled coordinate.
+- **Connection status**: Green/red indicator for ADB connection state
+- **Quick action buttons**: End turn, back, confirm — common one-click actions
+- **Coordinate entry**: Manual X/Y input for precise clicking
+- **City/object list**: Add/remove/traverse target coordinates
+- **Auto loop**: start/stop a background thread that iterates the list
+
+Key implementation notes:
+- Use `adb exec-out screencap -p` for fast binary screenshot
+- Scale click coordinates: `real_x = preview_x * (screen_w / preview_w)`
+- Run game loop in a `threading.Thread` with a `running` flag for safe stop
+- Schedule `root.after()` calls to update UI from background threads
+
+See `templates/wc4_panel.py` for a full working example with WC4 conquest mode.
 
 ## Pitfalls
 

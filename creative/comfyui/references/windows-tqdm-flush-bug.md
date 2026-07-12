@@ -193,3 +193,17 @@ check:
 - Whether `PYTHONDONTWRITEBYTECODE=1` was actually set in the launch command
 - If the ComfyUI process auto-restarted from the Desktop app (killing
   `python.exe` may not be enough — close the Desktop app too)
+
+### `.venv` vs `standalone-env` — Which Python Works?
+
+On Comfy Desktop Windows installs, there are TWO Python interpreters:
+- `standalone-env/python.exe` — the documented path, but **may silently fail** (exit code 1, zero output) on some setups
+- `.venv/Scripts/python.exe` — a working fallback when `standalone-env` dead-ends
+
+If `standalone-env/python.exe` produces no output and exits immediately, try `.venv`:
+```bash
+cd "<ComfyUI_root>/ComfyUI"
+taskkill //F //IM "python.exe"
+find "<ComfyUI_root>" -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="" .venv/Scripts/python main.py --listen 127.0.0.1 --port 8188
+```
