@@ -1,7 +1,7 @@
 ---
 name: hermes-troubleshooting
 description: "Troubleshoot Hermes Agent — Desktop connectivity, gateway stalls, platform startup issues, stale lock files. Quick-reference recovery patterns for common failure modes."
-version: 1.1.0
+version: 1.2.0
 author: agent
 license: MIT
 tags: [hermes, troubleshooting, desktop, gateway, recovery]
@@ -98,6 +98,42 @@ cat ~/AppData/Local/hermes/gateway_state.json
 # Look for "gateway_state": "running"
 ```
 
+## Scenario 6: Hermes fails to initialize with httpx/openai import error
+
+**Symptom**: Hermes Desktop or Gateway crashes on startup with an error like:
+```
+Failed to initialize OpenAI client: cannot import name 'URL' from 'httpx' (unknown location)
+```
+or any `ImportError` mentioning `httpx` and `openai` together.
+
+**Root cause**: `httpx` 0.28+ removed the `URL` class that older `openai` packages depend on. Hermes Desktop bundles its own Python with these packages, and a version mismatch can occur after auto-updates or fresh installs when the bundled `httpx` is too new for the bundled `openai`.
+
+**Fix — Option A: Pin httpx in Hermes's bundled Python** (precise):
+
+```bash
+# 1. Find Hermes's bundled Python (typical locations):
+#    C:\Users\<用户名>\AppData\Local\hermes\python\python.exe
+#    or inside the Hermes Desktop install directory.
+
+# 2. Pin httpx to the compatible version:
+"C:\Users\<用户名>\AppData\Local\hermes\python\python.exe" -m pip install httpx==0.27.2
+```
+
+**Fix — Option B: Reinstall/update Hermes Desktop** (simpler):
+
+1. Download the latest Hermes Desktop installer
+2. Install over the existing installation (no need to uninstall first)
+3. Restart Hermes Desktop — the latest build should have compatible packages
+
+**Fix — Option C: Upgrade openai instead** (if you can access the bundled pip):
+
+```bash
+"C:\Users\<用户名>\AppData\Local\hermes\python\python.exe" -m pip install --upgrade openai
+```
+
+**Note**: This is a Python package-level error, NOT a connectivity or gateway issue. `taskkill` and `--replace` won't help — the packages themselves need fixing.
+
 ## References
 
 - `references/desktop-connectivity.md` — detailed Desktop app connectivity troubleshooting
+- `references/httpx-openai-conflict.md` — httpx/openai version conflict details
