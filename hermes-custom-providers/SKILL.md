@@ -63,16 +63,21 @@ Model 'qwen-vl-max' not found. The requested model does not exist in our configu
 
 ## Pitfalls
 
-- **`hermes config set custom_providers "..."` is DANGEROUS.** It has two failure modes:
-  1. **Overwrites the entire list** — all existing custom providers are lost.
-  2. **Serializes as a JSON string** — the CLI wraps the array value in quotes, producing broken YAML: `custom_providers: '[{...}]'`. Hermes won't parse this correctly.
-  
-  **Recovery**: use Python to manually merge entries (see `references/dashscope.md` for the repair script).
+- **`hermes config set custom_providers` overwrites the entire list.** When adding a new provider, you MUST include all existing providers in the JSON array. Passing only the new entry will delete all others. To add safely, construct the full merged array: `'[{...existing...},{...new...}]'`. The JSON serialization with single-quote wrapping (`'[...]'`) works correctly despite the YAML appearing as a string — Hermes parses it properly at runtime.
 - **Not all providers are in Hermes's native vision resolution chain.** The chain in `agent/auxiliary_client.py` is: main provider (if supported) → OpenRouter → Nous Portal → Anthropic → custom endpoint. DashScope, Kimi, and most Chinese providers are NOT in the native chain; they MUST be configured as custom providers (`custom:<name>`, not just `<name>`).
 - **Direct provider name won't work for vision**: Setting `auxiliary.vision.provider = dashscope` (without `custom:` prefix) silently fails — Hermes falls back to OpenRouter with a 404 "model not found" error. Always use `custom:DashScope`.
 - **Model name format**: use the same model name the provider's own API expects (e.g., `qwen-vl-plus` for DashScope, not `dashscope/qwen-vl-plus`).
-- **Content filtering varies by model**: `qwen-vl-max` enforces strict content restrictions (refuses NSFW/adult content). `qwen-vl-plus` does NOT — it describes anime/illustration content without filtering. Test both for your use case before falling back to Google Gemini (which requires a proxy from China).
+- **Content filtering varies by model**: `qwen-vl-max` enforces strict content restrictions (refuses NSFW/adult content). `qwen-vl-plus` is more permissive but still moderates. **GLM-4.6V-Flash** (智谱) is completely free and has **near-zero censorship** — freely describes suggestive/adult imagery and themes without refusal. Far more permissive than any DashScope model.
+- **ZhipuGLM reasoning models**: `glm-4.6` is a reasoning model — output in `reasoning_content`, not `content`. Use `glm-4.5` or `glm-5.x` for normal chat.
 
 ## DashScope (阿里云百炼) Quick Reference
 
 See `references/dashscope.md` for endpoint URLs, model names, and known issues.
+
+## ZhipuGLM (智谱AI / BigModel) Quick Reference
+
+See `references/zhipu-glm.md` for endpoint URL, model names, pricing, censorship test results, and known pitfalls. Key models:
+- **Text**: `glm-4.5`, `glm-5.2` (latest), `glm-4.7-flash` (free)
+- **Vision**: `glm-4v-flash` / `glm-4.6v-flash` — **completely free** 🆓, 128K context, native Function Call. Near-zero censorship — the most permissive free vision model available.
+- **NOTE**: `glm-4.6` is a reasoning model — output in `reasoning_content`, not `content`. `glm-4.6v-flash` is a hybrid: has reasoning_content + content.
+- **Rate limiting**: 429 errors after ~5-8 rapid calls. Add `sleep 5-15` between calls when testing.
