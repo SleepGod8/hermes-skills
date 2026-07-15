@@ -68,7 +68,8 @@ Model 'qwen-vl-max' not found. The requested model does not exist in our configu
 - **Direct provider name won't work for vision**: Setting `auxiliary.vision.provider = dashscope` (without `custom:` prefix) silently fails — Hermes falls back to OpenRouter with a 404 "model not found" error. Always use `custom:DashScope`.
 - **Model name format**: use the same model name the provider's own API expects (e.g., `qwen-vl-plus` for DashScope, not `dashscope/qwen-vl-plus`).
 - **Content filtering varies by model**: `qwen-vl-max` enforces strict content restrictions (refuses NSFW/adult content). `qwen-vl-plus` is more permissive but still moderates. **GLM-4.6V-Flash** (智谱) is completely free and has **near-zero censorship** — freely describes suggestive/adult imagery and themes without refusal. Far more permissive than any DashScope model.
-- **ZhipuGLM reasoning models**: `glm-4.6` is a reasoning model — output in `reasoning_content`, not `content`. Use `glm-4.5` or `glm-5.x` for normal chat.
+- **ZhipuGLM reasoning models**: `glm-4.6` and `glm-4.7-flash` are reasoning models — output in `reasoning_content`, not `content`. Hermes reads `content` only, so these models appear to respond with empty strings. Use `glm-4.5`, `glm-4-flash`, or `glm-5.x` for normal chat. `glm-4.6v-flash` is a hybrid: has BOTH `reasoning_content` (visible thinking) AND `content` (final answer) — it works fine.
+- **Config writes are blocked**: Hermes rejects direct file edits to `config.yaml`. Always use `hermes config set <key> <value>` or the `hermes config` CLI. Desktop App may also lock the file.
 
 ## DashScope (阿里云百炼) Quick Reference
 
@@ -81,3 +82,7 @@ See `references/zhipu-glm.md` for endpoint URL, model names, pricing, censorship
 - **Vision**: `glm-4v-flash` / `glm-4.6v-flash` — **completely free** 🆓, 128K context, native Function Call. Near-zero censorship — the most permissive free vision model available.
 - **NOTE**: `glm-4.6` is a reasoning model — output in `reasoning_content`, not `content`. `glm-4.6v-flash` is a hybrid: has reasoning_content + content.
 - **Rate limiting**: 429 errors after ~5-8 rapid calls. Add `sleep 5-15` between calls when testing.
+
+## AI API Proxy Services (中转站)
+
+See `references/ai-proxy-services.md` for survey of API2D, ChatAnywhere, and AIHubMix — pricing, model coverage, and Hermes integration.

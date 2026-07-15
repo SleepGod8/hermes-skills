@@ -43,7 +43,17 @@ hermes config set custom_providers '[...,{"name":"ZhipuGLM","base_url":"https://
 - **Thinking mode**: Can be toggled on/off
 - **Use case**: Ideal as a free backup/primary vision model for Hermes, especially for Chinese-language image analysis
 
-## Censorship Notes
+## Free Models (Text)
+
+| Model | Type | Hermes Compatible | Notes |
+|-------|------|-------------------|-------|
+| **glm-4-flash** | text | ✅ YES | Normal output to `content`. Code capable. Speed: ~15s for medium tasks. |
+| **glm-4.7-flash** | text | ❌ NO | Reasoning model: answer in `reasoning_content`, `content` is empty. Hermes reads `content` only — will see empty responses. |
+| **glm-4.6v-flash** | vision | ✅ YES | Hybrid: both `reasoning_content` AND `content`. Works for vision. |
+
+### Recommendation
+
+Use `glm-4-flash` (not `glm-4.7-flash`) as a free text backup in Hermes. Despite the lower version number, it's the one that actually works because its output goes to `content`.
 
 ### GLM-4.6V-Flash: Near-Zero Censorship 🔥
 
