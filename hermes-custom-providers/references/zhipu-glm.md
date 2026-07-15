@@ -45,6 +45,16 @@ hermes config set custom_providers '[...,{"name":"ZhipuGLM","base_url":"https://
 
 ## Free Models (Text)
 
+**Confirmed on official pricing page (open.bigmodel.cn/pricing, 2026-07):**
+
+| Model | Input Price | Output Price | Cache | Status |
+|-------|-------------|--------------|-------|--------|
+| **glm-4.7-flash** | ¥0 (免费) | ¥0 (免费) | ¥0 | 🆓 Completely free |
+| glm-4.7-flashX | ¥0.5 | ¥3 | ¥0.1 | Low-cost |
+| glm-4.5-air | ¥0.8-1.2 | ¥2-8 | ¥0.16 | Budget |
+
+### Hermes Compatibility
+
 | Model | Type | Hermes Compatible | Notes |
 |-------|------|-------------------|-------|
 | **glm-4-flash** | text | ✅ YES | Normal output to `content`. Code capable. Speed: ~15s for medium tasks. |
@@ -86,6 +96,46 @@ hermes config set auxiliary.vision.model glm-4.6v-flash
 hermes config set auxiliary.vision.provider custom:DashScope
 hermes config set auxiliary.vision.model qwen-vl-plus
 ```
+
+## Function Call Testing (GLM-4.6V-Flash)
+
+GLM-4.6V-Flash supports OpenAI-compatible `tools` API for native function calling. Tested successfully:
+
+**Vision → Function Call:**
+```
+📸 Screenshot → identify_game() {game_name, genre, confidence, key_elements}
+              → analyze_character() {gender, hair_color, outfit_style, weapon_visible, mood}
+```
+
+**Multi-turn reasoning:**
+```
+💬 "Check Beijing weather, if >30°C set AC to cool"
+   → Step 1: get_weather(city="北京", date="今天")
+   → Step 2: (waits for weather result before deciding AC mode)
+```
+
+**Testing pattern (Python):**
+```python
+data = json.dumps({
+    'model': 'glm-4.6v-flash',
+    'messages': [{'role': 'user', 'content': '...'}],
+    'tools': [
+        {'type': 'function', 'function': {
+            'name': 'my_function',
+            'parameters': {'type': 'object', 'properties': {...}, 'required': [...]}
+        }}
+    ],
+    'tool_choice': 'auto',  # or 'required' to force function call
+    'max_tokens': 300
+}).encode()
+```
+
+**Key findings:**
+- Tool definitions follow OpenAI format exactly
+- `tool_choice: 'auto'` lets the model decide when to call functions
+- Image+function call works — the model can analyze an image THEN call appropriate tools
+- Multi-turn: model correctly calls `get_weather()` first, then waits for result before deciding `set_ac_mode()`
+- Free 🆓 — no additional cost for function calling
 
 ## Pitfalls
 
