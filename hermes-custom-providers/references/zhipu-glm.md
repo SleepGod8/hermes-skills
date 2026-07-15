@@ -26,7 +26,7 @@ hermes config set custom_providers '[...,{"name":"ZhipuGLM","base_url":"https://
 | Model | Type | Notes |
 |-------|------|-------|
 | glm-4.5 | text | Stable general-purpose |
-| glm-4.5-air | text | Lighter, faster, cheaper |
+| glm-4-flash | text | 🆓 Free. Lighter, faster. ~15s response. Normal output to `content` — Hermes compatible. |\n| glm-4.5-air | text | Lighter, faster, cheaper |
 | glm-4.6 | text | Reasoning model: output in `reasoning_content` field, NOT `content`. Use for deep reasoning tasks. |
 | glm-4.7 | text | |
 | glm-5 | text | |
@@ -49,7 +49,8 @@ hermes config set custom_providers '[...,{"name":"ZhipuGLM","base_url":"https://
 
 | Model | Input Price | Output Price | Cache | Status |
 |-------|-------------|--------------|-------|--------|
-| **glm-4.7-flash** | ¥0 (免费) | ¥0 (免费) | ¥0 | 🆓 Completely free |
+| **glm-4-flash** | ¥0 (免费) | ¥0 (免费) | ¥0 | 🆓 Completely free — **Hermes compatible** ✅ |
+| **glm-4.7-flash** | ¥0 (免费) | ¥0 (免费) | ¥0 | 🆓 Free but ❌ reasoning model (content empty) |
 | glm-4.7-flashX | ¥0.5 | ¥3 | ¥0.1 | Low-cost |
 | glm-4.5-air | ¥0.8-1.2 | ¥2-8 | ¥0.16 | Budget |
 
