@@ -86,3 +86,7 @@ See `references/zhipu-glm.md` for endpoint URL, model names, pricing, censorship
 ## AI API Proxy Services (中转站)
 
 See `references/ai-proxy-services.md` for survey of API2D, ChatAnywhere, and AIHubMix — pricing, model coverage, and Hermes integration.
+
+## Hermes ↔ OpenCode Messaging Protocol
+
+See `references/opencode-messaging-protocol.md` for the shared JSON-file protocol that enables bidirectional async messaging between Hermes and OpenCode via `~/.hermes-opencode-chat/messages.json`. Supports unread tracking, multi-turn conversations, and session persistence.
