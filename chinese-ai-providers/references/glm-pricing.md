@@ -2,13 +2,13 @@
 
 Source: https://open.bigmodel.cn/pricing (as of 2026-07)
 
-## Free Models
+## Free Models 🆓
 
-| Model | Type | Input | Output | Context |
-|-------|------|-------|--------|---------|
-| `glm-4.7-flash` | Text | Free | Free | 200K |
-| `glm-4.6v-flash` | Vision | Free | Free | 128K |
-| `glm-4-flash` | Text | Free | Free | Standard |
+| Model | Type | Input | Output | Context | Notes |
+|-------|------|-------|--------|---------|-------|
+| `glm-4.6v-flash` | Vision | Free | Free | 128K | Native function call, near-zero censorship |
+| `glm-4.7-flash` | Reasoning | Free | Free | 200K | Output in `reasoning_content` — Hermes incompatible |
+| `glm-4-flash` | Text | Free | Free | Standard | Outputs to `content` — works with Hermes |
 
 ## Latest Flagship (Paid)
 
@@ -27,13 +27,51 @@ Source: https://open.bigmodel.cn/pricing (as of 2026-07)
 | `glm-4.5-air` | 0.8 | 2-6 |
 | `glm-4.7-flashx` | 0.5 | 3 |
 
+## Model ID Gotchas
+
+| User-facing name | API model ID (must use lowercase) |
+|-----------------|----------------------------------|
+| GLM-4.6V-Flash | `glm-4.6v-flash` |
+| GLM-4V-Flash | `glm-4v-flash` (older) |
+
+The `/v4/models` endpoint returns IDs in lowercase. Always use lowercase.
+
+## Censorship Comparison
+
+| Model | Adult/NSFW Content |
+|-------|-------------------|
+| `qwen-vl-max` | Rejects |
+| `qwen-vl-plus` | Partial pass |
+| `glm-4.6v-flash` | **No filter** — freely describes NSFW |
+
 ## API Key Format
 
-API keys from Zhipu open platform are in format: `{id}.{secret}`
+API keys from Zhipu open platform: `{id}.{secret}`
 Example: `b21361b1145b44c5845e11b5d2b712a5.kvRYd296FLanqGrp`
 
-## Notes
-- Flash models are Zhipu's "便宜/免费" line
-- `glm-4.7-flash` is a reasoning model — answer goes in `reasoning_content` not `content`
-- `glm-4-flash` outputs normally to `content` — works with Hermes
-- All models support OpenAI-compatible `/v4/chat/completions` endpoint
+## Hermes Integration
+
+### As vision model (works)
+```bash
+hermes config set auxiliary.vision.provider "custom:ZhipuGLM"
+hermes config set auxiliary.vision.model "glm-4.6v-flash"
+```
+
+### As main chat model (FAILS)
+```bash
+# ⚠️ DO NOT — causes auth error
+hermes config set model.provider "custom:ZhipuGLM"
+```
+Custom providers work as `auxiliary.vision` but fail with auth errors when set as `model.provider`.
+
+## API Proxy / Middleman Pricing (ChatAnywhere, 2026-07)
+
+| Model | Input (¥/K tokens) | Output (¥/K tokens) |
+|------|-------------------|---------------------|
+| deepseek-v4-flash | 0.0008 | 0.0016 |
+| deepseek-v4-pro | 0.003 | 0.006 |
+| deepseek-chat | 0.0012 | 0.0018 |
+| deepseek-reasoner | 0.0024 | 0.0096 |
+| qwen3.5-plus | 0.00056 (tiered) | 0.00336 |
+| kimi-k2.7-code | 0.0052 | 0.0216 |
+| glm-5.2 | 0.0064 | 0.0224 |

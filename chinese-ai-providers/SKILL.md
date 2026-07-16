@@ -80,6 +80,19 @@ ChatAnywhere has the widest model range. No free tier beyond what underlying pro
 
 When using GLM-4.6V-Flash with tools + images, include visual cues in the prompt (e.g. "画面中有霓虹灯、红色护目镜") to improve function selection accuracy. Without hints, the model may return `confidence: 0.5` or `game_name: "未知"`.
 
+## Model ID Gotchas
+
+| User-facing name | API model ID (lowercase) |
+|-----------------|-------------------------|
+| GLM-4.6V-Flash | `glm-4.6v-flash` |
+| GLM-4V-Flash | `glm-4v-flash` (older) |
+
+The models endpoint (`GET /models`) returns IDs in lowercase. Always use lowercase in API calls.
+
+## Detailed Pricing
+
+See `references/glm-pricing.md` for the full scraped pricing table from open.bigmodel.cn/pricing as of 2026-07.
+
 ## OpenCode China Install
 
 ```bash
