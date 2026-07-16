@@ -81,7 +81,7 @@ See `references/dashscope.md` for endpoint URLs, model names, and known issues.
 ## ZhipuGLM (智谱AI / BigModel) Quick Reference
 
 See `references/zhipu-glm.md` for endpoint URL, model names, pricing, censorship test results, and known pitfalls. Key models:
-- **Text**: `glm-4.5`, `glm-5.2` (latest), `glm-4.7-flash` (free)
+- **Text**: `glm-4.5`, `glm-5.2` (latest flagship, 1M context), `glm-4-flash` (free, normal output), `glm-4.7-flash` (free, reasoning model — output in reasoning_content)
 - **Vision**: `glm-4v-flash` / `glm-4.6v-flash` — **completely free** 🆓, 128K context, native Function Call. Near-zero censorship — the most permissive free vision model available.
 - **NOTE**: `glm-4.6` is a reasoning model — output in `reasoning_content`, not `content`. `glm-4.6v-flash` is a hybrid: has reasoning_content + content.
 - **Rate limiting**: 429 errors after ~5-8 rapid calls. Add `sleep 5-15` between calls when testing.

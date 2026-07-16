@@ -21,9 +21,38 @@ Set via CLI (WARNING: overwrites ALL custom providers — merge manually if othe
 hermes config set custom_providers '[...,{"name":"ZhipuGLM","base_url":"https://open.bigmodel.cn/api/paas/v4/","api_key":"<key>"}]'
 ```
 
-## Available Models
+## Available Models (with Pricing)
 
-| Model | Type | Notes |
+All prices in CNY ¥ per million tokens. Confirmed on official pricing page (open.bigmodel.cn/pricing, 2026-07).
+
+### Text Models (旗舰模型)
+
+| Model | Input ¥/M | Output ¥/M | Context | Notes |
+|-------|-----------|-------------|---------|-------|
+| glm-5.2 | ¥8 | ¥28 | 1M | 🆕 Latest flagship |
+| glm-5.1 | ¥6-8 | ¥24-28 | 32K+ | |
+| glm-5-turbo | ¥5-7 | ¥22-26 | 32K+ | 🚀 Speed optimized |
+| glm-5 | ¥4-6 | ¥18-22 | 32K+ | |
+| glm-4.7 | ¥2-4 | ¥8-16 | 32K+ | |
+| glm-4.5-air | ¥0.8-1.2 | ¥2-8 | 32K+ | 💰 Budget |
+
+### Free Models 🆓
+
+| Model | Type | Input | Output | Hermes Compatible |
+|-------|------|-------|--------|-------------------|
+| **glm-4-flash** | text | ¥0 | ¥0 | ✅ YES — normal content output |
+| **glm-4.7-flash** | text | ¥0 | ¥0 | ❌ NO — reasoning model, content=empty |
+| **glm-4.6v-flash** | vision | ¥0 | ¥0 | ✅ YES — hybrid reasoning+content |
+
+### Flash Series (低价线)
+
+| Model | Input ¥/M | Output ¥/M |
+|-------|-----------|-------------|
+| glm-4.7-flashX | ¥0.5 | ¥3 |
+| glm-4.7-flash | ¥0 | ¥0 |
+| glm-4-flash | ¥0 | ¥0 |
+
+## Available Models (Legacy)
 |-------|------|-------|
 | glm-4.5 | text | Stable general-purpose |
 | glm-4-flash | text | 🆓 Free. Lighter, faster. ~15s response. Normal output to `content` — Hermes compatible. |\n| glm-4.5-air | text | Lighter, faster, cheaper |
