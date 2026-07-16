@@ -64,6 +64,22 @@ Custom providers work as `auxiliary.vision` but may fail with auth errors when s
 
 GLM-4.6V-Flash supports OpenAI-compatible tools API with `tool_choice: "auto"`. Works with both text and vision inputs.
 
+## API Proxy / Middleman Services
+
+For accessing GPT/Claude/Gemini models without VPN:
+
+| Service | Coverage | Pricing | Status |
+|---------|----------|---------|--------|
+| **ChatAnywhere** | GPT-5.6, Claude Sonnet 5, DeepSeek, Qwen, Kimi, GLM | Per-token, ~official price | ✅ Active (2026-07) |
+| **API2D** | GPT, Claude, StableDiffusion | ~1.5x official OpenAI | ✅ Active |
+| AIHubMix | — | — | ❌ Offline |
+
+ChatAnywhere has the widest model range. No free tier beyond what underlying providers offer.
+
+## Vision Function Calling Tips
+
+When using GLM-4.6V-Flash with tools + images, include visual cues in the prompt (e.g. "画面中有霓虹灯、红色护目镜") to improve function selection accuracy. Without hints, the model may return `confidence: 0.5` or `game_name: "未知"`.
+
 ## OpenCode China Install
 
 ```bash
