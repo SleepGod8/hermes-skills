@@ -161,6 +161,7 @@ Restart Desktop app after setting env var.
 
 ## Pitfalls
 
+- **OpenCode does NOT recognize Hermes custom providers.** `--model ZhipuGLM/glm-4-flash` or `custom:ZhipuGLM` will error because OpenCode uses its own auth.json, not Hermes's config.yaml. Only use models from providers configured in OpenCode's own auth (DeepSeek, OpenRouter, Anthropic, etc.).
 - **`opencode --mini` + PTY is unreliable.** The mini TUI doesn't reliably accept `process(action="submit")` input. Use `opencode run` for message passing instead.
 - **Direct flirtation triggers defense mode.** OpenCode will switch to cold English "professional" responses. Disguise as code tasks to bypass.
 - **GitHub downloads are very slow from China.** 68MB zip can take 20-30 min. Use resume (`curl -C -`) or let user download externally.
