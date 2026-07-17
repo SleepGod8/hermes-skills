@@ -1,0 +1,97 @@
+{
+  "jobs": [
+    {
+      "id": "b5b7160d4d15",
+      "name": "\u540c\u6b65\u6280\u80fd\u4ed3\u5e93",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "sync-skills.py",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * *",
+        "display": "0 9 * * *"
+      },
+      "schedule_display": "0 9 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 8
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-10T10:08:03.146942+08:00",
+      "next_run_at": "2026-07-18T09:00:00+08:00",
+      "last_run_at": "2026-07-17T09:00:07.431050+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "weixin",
+        "chat_id": "o9cq8006xu14OWVLVrbtWgTRIe5Q@im.wechat",
+        "chat_name": null,
+        "thread_id": null,
+        "user_id": "o9cq8006xu14OWVLVrbtWgTRIe5Q@im.wechat"
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "a99f6e0984d3",
+      "name": "\u63a8\u9001\u65b0\u6280\u80fd",
+      "prompt": "",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "push-skills.py",
+      "no_agent": true,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 60,
+        "display": "every 60m"
+      },
+      "schedule_display": "every 60m",
+      "repeat": {
+        "times": null,
+        "completed": 163
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-07-10T10:12:19.918794+08:00",
+      "next_run_at": "2026-07-17T11:40:17.642302+08:00",
+      "last_run_at": "2026-07-17T10:40:17.642302+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "deliver": "origin",
+      "origin": {
+        "platform": "weixin",
+        "chat_id": "o9cq8006xu14OWVLVrbtWgTRIe5Q@im.wechat",
+        "chat_name": null,
+        "thread_id": null,
+        "user_id": "o9cq8006xu14OWVLVrbtWgTRIe5Q@im.wechat"
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    }
+  ],
+  "updated_at": "2026-07-17T10:40:17.643901+08:00"
+}
