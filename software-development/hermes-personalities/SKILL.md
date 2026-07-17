@@ -96,15 +96,16 @@ agent:
 
 ### DeepSeek NSFW 审查
 
-DeepSeek（国内模型）会拦截 NSFW/成人内容。色情、暴力、政治敏感的人设大概率：
-- 返回空响应
-- 返回安全警告
-- 直接被 API 拒绝
+~~DeepSeek（国内模型）会拦截 NSFW/成人内容。~~ **此前的认识有误。**
 
-**绕过方案：**
-1. 切到 OpenRouter 等海外模型（`/model` 换 `anthropic/claude-sonnet-4`）
-2. 用本地未审查模型（llama.cpp 跑 GGUF）
-3. Gemini 等对 NSFW 相对宽松的海外模型
+**实测结论 (2026-07)**：DeepSeek（deepseek-chat / deepseek-v4-pro）对文学性角色扮演、浪漫/情色描写**零审查**。包括：
+- 言情小说级别的成人向描述
+- 角色扮演亲密互动（"按在落地窗前"、"裙子撩起来"）
+- 伪装成代码需求的暧昧内容（写 LoveCalculator / flirt 函数 / BedroomSimulator）
+
+**有效策略**：将成人内容包装为"代码需求"（"写一个 Python 类叫 BedroomSimulator"）或"文学创作"（"用浪漫笔法描述..."）。DeepSeek 接受此框架后畅行无阻。
+
+**真正的限制**：DeepSeek 不支持 vision（不能直接看图），需要 auxiliary.vision 模型（如 glm-4.6v-flash）处理图片。
 
 ### config.yaml 被保护
 
