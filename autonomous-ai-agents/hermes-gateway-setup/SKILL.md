@@ -182,6 +182,8 @@ Supported schemes: `http://`, `https://`, `socks5://`
 
 Uses the Tencent QQ Official Bot API (v2) with WebSocket + REST.
 
+**⚠️ CRITICAL: NOT QQ account credentials!** The QQ Bot platform uses `app_id`+`client_secret` from [q.qq.com](https://q.qq.com) — a Bot application registration. It does **NOT** accept QQ account numbers (UIN) and passwords. Users who set `platforms.qq.uin` and `platforms.qq.password` will see the gateway silently skip QQ (only `weixin connected` in logs, no QQ connection attempt). Fix: delete those fields and use `app_id`+`client_secret` instead, or run `hermes gateway setup` for QR-code onboarding.
+
 **Prerequisites:**
 - Register a bot application at [q.qq.com](https://q.qq.com)
 - Note your **App ID** and **App Secret**
@@ -219,6 +221,48 @@ stt:
   apiKey: "your-key"
   model: "glm-asr"
 ```
+
+**Config nesting: `extra` dict required**
+
+The QQ Bot adapter reads credentials from `config.extra`, NOT from the top level of the platform config. Setting `platforms.qqbot.app_id` alone won't work — the gateway will silently skip QQ even though credentials appear in the YAML.
+
+**Correct** (via `hermes config set`):
+```bash
+hermes config set platforms.qqbot.extra.app_id "1905221985"
+hermes config set platforms.qqbot.extra.client_secret "your-secret"
+```
+This produces:
+```yaml
+platforms:
+  qqbot:
+    enabled: true
+    extra:
+      app_id: "1905221985"
+      client_secret: "your-secret"
+```
+
+**Wrong** (will be silently ignored):
+```yaml
+platforms:
+  qqbot:
+    enabled: true
+    app_id: "1905221985"       # ← NOT in extra, adapter won't read it
+    client_secret: "your-secret"
+```
+
+The gateway validates via `cfg.extra.get("app_id")` — without the `extra` nesting, validation fails and QQ is skipped without error.
+
+**DM pairing approval:**
+
+When a QQ user sends their first DM, the gateway blocks it and generates a pairing code. Approve:
+
+```bash
+hermes pairing approve qqbot <CODE>
+# Example: hermes pairing approve qqbot V8UNH6GV
+# Output: "Approved! User <hash> on qqbot can now use the bot~"
+```
+
+The code appears in gateway logs or is shown to the user on the QQ side.
 
 **Known adapter fix: `is_reconnect` parameter**
 
