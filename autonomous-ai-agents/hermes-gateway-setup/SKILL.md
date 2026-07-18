@@ -298,6 +298,36 @@ tail -f "$HERMES_HOME/logs/gateway.log" | grep -E "(qqbot|✓)"
 ```
 Expected: `[QQBot:*] Connected` followed by `✓ qqbot connected`
 
+**⚠️ QQ Bot can crash the ENTIRE Gateway (takes down WeChat too!)**
+
+QQ Bot's WebSocket connection is fragile — when it times out (code=4009 "Session timed out"), the adapter repeatedly reconnects, and the connection storms can stall the Gateway's event loop, causing ALL platforms (including WeChat) to go silent:
+
+```
+WARNING gateway.platforms.qqbot.adapter: [QQBot:1905221985] WebSocket closed: code=4009 reason=Session timed out
+```
+
+Recovery: kill the Gateway process and restart with `--replace`. If QQ Bot is not essential, disable it entirely to prevent this:
+
+```bash
+hermes config set platforms.qqbot.enabled false
+```
+
+**⚠️ QQ Bot open-policy blocks Gateway startup entirely**
+
+If `dm_policy` or `group_policy` is set to `open` but neither `GATEWAY_ALLOW_ALL_USERS` nor `QQ_ALLOW_ALL_USERS` is enabled, the Gateway REFUSES to start — not just QQ, but ALL platforms including WeChat:
+
+```
+ERROR gateway.run: Refusing to start: qqbot has dm_policy/group_policy set to 'open'
+but neither GATEWAY_ALLOW_ALL_USERS nor QQ_ALLOW_ALL_USERS is enabled.
+ERROR gateway.run: Gateway exiting cleanly: qqbot: open policy without allow-all opt-in
+```
+
+Fix: change both policies to `allowlist`:
+```bash
+hermes config set platforms.qqbot.dm_policy allowlist
+hermes config set platforms.qqbot.group_policy allowlist
+```
+
 ### Generic Pattern
 For any platform with a QR-code flow:
 1. Navigate the initial menu (piped input)
@@ -420,6 +450,8 @@ schtasks /query /tn "Hermes Gateway Watchdog" /fo LIST
 - **Platform TUI sub-menus**: Some platforms (Telegram) have a sub-menu (Automatic [1] vs Manual [2]) after selection. The piped input must account for this: append extra values like `22\\n2\\n<token>\\n<user_id>\\n\\n`.
 - **Wizard "configured" status is unreliable**: The wizard may show a platform as "(configured)" even when no credentials exist in `$HERMES_HOME/.env` or the platform accounts directory. Always verify with actual file checks: `grep -i WEIXIN "$HERMES_HOME/.env"` and `ls "$HERMES_HOME/weixin/accounts/"`. Don't trust the wizard's status badge alone.
 - **`hermes config get` does not exist**: Use `hermes config show` to view config, or `hermes config set <key> <value>` to set values. There is no `get` subcommand.
+- **QQ Bot destabilizes Gateway**: QQ Bot WebSocket timeouts (code=4009) can crash the entire Gateway, silencing WeChat too. If you only need WeChat, keep QQ Bot disabled (`platforms.qqbot.enabled: false`). Only enable QQ Bot if you actively use it.
+- **QQ Bot open-policy blocks Gateway startup**: If `dm_policy`/`group_policy` is `open` without `GATEWAY_ALLOW_ALL_USERS` or `QQ_ALLOW_ALL_USERS`, the Gateway refuses to start entirely — all platforms blocked, not just QQ. Fix: set both to `allowlist`.
 
 ## Post-Setup Verification (Full Workflow)
 
