@@ -133,7 +133,21 @@ or any `ImportError` mentioning `httpx` and `openai` together.
 
 **Note**: This is a Python package-level error, NOT a connectivity or gateway issue. `taskkill` and `--replace` won't help — the packages themselves need fixing.
 
+## Scenario 7: QQ Bot gateway won't connect or receive messages
+
+**Symptom**: QQ gateway configured but not loading (`Gateway running with 1 platform(s)`), or connected but receiving no messages.
+
+**Quick checklist**:
+1. Config key is `qqbot` (NOT `qq`)
+2. Credentials go under `extra.app_id` / `extra.client_secret` (NOT top-level)
+3. `is_reconnect` parameter may need adding to adapter (v0.18.2)
+4. Bot must be **published** on q.qq.com, not sandbox
+5. User must add bot as QQ friend before messaging
+
+See `references/qq-gateway.md` for full setup and debugging guide.
+
 ## References
 
 - `references/desktop-connectivity.md` — detailed Desktop app connectivity troubleshooting
 - `references/httpx-openai-conflict.md` — httpx/openai version conflict details
+- `references/qq-gateway.md` — QQ Bot gateway setup, config format, pairing, and debugging
