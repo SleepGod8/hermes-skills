@@ -182,6 +182,8 @@ Supported schemes: `http://`, `https://`, `socks5://`
 
 Uses the Tencent QQ Official Bot API (v2) with WebSocket + REST.
 
+**⚠️ CRITICAL: Config key is `qqbot`, NOT `qq`!** The platform config key must be `platforms.qqbot` (matching `Platform.QQBOT` enum value `\"qqbot\"`). Using `platforms.qq` will write to a different, unrecognized key — the gateway will NOT load QQ even if `app_id`/`client_secret` are present. Fix: `hermes config set platforms.qqbot.enabled true` (not `platforms.qq.enabled`).
+
 **⚠️ CRITICAL: NOT QQ account credentials!** The QQ Bot platform uses `app_id`+`client_secret` from [q.qq.com](https://q.qq.com) — a Bot application registration. It does **NOT** accept QQ account numbers (UIN) and passwords. Users who set `platforms.qq.uin` and `platforms.qq.password` will see the gateway silently skip QQ (only `weixin connected` in logs, no QQ connection attempt). Fix: delete those fields and use `app_id`+`client_secret` instead, or run `hermes gateway setup` for QR-code onboarding.
 
 **Prerequisites:**
