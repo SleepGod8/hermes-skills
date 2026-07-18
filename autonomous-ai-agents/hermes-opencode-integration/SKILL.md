@@ -128,6 +128,13 @@ OpenCode 不仅会写代码，也能**纯聊天**：
 - 官网安装器和手动 ZIP 是两个独立安装，避免重复。
 - DeepSeek 通过 OpenCode 对文学性/角色扮演内容零审查。
 - 同一 workdir 不要并行跑多个 OpenCode session。
+- **Windows subprocess 调用**：Hermes 的 opencode 二进制是 POSIX shell 脚本，Python `subprocess.run` 直接调用会报 `WinError 193`。必须用 `opencode.cmd` 启动器 + `shell=True`。详见 `references/multi-agent-qq-bridge.md`。
+
+## 多 Agent QQ 群聊桥接
+
+通过 QQ Bot + OpenCode 在 QQ 群里实现两个 AI Agent 互相对话。
+
+> 详见 `references/multi-agent-qq-bridge.md`，桥接脚本：`scripts/multi_agent_bridge.py`。
 
 ## 已验证
 
