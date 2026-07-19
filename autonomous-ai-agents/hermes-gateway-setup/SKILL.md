@@ -298,6 +298,25 @@ tail -f "$HERMES_HOME/logs/gateway.log" | grep -E "(qqbot|✓)"
 ```
 Expected: `[QQBot:*] Connected` followed by `✓ qqbot connected`
 
+**🔑 CRITICAL: QQ Bot 连接成功但收不到 C2C 私聊消息？**
+
+This is the #1 QQ Bot issue. Symptoms: `✓ qqbot connected` in logs, WebSocket healthy, Identify sent, Ready — but ZERO `C2C_MESSAGE_CREATE` events arrive. No inbound messages at all, even though:
+
+- ✅ Callback URL is empty (WebSocket mode — correct)
+- ✅ Sandbox has your QQ user as administrator
+- ✅ All C2C events subscribed in 回调配置
+- ✅ `hermes pairing` shows your QQ user approved
+
+**Root cause: QQ 开放平台 requires at least 1 function/command configured.**
+
+The QQ platform will NOT push C2C message events to a bot that has "0 configured functions" in the 发布上架 page. Go to **管理 → 发布上架** and check Step 01:
+
+> 已配置0个功能，0个指令，0个快捷菜单 → **C2C messages BLOCKED**
+
+**Fix:** Click 「配置 >」 on Step 01, add at least one function (even a placeholder), then the 提交审核 button will activate. After this, C2C messages start flowing immediately — no actual review approval needed.
+
+See `references/qqbot-c2c-no-messages.md` for the full debugging transcript (screenshots, config checks, exact QQ platform page walkthrough).
+
 **⚠️ QQ Bot can crash the ENTIRE Gateway (takes down WeChat too!)**
 
 QQ Bot's WebSocket connection is fragile — when it times out (code=4009 "Session timed out"), the adapter repeatedly reconnects, and the connection storms can stall the Gateway's event loop, causing ALL platforms (including WeChat) to go silent:
