@@ -62,6 +62,14 @@ echo "QQ_ALLOW_ALL_USERS=true" >> ~/AppData/Local/hermes/.env
 python3 -c "import yaml; cfg=yaml.safe_load(open('config.yaml')); print(cfg['platforms']['qqbot'])"
 ```
 
+**Recovery**: If QQ disappeared after policy change:
+```bash
+hermes config set platforms.qqbot.dm_policy ""
+hermes config set platforms.qqbot.group_policy ""
+hermes config set platforms.qqbot.enabled "true"
+hermes gateway run --replace
+```
+
 ## QQ Open Platform Requirements
 
 The bot must be **published** on [q.qq.com](https://q.qq.com), not in sandbox mode. 
