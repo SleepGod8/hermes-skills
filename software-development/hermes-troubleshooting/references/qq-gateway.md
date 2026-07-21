@@ -22,6 +22,31 @@ hermes config set platforms.qqbot.extra.client_secret "SECRET"
 
 **DO NOT use `platforms.qq.*` — that's a wrong key ignored by the gateway.**
 
+## Minimal Config Rule (新增 — v1.2)
+
+**最简配置即可工作，不要加多余设置。**
+
+有效的配置只需：
+```yaml
+qqbot:
+  enabled: true
+  extra:
+    app_id: "..."
+    client_secret: "..."
+```
+
+默认的 `dm_policy: pairing` + 已批准用户 = 正常工作。
+
+**不要画蛇添足**：加了 `group_policy: "open"`、`allow_all: true` 等多余字段反而会破坏默认配对机制，导致私聊也收不到消息。
+
+如果 QQ 连上但不回消息，先精简配置到最小，重启网关：
+```bash
+hermes config set platforms.qqbot.dm_policy ""
+hermes config set platforms.qqbot.group_policy ""
+hermes config set platforms.qqbot.allow_all ""
+hermes gateway run --replace
+```
+
 ## Code Fix: `is_reconnect` Parameter
 
 QQAdapter.connect() signature in v0.18.2 may lack the `is_reconnect` keyword argument that newer gateway runners pass. Symptom:
@@ -77,6 +102,13 @@ The bot must be **published** on [q.qq.com](https://q.qq.com), not in sandbox mo
 - Production → all users can message after adding bot as friend
 
 In QQ app: search bot name → add as friend → send message.
+
+## QQ 群聊限制 (新增)
+
+QQ 开放平台目前**不支持 AIGC 机器人进入社群场景**。沙箱配置页面明确标注：
+> 暂不支持群相关配置，敬请期待
+
+Bot 只能用于私聊，不能加入 QQ 群。这是 QQ 平台限制，不是 Hermes 配置问题。
 
 ## Startup Log Signals
 

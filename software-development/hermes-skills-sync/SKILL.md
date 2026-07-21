@@ -110,6 +110,7 @@ git clone <repo-url> skills
 ## Pitfalls
 
 - **Private repo is essential**: Skills may contain project-specific paths, API endpoints, or internal tool configurations. Never use a public repo.
+- **China network / GitHub blocked**: Use a local proxy (Clash/V2Ray). Configure: `git config --global http.proxy http://127.0.0.1:PORT`. See `references/git-proxy.md` for full guide.
 - **Cron jobs need repeat=forever**: Newly created cron jobs default to `once`. Update them: `hermes cron edit <job_id>` and set repeat to 0 (forever).
 - **Script-only jobs are silent by design**: With `no_agent=true`, empty stdout means no message is delivered. This is intentional — you don't want a notification every 5 minutes when nothing changed.
 - **Git authentication**: The machine must have Git push access to the remote (SSH key or credential helper). Without it, push silently fails.
