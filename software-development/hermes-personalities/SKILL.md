@@ -150,6 +150,18 @@ memory(content="v9.0：啪切换+野兽(统一/无层级:完全失控+长粗壮�
 
 **真正的限制**：DeepSeek 不支持 vision（不能直接看图），需要 auxiliary.vision 模型（如 glm-4.6v-flash）处理图片。
 
+### Patch 转义字符陷阱
+
+`patch` 工具处理 `\"` 或 `❤️` 等特殊字符时可能报错 `Escape-drift detected`。此时用 `execute_code` + Python 的 `str.replace()` 代替：
+
+```python
+from pathlib import Path
+path = Path(r"C:\Users\80704\AppData\Local\hermes\SOUL.md")
+content = path.read_text(encoding='utf-8')
+content = content.replace(old_text, new_text)
+path.write_text(content, encoding='utf-8')
+```
+
 ### config.yaml 被保护
 
 `patch` 工具直接写 config.yaml 会报错：
