@@ -161,8 +161,20 @@ The push script (`skills-sync-push-rebase.sh`) follows this sequence to avoid lo
 
 The key difference from a simple `git push` is **Step 1**: the rebase-first approach ensures local and remote changes merge cleanly before pushing. This prevents the "rejected" error when the remote has diverged.
 
+## Prerequisites
+
+### Git Identity (REQUIRED for push)
+
+Without this, `git push` fails with `Author identity unknown`:
+
+```bash
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+```
+
 ## Pitfalls
 
+- **Git identity not set → push fails**: `Author identity unknown / unable to auto-detect email address`. Fix: `git config --global user.email "..."` and `user.name`. See Prerequisites above.
 - **Private repo is essential**: Skills may contain project-specific paths, API endpoints, or internal tool configurations. Never use a public repo.
 - **China network / GitHub blocked**: Use a local proxy (Clash/V2Ray). Configure: `git config --global http.proxy http://127.0.0.1:PORT`. See `references/git-proxy.md` for full guide.
 - **Cron jobs need repeat=forever**: Newly created cron jobs default to `once`. Update them: `hermes cron edit <job_id>` and set repeat to 0 (forever).

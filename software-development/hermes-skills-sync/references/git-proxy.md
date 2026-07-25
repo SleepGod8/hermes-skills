@@ -49,3 +49,15 @@ git config --global http.proxy http://127.0.0.1:12450
 git config --global https.proxy http://127.0.0.1:12450
 git clone https://github.com/User/repo.git
 ```
+
+## Auto-Detect Proxy Port
+
+When the user says they have a VPN but doesn't specify the port, probe common ports:
+
+```bash
+for PORT in 7890 10809 1080 8118 8888; do
+    curl -s --max-time 3 -x http://127.0.0.1:$PORT https://github.com -o /dev/null -w "$PORT: %{http_code}\n" 2>/dev/null
+done
+```
+
+If none work, ask the user: "What proxy port are you using? (e.g. Clash=7890, V2Ray=10809)"
