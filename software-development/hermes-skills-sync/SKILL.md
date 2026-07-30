@@ -20,12 +20,20 @@ Use when:
 ## Architecture
 
 ```
-Machine A ──(auto-push every 10min)──▶ Git Repo ◀──(auto-pull every 5min)── Machine B
+Machine A ──(auto-push every 60min, rebase-first)──▶ Git Repo ◀──(auto-pull daily at 9:00)── Machine B
 ```
 
 Two cron jobs run on each machine:
-- **pull** (every 5 min): fetches remote changes, stashes local uncommitted work first
-- **push** (every 10 min): detects local changes, commits with auto-generated message, pushes
+- **pull** (daily at 9:00): `git pull` — merges remote changes, keeps local unique skills intact
+- **push** (every 60 min): `git pull --rebase` first to sync remote → then commit+push local-only changes
+
+**Key design principle**: pull and push use different strategies.
+- **Pull** (`git pull`): Fast-forward merge from remote. Does NOT delete local-only skills — it only adds/updates skills that exist in remote.
+- **Push** (`git pull --rebase` first, then push): Before pushing local changes, rebase on top of remote to avoid conflicts. This ensures the remote always has both machines' contributions.
+
+**Key design principle**: pull and push use different strategies.
+- **Pull** (`git pull`): Fast-forward merge from remote. Does NOT delete local-only skills — it only adds/updates skills that exist in remote.
+- **Push** (`git pull --rebase` first, then push): Before pushing local changes, rebase on top of remote to avoid conflicts. This ensures the remote always has both machines' contributions.
 
 ## Setup
 
@@ -71,17 +79,59 @@ Copy the appropriate scripts from this skill's `scripts/` directory into `$HERME
 
 ### 4. Create cron jobs
 
-```bash
-# Linux/macOS — use .sh scripts (bash always available)
-hermes cron create "5m" --name "Skills Auto-Pull" --script skills-sync-pull.sh --no-agent
-hermes cron create "10m" --name "Skills Auto-Push" --script skills-sync-push.sh --no-agent
+The user's preferred setup (used in production):
 
-# Windows — use .py scripts (bash not on cron PATH)
-hermes cron create "every 60m" --name "Skills Auto-Pull" --script skills-sync-pull.py --no-agent
-hermes cron create "every 60m" --name "Skills Auto-Push" --script skills-sync-push.py --no-agent
+| Job | Frequency | Strategy | Script |
+|-----|-----------|----------|--------|
+| 📥 pull-skills | **Daily at 9:00** (`0 9 * * *`) | `git pull` — merge remote, **keep local unique skills** | `skills-sync-pull.sh` |
+| 📤 push-skills | **Every 60 min** (`60m`) | `git pull --rebase` → commit + push | `skills-sync-push-rebase.sh` |
+
+**Key principle**: pull and push use different strategies.
+- **Pull** (`git pull`, `--ff-only`): Fast-forward merge from remote. Does NOT delete local-only skills — it only adds/updates skills that exist in remote. **Stashes local changes first**, pulls, then restores them.
+- **Push** (`git pull --rebase` first, then push): Before pushing local changes, rebase on top of remote to avoid conflicts. **Auto-resolves conflicts with `--ours` (local version)** since local skills are the source of truth for the push machine. This ensures the remote always has both machines' contributions.
+
+Create both with `no_agent=true`:
+
+```bash
+# Use cronjob tool (not CLI) — the 'hermes cron create' CLI command may not exist
+# Instead, use the cronjob tool's create action with these parameters:
+
+# Pull: daily at 9am — simple git pull, keeps local-only skills
+cronjob(action='create',
+        name='📥 pull-skills',
+        schedule='0 9 * * *',
+        script='skills-sync-pull.sh',
+        no_agent=True,
+        repeat=0)
+
+# Push: every 60 min — rebase-first, then push local changes
+cronjob(action='create',
+        name='📤 push-skills',
+        schedule='60m',
+        script='skills-sync-push-rebase.sh',
+        no_agent=True,
+        repeat=0)
 ```
 
-Both jobs use `--no-agent` (script-only, zero tokens). They output nothing when there's no work to do. On Windows, longer intervals (60m) are recommended since git operations are slower.
+**Important**: New cron jobs default to `repeat=once`. You MUST set `repeat=0` either at creation time (as shown above) or update after:
+```bash
+hermes cron update <job-id> --repeat 0
+```
+
+**After Hermes restart, verify cron jobs are still `enabled=true` and `state=scheduled`**:
+```bash
+hermes cron list
+# If a job shows enabled=false and state=completed, re-enable it:
+hermes cron update <job-id> --schedule "0 9 * * *"  # re-schedule to reactivate
+```
+
+**Conflict resolution during push** (`skills-sync-push-rebase.sh`):
+The rebase-push script now includes automatic conflict resolution:
+1. Attempt `git pull --rebase origin master`
+2. On CONFLICT: identify conflicted files, resolve with `git checkout --ours` (local version is source of truth)
+3. `git add` resolved files, `git rebase --continue`
+4. If continue fails (unmerged paths remain), fall back to `git rebase --skip`
+5. After successful rebase, commit and push local changes
 
 ### 5. On the second machine
 
@@ -101,11 +151,15 @@ git clone <repo-url> skills
 4. Restore stashed changes
 5. Notify Hermes to reload skills
 
-**Push script** (`skills-sync-push.sh`):
-1. `cd $HERMES_HOME/skills`
-2. Check for changes (`git diff` + untracked files)
-3. If clean → exit silently (no output)
-4. If dirty → `git add -A`, commit with timestamp, `git push`
+**Push script** (uses rebase-first strategy — the user's preferred approach, see `references/rebase-push-strategy.md`):
+
+The push script (`skills-sync-push-rebase.sh`) follows this sequence to avoid losing either machine's changes:
+1. `git pull --rebase origin master` — sync remote changes first, re-apply local commits on top
+2. Check for local changes (`git diff` + untracked files). If clean → exit silently
+3. If dirty → `git add -A`, commit with timestamp
+4. `git push origin master` — push local-unique skills to remote
+
+The key difference from a simple `git push` is **Step 1**: the rebase-first approach ensures local and remote changes merge cleanly before pushing. This prevents the "rejected" error when the remote has diverged.
 
 ## Pitfalls
 
@@ -113,11 +167,30 @@ git clone <repo-url> skills
 - **China network / GitHub blocked**: Use a local proxy (Clash/V2Ray). Configure: `git config --global http.proxy http://127.0.0.1:PORT`. See `references/git-proxy.md` for full guide.
 - **Cron jobs need repeat=forever**: Newly created cron jobs default to `once`. Update them: `hermes cron edit <job_id>` and set repeat to 0 (forever).
 - **Script-only jobs are silent by design**: With `no_agent=true`, empty stdout means no message is delivered. This is intentional — you don't want a notification every 5 minutes when nothing changed.
+- **Cron jobs silently accumulate `last_status=error` after Hermes restart**: After a Hermes Desktop restart or profile change, cron jobs may stop running silently — they appear in the list with `last_status: error` and `enabled: false`. Always verify after a restart: `hermes cron list`. If jobs show as `completed`/`error` instead of `scheduled`, re-enable them with `hermes cron update <job_id> --schedule "..."` (set the schedule to re-activate).
 - **Git authentication**: The machine must have Git push access to the remote (SSH key or credential helper). Without it, push silently fails.
 - **GitHub token expiration (classic PAT)**: Classic personal access tokens expire. When this happens, push fails with `remote: Permission denied ... 403`. Fix: generate a new token at https://github.com/settings/tokens with `repo` scope, then update the remote URL: `git remote set-url origin "https://USER:NEW_TOKEN@github.com/USER/REPO"`. The token embedded in the remote URL overrides the credential helper.
 - **Conflicts**: The pull script uses `git stash` before pull and `git stash pop` after. If the pop produces a conflict, the local changes are preserved in the stash for manual resolution.
 - **Windows path separators**: Always use `$HERMES_HOME` not `~/.hermes` in scripts. On Windows, `HERMES_HOME` defaults to `%LOCALAPPDATA%\\hermes`, not `~/.hermes`.
 - **Windows: use .py scripts, not .sh**: The cron scheduler does not have bash on its PATH. Scripts must be Python (`.py`) on Windows. The `.sh` versions are for Linux/macOS only.
+- **Cron jobs go `enabled: false` after error state**: When a cron job fails (e.g. due to network), Hermes may mark it as `enabled: false` and move it to `completed` state. The job stops running entirely — no retry. To recover: `hermes cron update <job_id> --enabled true`. Monitor with `hermes cron list` after any network outage or Hermes Desktop restart.
+- **Initial setup on second machine needs proxy for git clone**: During `git clone` of the skills repo, GitHub may be blocked. Use `git -c http.proxy=... clone ...` or ensure VPN is active before running the clone command.
+
+## Linked Files
+
+This skill ships with the following scripts and references:
+
+**Scripts:**
+- `scripts/skills-sync-pull.sh` — Pull script (standard `git pull --ff-only`)
+- `scripts/skills-sync-push.sh` — Simple push script (no rebase)
+- `scripts/skills-sync-push-rebase.sh` — **User's preferred** push script (rebase-first strategy)
+- `scripts/skills-sync-pull.py` — Windows variant of pull script
+- `scripts/skills-sync-push.py` — Windows variant of push script
+
+**References:**
+- `references/rebase-push-strategy.md` — Why rebase-first and conflict resolution
+- `references/git-proxy.md` — Git proxy config for China/GitHub access
+- `references/sqlalchemy-pitfalls.md` — (unrelated, legacy)
 
 ## Verification
 
@@ -126,10 +199,13 @@ git clone <repo-url> skills
 hermes cron list
 
 # Test push script manually (Linux/macOS)
+bash "$HERMES_HOME/scripts/skills-sync-push-rebase.sh"
+
+# Test push script manually (simple variant)
 bash "$HERMES_HOME/scripts/skills-sync-push.sh"
 
-# Test push script manually (Windows)
-python "$HERMES_HOME/scripts/skills-sync-push.py"
+# Test pull script manually
+bash "$HERMES_HOME/scripts/skills-sync-pull.sh"
 
 # Check remote has the latest
 git -C "$HERMES_HOME/skills" log --oneline -3

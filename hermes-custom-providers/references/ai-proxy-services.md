@@ -28,6 +28,20 @@ Centralized proxy services that provide a single API key with access to multiple
 - **Best for**: One key for all models, widest selection
 - **Pitfall**: No free tier; models from third-party suppliers may occasionally error
 
+### ASLNet (api.aslnet.cloud)
+
+- **Status**: ✅ Active (2026-07)
+- **Pricing**: Per-token, RMB-based
+- **Model coverage (GPT-5.x focused)**:
+  - gpt-5.6-sol (LiveBench 编码 83.9, Agentic 65.6)
+  - gpt-5.6-luna (LiveBench 编码 82.9, 代码补全 87.0)
+  - gpt-5.6-terra (LiveBench 编码 78.2, Agentic 68.0)
+  - gpt-5.6, gpt-5.5, gpt-5.4, gpt-5.4-mini
+  - codex-auto-review
+- **Format**: OpenAI-compatible (`/v1/chat/completions`)
+- **Best for**: GPT-5.x coding models for Chinese users
+- **Pitfall**: No Claude/Gemini/DeepSeek models — GPT-only lineup
+
 ### AIHubMix (aihubmix.com)
 
 - **Status**: ❌ Connection timeout (may be offline/shut down)

@@ -1,8 +1,8 @@
 ---
 name: hermes-custom-provider
 description: "Add any OpenAI-compatible API provider (Agnes AI, custom endpoints, etc.) to Hermes Agent via hermes auth + config."
-version: 1.0.0
-author: Hermes Agent
+version: 1.1.0
+author: Hermes Agent + agent
 tags: [hermes, provider, configuration, api-key, custom-endpoint]
 ---
 
@@ -32,6 +32,20 @@ hermes config set model.provider deepseek
 hermes config set model.base_url "https://api.deepseek.com"
 hermes config set model.default "deepseek-v4-pro"
 ```
+
+## Dual-mode / workflow-specific provider switching
+
+Users often want **different models for different task types** (e.g. deepseek for chat, gpt-5.5 for coding). Since Hermes uses one active model per session, the pattern is:
+
+1. Save both provider-model pairs as known commands
+2. On switch: `hermes config set model.provider` + `hermes config set model.default`
+3. **Must `/reset` (new session) for config change to take effect**
+
+### Pitfalls for dual-mode switching
+
+- **`model.base_url` leakage**: when switching between providers with different base URLs, the old `model.base_url` may persist, causing 404 errors. Either explicitly set `model.base_url` to empty string (built-in providers) or the correct URL (custom providers). See `references/dual-mode-switching.md` for a full worked example.
+- **Session bound**: config changes never apply mid-session. The user must type `/reset` or start a new session. Tell the user explicitly — don't assume they know.
+- **Save user's preference to memory**: if the user establishes a dual-mode pattern (e.g. "切编码" = coding model, "切聊天" = chat model), save the trigger phrases + exact config values to memory so future sessions act on the trigger without re-asking.
 
 ## Adding MULTIPLE providers without changing the active model
 
@@ -88,6 +102,13 @@ Notes:
   ```
   The `hermes model` command is your diagnostic tool — if it says "Unknown provider" for your `custom:`, that's the sign to switch to the built-in equivalent.
 - **Provider/model changes require a new session** (`/new` or restart the CLI) to take effect. The `/model` slash command can switch the model name mid-session, but changing `model.provider` is a config-level change that only loads at startup.
+- **⚠️ `model.base_url` from a previous provider can leak into the new provider and cause 404.** When switching from a local/custom endpoint (e.g. Ollama at `http://localhost:11434/v1`) to a built-in provider (e.g. `zai`), the old `model.base_url` stays in config — Hermes then sends requests to the OLD endpoint with the NEW model name, resulting in `HTTP 404: model 'xxx' not found`. Fix: explicitly set `model.base_url` to empty or the correct URL when switching providers:
+  ```bash
+  # Before switching to a built-in provider, clear the base_url:
+  hermes config set model.base_url ""
+  ```
+  For built-in providers (`zai`, `deepseek`, `openrouter` etc.), the base_url is hardcoded in Hermes — set it to empty string to use the default. For custom providers, set it to the correct endpoint.
+- **Always verify with curl or the verification script AFTER config changes, not before.** A successful curl to the API endpoint proves the key + model name are correct — if the same model still fails in Hermes afterward, the problem is config state (base_url leakage, wrong provider name), not the provider itself.
 - **Test the endpoint with curl first** before configuring in Hermes, to verify the key and base URL are correct:
   ```bash
   curl -s "https://<api-host>/v1/chat/completions" \
@@ -112,6 +133,15 @@ After adding a provider, always PROVE the key + base_url + model name actually w
 - **Probe model-name validity with a real request**: HTTP `404` = wrong model name; HTTP `429` = name is VALID but the endpoint is currently overloaded. Do NOT conclude a model name is wrong from a 429 — it means "correct name, try later". (Seen live: `GLM-4.6V-Flash` returned 429 "访问量过大" but the name was correct; `GLM-4.1V-Thinking-Flash` returned 200.)
 - **Thinking models** (e.g. Zhipu `GLM-4.1V-Thinking-Flash`) emit a ` ` … ` ` block then a ` ` answer. If you cap `max_tokens` too low (e.g. 60) the response truncates mid-` ` with `finish_reason:"length"` and looks "broken" — that is YOUR test limit, not the model. Use a larger cap (e.g. 400) to confirm a clean `finish_reason:"stop"`.
 - **Re-verify before switching the active model to a new name**: if the probe shows 429, keep the config but warn the user the endpoint is overloaded; don't claim the model is unusable.
+
+## Local LLM: Ollama
+
+For offline environments, Ollama provides an OpenAI-compatible API at `http://localhost:11434/v1`.
+
+See `references/ollama-local-provider.md` for:
+- Full setup steps (Windows/Linux)
+- Recommended models by hardware (Qwen3, GLM4, DeepSeek-R1)
+- Known limitations (tool calling, CPU speed, vision support)
 
 ## Real-world example: Agnes AI
 

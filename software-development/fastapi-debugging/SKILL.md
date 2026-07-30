@@ -69,6 +69,10 @@ Base.metadata.create_all(bind=engine)
 | 15 | 前端筛选项字段名 ≠ 后端参数名 | 前端筛选输入无响应（无报错） | 前端 `filters[{field:\"X\"}]` → URL `?X=val` → 后端必须有同名 `X` 参数 |
 | 16 | Seed 数据 status 不合 pattern | 创建时报 422 或查询时 500 | 创建前用 `re.match(pattern, val)` 预检所有状态值 |
 | 17 | 前端下拉选项与后端 Schema 状态值不同步 | 前端下拉缺选项但后端支持 | 对比后端 `pattern`/`Literal` 与前端 `fields` `select` 数组 |
+| 18 | TestClient 未触发 startup 初始化 | 测试时报 `sqlite3.OperationalError: no such table`，但 uvicorn 正常启动 | 用 `with TestClient(app) as client:` 触发生命周期；或在测试夹具/导入处显式 `init_db()`；不要假设全局 `client = TestClient(app)` 一定运行 startup |
+| 19 | 中文危险指令未被 SQL 安全正则拦截 | NL2SQL 对“删除所有客户数据”没有拒绝，返回空结果或误查询 | SQL 安全校验同时覆盖英文关键字和中文动词：`删除|清空|删掉|移除所有`；拒绝后返回结构化提示行，便于前端/测试展示 |
+| 20 | `scalar_one_or_none()` 查询待办/最新记录 | 多条待办时报 `MultipleResultsFound` | 对“最新一条/任选一条待处理”用 `.scalars().first()`；只有业务上必须唯一时才用 one-or-none |
+| 21 | 在 Hermes venv 里安装项目 requirements | pip 可能降级 Hermes 依赖，引发兼容冲突 | 优先使用项目 venv；若必须在 Hermes venv 验证，requirements 固定到 Hermes 兼容版本，避免降级 `pydantic/fastapi/starlette/pytest` |
 
 ## 辅助工具：ORM 转 JSON（serialize）
 

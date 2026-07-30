@@ -1,13 +1,13 @@
 ---
 name: chinese-ai-providers
-description: "Chinese AI API providers (Zhipu/GLM, DashScope, DeepSeek) — pricing, censorship, function calling, and Hermes integration patterns."
-version: 1.0.0
+description: "Chinese AI API providers (Zhipu/GLM, DashScope, DeepSeek, Moonshot/Kimi) — pricing, censorship, function calling, and Hermes integration patterns."
+version: 1.1.0
 author: Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
 metadata:
   hermes:
-    tags: [AI-Provider, Zhipu, GLM, DashScope, DeepSeek, Vision]
+    tags: [AI-Provider, Zhipu, GLM, DashScope, DeepSeek, Kimi, Moonshot, Vision]
 ---
 
 # Chinese AI API Providers
@@ -21,6 +21,47 @@ Reference for evaluating and integrating Chinese AI API providers. Covers ZhipuA
 | ZhipuAI | `https://open.bigmodel.cn/api/paas/v4/` | Free vision, function calling, 1M context |
 | DashScope | `https://dashscope.aliyuncs.com/compatible-mode/v1` | Stable vision |
 | DeepSeek | `https://api.deepseek.com` | Strong coding, main chat |
+| **Moonshot/Kimi** | `https://api.moonshot.cn/v1` | Best open-source coding (K3: 81.4), OpenAI-compatible |
+
+## Moonshot AI (Kimi) API Platform
+
+> **Critical distinction**: Kimi **desktop/Web membership** (kimi.moonshot.cn) and Kimi **API platform** (platform.kimi.com) are completely separate. Membership subscription does NOT include API credits, and API credits do NOT unlock desktop features. They are independently billed.
+
+### API Platform Registration
+- **URL**: https://platform.kimi.com
+- **Auth**: Phone number registration (Chinese phone)
+- **Payment**: Prepaid balance (按量付费), RMB via WeChat/Alipay
+- **OpenAI-compatible**: Yes — uses standard `/v1/chat/completions` endpoint
+
+### Model Lineup & Pricing (per 1M tokens)
+
+| Model | Type | Input | Output | Cache Hit | Best For |
+|-------|------|-------|--------|-----------|----------|
+| **K3** | Flagship | ¥20.00 | ¥100.00 | ¥2.00 | Deep reasoning, complex coding |
+| **K2.7 Code** | Coding specialist | ¥6.50 | ¥27.00 | ¥1.30 | Daily coding tasks |
+| **K2.6** | General purpose | ¥6.50 | ¥27.00 | ¥1.10 | General chat, vision |
+
+### LiveBench Coding Scores (2026-06-25)
+- **Kimi K3**: Coding 81.4 — **#1 open-source**, #8 overall
+- **Kimi K2.6 Thinking**: Coding 78.6
+- **Kimi K2.7 Code**: Coding 74.0 — positioned as "code model" but underperforms K3
+
+### Hermes Integration
+```bash
+# As custom provider
+hermes config set custom_providers '[{"name":"Kimi","base_url":"https://api.moonshot.cn/v1","api_key":"YOUR_KEY"}]'
+# Model name: kimi-k3 (verify via GET /v1/models)
+```
+Note: API platform and desktop app use DIFFERENT accounts even if same phone number — API key is generated in platform.kimi.com user center.
+
+### Desktop App (NSIS Silent Install to D: drive)
+```bash
+cmd.exe /c "start /wait C:\Users\Windows\Downloads\kimi_X.X.X.exe /S /D=D:\Program Files\Kimi"
+# NSIS installer. /S = silent, /D= must be LAST parameter, no quotes on path.
+```
+Shortcut: `D:\Program Files\Kimi\Kimi.exe`
+
+See `references/kimi-api-pricing.md` for full scraped pricing page.
 
 ## Adding to Hermes
 

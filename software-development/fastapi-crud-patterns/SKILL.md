@@ -31,6 +31,16 @@ FastAPI + SQLAlchemy + Pydantic 三层分离标准模式，以及学习过程中
 
 **关键原则：** database.py 被所有人引用，但它自己不引用任何人 —— 这是打破循环导入的核心。
 
+## 从参考项目优化简易 FastAPI 项目
+
+当用户要求“以某个成熟项目为参考”优化当前简易项目时，优先迁移**可低风险落地的工程层能力**，不要一次性照搬整个目录树：
+
+1. 先对比参考项目的稳定横切层：`core/config.py`、`core/response.py`、`core/permissions.py`、文件解析服务、异常处理、路由聚合。
+2. 对当前项目做小步迁移：新增轻量 `core/config.py`，让 `database.py` 从 settings 读取 `DATABASE_URL`；新增 `core/response.py`/`core/permissions.py` 作为后续标准化基础。
+3. 把 `main.py` 中的文件解析、业务规则等膨胀逻辑抽到服务文件，例如 `file_parser.py`、`services.py`，保持入口文件只负责路由装配。
+4. 保持旧接口响应形状不破坏已有前端和测试；统一响应体可以先作为新增接口/后续迁移的工具，不要强行全量改造。
+5. 每一轮迁移后立即跑 `pytest`，再重启 uvicorn 并做 1-2 个真实 HTTP 探针确认服务可用。
+
 ## 循环导入问题（高频坑）
 
 **症状：** Swagger 测试返回 `500 Undocumented Error: Internal Server Error`
@@ -106,6 +116,20 @@ emp = db.execute(
 from typing import cast
 return cast(Employment, emp)
 ```
+
+## Requirements-Driven Prototype Hardening
+
+When asked to optimize a simple FastAPI prototype against a developer requirements specification, treat traceability and closed-loop workflows as first-class deliverables. Add missing source/audit/readback tables and endpoints before cosmetic refactors: customer source records, judgment records, knowledge chunks, operation logs, notifications, complaint handling, and psychological alert follow-up. Preserve existing response shapes unless the user explicitly wants a breaking redesign. See `references/requirements-driven-fastapi-ai-platform.md` for a concrete pattern and pitfalls from an education-service AI platform.
+
+## Dify Workflow AI Adapter
+
+When a project has rule-based AI features and the user asks to implement them through Dify workflows, add a centralized Dify client and route every AI capability through “Dify first, local fallback” service functions. Keep credentials in env vars only, preserve backend ownership of DB writes/audit logs, and keep NL2SQL protected by backend SELECT-only validation. See `references/dify-workflow-ai-adapter.md` for the concrete pattern.
+
+For Dify 1.16 self-hosted, prefer the official Service API shape: each Workflow App has its own `app-*` API key and `/v1/workflows/run` runs that app's default published workflow. Do not model it as one global API key plus multiple workflow IDs unless the deployment explicitly supports that. If creating workflow records programmatically, verify control-panel compatibility as well as API execution; Dify expects `kind='standard'`, serialized variable stores such as `conversation_variables`/`rag_pipeline_variables` as `{}`, and no stale `#sys.query#` references in generated nodes. See `references/dify-116-workflow-app-key.md` for the concrete pitfall checklist.
+
+## FastAPI Frontend Template Preview
+
+When asked to adapt/find a frontend template for a FastAPI prototype, create a non-destructive preview route first (for example `/template-preview`) using a domain-appropriate admin/dashboard template and wire it to real APIs before replacing the homepage. See `references/fastapi-frontend-template-preview.md`.
 
 ## 创建 vs 修改的 Schema 设计
 
