@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>Agent平台矩阵对比</title></head>
+<body>
+<style>
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f7f7f8;
+  --border: #e4e4e7;
+  --border-strong: #d4d4d8;
+  --text: #1a1a2e;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+  --brand: #7c3aed;
+  --brand-light: #ede9fe;
+  --accent: #0ea5e9;
+  --accent-light: #e0f2fe;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "JetBrains Mono", monospace;
+  --text-caption: 12px/18px var(--font-sans);
+  --text-code: 13px/20px var(--font-mono);
+  --text-body: 14px/20px var(--font-sans);
+  --text-title: 16px/24px var(--font-sans);
+  --weight-medium: 500;
+  --weight-strong: 700;
+  --radius: 8px;
+  --radius-card: 12px;
+  --spacer-4: 4px;
+  --spacer-8: 8px;
+  --spacer-12: 12px;
+  --spacer-16: 16px;
+  --spacer-20: 20px;
+  --spacer-24: 24px;
+}
+:root[data-widget-theme="dark"] {
+  --bg: #0f0f17;
+  --surface: #1a1a2e;
+  --surface-muted: #252537;
+  --border: #2e2e42;
+  --border-strong: #3e3e52;
+  --text: #f4f4f5;
+  --text-secondary: #c4c4c8;
+  --text-muted: #81818a;
+  --brand: #a78bfa;
+  --brand-light: #2d2150;
+  --accent: #38bdf8;
+  --accent-light: #1a3a52;
+}
+
+[data-dynamic-ui-widget] {
+  font: var(--text-body);
+  color: var(--text);
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.widget-header {
+  padding: var(--spacer-16) var(--spacer-20);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+.widget-title {
+  font: var(--weight-strong) var(--text-title) var(--font-sans);
+  margin: 0 0 var(--spacer-4) 0;
+}
+.widget-subtitle {
+  font: var(--text-caption);
+  color: var(--text-muted);
+  margin: 0;
+}
+.tab-bar {
+  display: flex;
+  gap: var(--spacer-4);
+  padding: var(--spacer-8) var(--spacer-16) 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+.tab-btn {
+  padding: var(--spacer-8) var(--spacer-16);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: var(--weight-medium) var(--text-caption);
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.tab-btn:hover { color: var(--text-secondary); background: var(--surface); }
+.tab-btn.active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  background: var(--surface);
+}
+.tab-panel { display: none; padding: var(--spacer-16); }
+.tab-panel.active { display: block; }
+
+.cmp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--text-caption);
+}
+.cmp-table th, .cmp-table td {
+  padding: var(--spacer-8) var(--spacer-12);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.cmp-table th {
+  font: var(--weight-strong) var(--text-caption);
+  color: var(--text-secondary);
+  background: var(--surface-muted);
+  position: sticky;
+  top: 0;
+  white-space: nowrap;
+}
+.cmp-table td:first-child {
+  font: var(--weight-medium) var(--text-caption);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.cmp-table tr:hover td { background: var(--surface-muted); }
+.vendor-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: var(--text-caption);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+.v-google { background: rgba(66,133,244,0.12); color: #4285f4; }
+.v-meta { background: rgba(8,131,149,0.12); color: #088395; }
+.v-ms { background: rgba(0,120,212,0.12); color: #0078d4; }
+.v-aws { background: rgba(255,153,0,0.12); color: #d97706; }
+.v-ali { background: rgba(255,102,0,0.12); color: #e25822; }
+.v-bytedance { background: rgba(0,0,0,0.08); color: var(--text-secondary); }
+:root[data-widget-theme="dark"] .v-bytedance { background: rgba(255,255,255,0.08); }
+
+.term-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacer-12);
+}
+.term-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacer-12) var(--spacer-16);
+  background: var(--surface);
+}
+.term-concept {
+  font: var(--weight-strong) var(--text-body);
+  color: var(--brand);
+  margin: 0 0 var(--spacer-8) 0;
+}
+.term-mapping {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacer-4);
+}
+.term-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacer-8);
+  font: var(--text-caption);
+}
+.term-vendor {
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+  min-width: 80px;
+  white-space: nowrap;
+}
+.term-word {
+  font: var(--text-code);
+  color: var(--text);
+  background: var(--surface-muted);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacer-12);
+}
+.arch-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--spacer-12) var(--spacer-16);
+  background: var(--surface);
+}
+.arch-card-title {
+  font: var(--weight-strong) var(--text-body);
+  margin: 0 0 var(--spacer-4) 0;
+}
+.arch-card-desc {
+  font: var(--text-caption);
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+.arch-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font: var(--text-caption);
+  font-weight: var(--weight-medium);
+  margin-bottom: var(--spacer-8);
+}
+.focal-highlight {
+  border-color: var(--brand);
+  border-width: 2px;
+}
+</style>
+
+<div data-dynamic-ui-widget data-template="compact-table-visual" data-mounted="true">
+  <div class="widget-header">
+    <h3 class="widget-title">超级大厂 Agent 平台对比矩阵</h3>
+    <p class="widget-subtitle">Google · Meta · Microsoft · Amazon · Alibaba Cloud · ByteDance — 2025-2026</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="0">核心架构对比</button>
+    <button class="tab-btn" data-tab="1">专业化词汇映射</button>
+    <button class="tab-btn" data-tab="2">约束与隔离体系</button>
+  </div>
+
+  <div class="tab-panel active" data-panel="0">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th><span class="vendor-tag v-google">Google</span></th>
+          <th><span class="vendor-tag v-meta">Meta</span></th>
+          <th><span class="vendor-tag v-ms">Microsoft</span></th>
+          <th><span class="vendor-tag v-aws">Amazon</span></th>
+          <th><span class="vendor-tag v-ali">Alibaba</span></th>
+          <th><span class="vendor-tag v-bytedance">ByteDance</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>编排范式</td>
+          <td>ADK + A2A Agent Card 发现</td>
+          <td>Llama Stack Session/Turn</td>
+          <td>SK Plugin + AutoGen GroupChat</td>
+          <td>Supervisor + Swarms 竞协</td>
+          <td>Leader-Worker DAG 编排</td>
+          <td>LangGraph 状态机 + task() 派发</td>
+        </tr>
+        <tr>
+          <td>技能管理</td>
+          <td>Agent Card (JSON) 声明式</td>
+          <td>Tool Calling + Agentic Toolkit</td>
+          <td>Plugin (KernelFunction 注册)</td>
+          <td>MCP Tool + Action Group</td>
+          <td>Skill Registry 热更新审核</td>
+          <td>SKILL.md 动态加载 + 自演化 RFC</td>
+        </tr>
+        <tr>
+          <td>Agent 通信</td>
+          <td>A2A (自有标准, Agent Card)</td>
+          <td>Llama Stack 内部 Session</td>
+          <td>SK ↔ AutoGen 运行时收敛</td>
+          <td>A2A + MCP 双协议</td>
+          <td>A2A Registry + Matrix 协议</td>
+          <td>task() 原语 + LangGraph 事件</td>
+        </tr>
+        <tr>
+          <td>隔离模型</td>
+          <td>Vertex AI Agent Engine (Serverless)</td>
+          <td>进程级 Session 隔离</td>
+          <td>AKS + 语义内核隔离</td>
+          <td>AgentCore microVM per session</td>
+          <td>实例级资源隔离 + RAM 角色</td>
+          <td>Docker AIO Sandbox (shell+浏览器+FS)</td>
+        </tr>
+        <tr>
+          <td>记忆体系</td>
+          <td>Vertex AI Memory + Session State</td>
+          <td>Session Context + Vector DB</td>
+          <td>SK Memory Store (Volatile/Semantic)</td>
+          <td>Bedrock Session Manager</td>
+          <td>AgentScope 短期+长期记忆</td>
+          <td>跨会话持久化 + 用户画像</td>
+        </tr>
+        <tr>
+          <td>部署模式</td>
+          <td>全托管 Serverless</td>
+          <td>开源自托管 + Llama Stack SDK</td>
+          <td>Azure 全托管 + 开源双轨</td>
+          <td>Bedrock 全托管 + microVM</td>
+          <td>容器服务 + 云原生混部</td>
+          <td>本地优先 + K8s + MIT 开源</td>
+        </tr>
+        <tr>
+          <td>模型策略</td>
+          <td>Gemini 原生 + 第三方</td>
+          <td>Llama 4 系列自研</td>
+          <td>Azure OpenAI + 多模型路由</td>
+          <td>Claude/Llama/Nova 多模型</td>
+          <td>通义千问 + 适配层多模型</td>
+          <td>Model-Agnostic (Doubao/DeepSeek/Claude)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-panel" data-panel="1">
+    <div class="term-grid">
+      <div class="term-card">
+        <p class="term-concept">技能 / 能力单元</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Agent Card</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">Plugin</span></div>
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">Action Group</span></div>
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Skill Registry</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">SKILL.md</span></div>
+          <div class="term-row"><span class="term-vendor">Anthropic</span><span class="term-word">Tool (MCP)</span></div>
+        </div>
+      </div>
+      <div class="term-card">
+        <p class="term-concept">编排器 / 协调者</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">Supervisor Agent</span></div>
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Leader</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">Orchestrator</span></div>
+          <div class="term-row"><span class="term-vendor">Meta</span><span class="term-word">Meta-Agent</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">Lead Agent</span></div>
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Root Agent</span></div>
+        </div>
+      </div>
+      <div class="term-card">
+        <p class="term-concept">约束 / 边界控制</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Constraint Infra</span></div>
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Guardrail</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">Policy / Filter</span></div>
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">Guardrail</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">Sandbox Boundary</span></div>
+          <div class="term-row"><span class="term-vendor">Anthropic</span><span class="term-word">Hardline / Approval</span></div>
+        </div>
+      </div>
+      <div class="term-card">
+        <p class="term-concept">执行器 / 子智能体</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">Sub-agent (Swarm)</span></div>
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Worker</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">Agent (SK)</span></div>
+          <div class="term-row"><span class="term-vendor">Meta</span><span class="term-word">Graph Agent</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">Sub-agent (task())</span></div>
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Sub-agent</span></div>
+        </div>
+      </div>
+      <div class="term-card">
+        <p class="term-concept">运行时 / 沙箱</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">AgentCore Runtime</span></div>
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Agent Runtime</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">AIO Sandbox</span></div>
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Agent Engine</span></div>
+          <div class="term-row"><span class="term-vendor">Meta</span><span class="term-word">Llama Stack Runtime</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">Kernel Process</span></div>
+        </div>
+      </div>
+      <div class="term-card">
+        <p class="term-concept">Harness / 治理层</p>
+        <div class="term-mapping">
+          <div class="term-row"><span class="term-vendor">Alibaba</span><span class="term-word">Agent Governance</span></div>
+          <div class="term-row"><span class="term-vendor">Google</span><span class="term-word">Agent Engine Mgmt</span></div>
+          <div class="term-row"><span class="term-vendor">Amazon</span><span class="term-word">AgentCore Mgmt</span></div>
+          <div class="term-row"><span class="term-vendor">Microsoft</span><span class="term-word">SK Orchestration</span></div>
+          <div class="term-row"><span class="term-vendor">ByteDance</span><span class="term-word">SuperAgent Harness</span></div>
+          <div class="term-row"><span class="term-vendor">Industry</span><span class="term-word">Harness = Model + Constraint</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" data-panel="2">
+    <div class="arch-grid">
+      <div class="arch-card focal-highlight">
+        <span class="arch-badge" style="background:var(--brand-light);color:var(--brand);">最完善</span>
+        <p class="arch-card-title">Alibaba Cloud</p>
+        <p class="arch-card-desc">四层约束栈：模型网关(Higress) → 运行时行为(Prompt资产+AgentLoop评估) → 规则编排(四大Registry+EventBridge) → 效果可观测(UModel拓扑)。零信任安全模型 + Human-in-the-Loop。</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-badge" style="background:var(--accent-light);color:var(--accent);">全托管</span>
+        <p class="arch-card-title">Amazon Bedrock</p>
+        <p class="arch-card-desc">AgentCore microVM 每会话隔离 + Guardrails 策略引擎 + A2A/MCP 双协议。Swarm 模式支持竞协子智能体。Supervisor 统一编排与评分。</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-badge" style="background:var(--accent-light);color:var(--accent);">标准化</span>
+        <p class="arch-card-title">Google Vertex AI</p>
+        <p class="arch-card-desc">A2A 协议开创者，Agent Card 声明式能力发现。Agent Engine Serverless 部署 + ADK 编排。强调跨框架互操作与开放生态。</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-badge" style="background:rgba(0,120,212,0.1);color:#0078d4;">双轨融合</span>
+        <p class="arch-card-title">Microsoft</p>
+        <p class="arch-card-desc">SK Plugin 系统 + AutoGen GroupChat 收敛为统一 Agent Framework。KernelFunction 注册即约束，Process 模型管理状态流转。Azure Policy 集成。</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-badge" style="background:rgba(8,131,149,0.1);color:#088395;">开源生态</span>
+        <p class="arch-card-title">Meta Llama Stack</p>
+        <p class="arch-card-desc">Session/Turn 原语 + Agentic Toolkit 标准化。从模型训练转向生态编排，In-Flight Inference 降低延迟。社区驱动的技能发现。</p>
+      </div>
+      <div class="arch-card">
+        <span class="arch-badge" style="background:rgba(255,102,0,0.1);color:#e25822;">本地优先</span>
+        <p class="arch-card-title">ByteDance DeerFlow</p>
+        <p class="arch-card-desc">Docker AIO Sandbox 完整隔离(shell+浏览器+FS)。SKILL.md 格式 + 自演化 RFC。LangGraph 状态机编排，Model-Agnostic。MIT 开源但存在合规审查需求。</p>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
