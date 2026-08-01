@@ -135,6 +135,51 @@ curl -s "https://api.example.com/v1/models" \
   PATH; use `terminal()` directly
 - **Config file is TOML** — not JSON. Strings use `"..."`, tables use
   `[section]` syntax, booleans are lowercase (`true`/`false`)
+- **`remote_plugin` feature triggers auth errors with third-party providers**
+  — Codex tries to fetch OpenAI's remote plugin catalog on startup.
+  If using a third-party provider (ASLNet, Ollama, etc.) and ChatGPT auth
+  is unavailable, Codex logs `chatgpt authentication required for remote
+  plugin catalog`. Disable remote plugin fetching:
+  ```bash
+  codex features disable remote_plugin
+  ```
+  This keeps local plugins (browser, pdf, documents, etc.) working fine;
+  only the remote catalog search is suppressed.
+- **Plugins unavailable → use MCP servers instead** — Without remote plugin
+  catalog access, tools like Netlify deploy or Slack integration are
+  unavailable as plugins. Workaround: install the tool's official MCP server
+  and configure it as a Codex `[mcp_servers]` entry in `config.toml`:
+  ```toml
+  [mcp_servers.servicename]
+  command = "node"
+  args = ["path/to/mcp-server.js"]
+  startup_timeout_sec = 30
+  ```
+  
+  MCP servers use **stdio protocol** — verify with a JSON-RPC initialize call:
+  ```bash
+  echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' \
+    | node /path/to/mcp-server.js | head -1
+  ```
+  
+  This pattern works for any MCP-compatible tool and doesn't require OpenAI
+  auth. See `references/netlify-mcp-setup.md` for a complete Netlify example.
+
+- **TOML section corruption via `patch` tool** — The `patch` tool's fuzzy
+  matching can merge adjacent `[section]` headers when the matched context
+  includes nearby section boundaries. This produces orphaned keys under the
+  wrong section. After editing `config.toml`, always validate:
+  ```bash
+  python -c "import tomllib; f=open('$CODEX_HOME/config.toml','rb'); tomllib.load(f); print('Valid TOML'); f.close()"
+  ```
+  If validation fails, read the full file and look for orphaned keys — lines
+  that belong under one section but appear under another. The fix is to insert
+  the dropped `[section.header]` before them.
+
+- **MCP `[env]` block `${VAR}` syntax not supported** — Codex passes
+  `${NETLIFY_AUTH_TOKEN}` as a literal string, not an env var reference.
+  Set the env var at the system level (`setx`, `~/.bashrc`, or Hermes `.env`)
+  and omit the `[mcp_servers.<name>.env]` subsection entirely.
 
 ## Examples
 

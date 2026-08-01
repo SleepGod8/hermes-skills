@@ -152,6 +152,26 @@ def update_employment(db, employment_id, data: EmploymentUpdate):
 
 不用 `exclude_unset=True` 的话，所有 Optional 字段都会变成 `None`，把数据库里的值覆盖掉。
 
+## DAO update() 的 None 跳过陷阱
+
+**症状：** `dao.update(user, {"department": None, "department_path": None})` 后字段值没变。
+
+**根因：** BaseDAO.update() 默认跳过 None 值，防止意外覆盖已有数据：
+```python
+if v is None and not clear:
+    continue   # ← None 被静默跳过
+```
+
+**修复：** 传 `_clear=True` 标记告诉 DAO 允许置空：
+```python
+update_data["department"] = None
+update_data["department_path"] = None
+update_data["_clear"] = True
+dao.update(obj, update_data)
+```
+
+`_clear` 是 DAO 内部约定 key（被 pop 掉不写入数据库）。只在主动清空字段时使用，普通更新仍走默认行为（跳过 None）。
+
 ## 筛选查询模式
 
 在查询接口上加可选参数实现筛选，不传就不筛：

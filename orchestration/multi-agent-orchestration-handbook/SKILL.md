@@ -293,7 +293,7 @@ degradation:
 
 ### 10.1 超级大厂 Agent 平台对比矩阵
 
-见 `references/agent-platform-matrix.html` — 包含 Google/Meta/Microsoft/Amazon/Alibaba/ByteDance 六大平台的：
+见 `references/agent-platform-matrix.html`（交互式 HTML 版本）和 `references/agent-platform-matrix.md`（终端友好版）— 包含 Google/Meta/Microsoft/Amazon/Alibaba/ByteDance 六大平台的：
 - **核心架构对比**：编排范式、技能管理、Agent通信、隔离模型等 7 个维度
 - **专业化词汇映射**：6 类概念的跨厂商术语对照（技能/编排器/约束/执行器/运行时/Harness）
 - **约束与隔离体系**：各平台沙箱和安全策略详情
