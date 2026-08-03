@@ -71,8 +71,47 @@ Observed: C2C messages flowed (13:41–13:58), then a full day of zero deliverie
 4. 功能配置/发布上架: platform requires ≥1 configured feature before 提审; "已配置0个功能" is normal for sandbox testing but review gates on it
 5. Restart gateway with a fresh Identify (kill process, `hermes gateway run --replace` — a Resume may carry stale session state)
 
+## ✅ VERIFIED (2026-07-20): minimal config is the fix that worked
+
+After a full day of C2C silence, the fix that actually restored QQ replies was **REMOVING every extra policy flag** and going back to the minimal config — identical to the user's other machine that "just works" with no QQ-platform-side settings:
+
+```yaml
+platforms:
+  qqbot:
+    enabled: True
+    app_id: 1905221985
+    client_secret: <secret>
+    extra:
+      app_id: 1905221985
+      client_secret: <secret>
+    dm_policy: pairing
+    # NO group_policy, NO allow_all — leave them unset/empty
+```
+
+**What did NOT help / actively hurt:**
+- Setting `dm_policy: open` / `group_policy: open` → gateway refuses to start unless `QQ_ALLOW_ALL_USERS=true` is actually picked up by the process. Writing it to `~/.hermes/.env` did **NOT** get picked up by the gateway process → still `Refusing to start` → then `qqbot.enabled` was silently flipped to `False` when the policy keys were cleared with empty strings.
+- `allow_all: True` in config did not enable messaging; user's working machine has none of it.
+
+**Restore sequence that worked:**
+```bash
+hermes config set platforms.qqbot.enabled "true"        # check it didn't flip to False
+hermes config set platforms.qqbot.dm_policy "pairing"
+hermes config set platforms.qqbot.group_policy ""       # clear
+hermes config set platforms.qqbot.allow_all ""          # clear
+hermes gateway run --replace
+```
+Then confirm in logs: `✓ qqbot connected` + `Ready, session_id=...` + **fresh `inbound message: platform=qqbot`** after the user sends.
+
+**QQ group chat is NOT supported for AIGC bots** (QQ platform restriction, 2026-07): "暂不支持 AIGC 机器人进入社群场景" — the q.qq.com 沙箱配置 page shows 群配置 as 暂不支持. Do not chase group_policy for AIGC bots; C2C (private message) is the working channel. QQ 频道 (guild/channel) config exists separately on the platform and is the only community-ish surface.
+
 ## Pitfalls
 
 - `hermes gateway run` (no `--replace`) fails with "Another gateway instance is already running (PID ...)" when the lock file survives a killed process — always use `--replace` after killing.
 - `hermes gateway restart/stop` are blocked from inside the gateway process tree — kill externally + `--replace` instead.
 - After killing a process, the Desktop GUI logs `render-process-gone reason=killed` but does **NOT** auto-restart the gateway — the Scheduled Task is what brings it back.
+
+## Profile routing pitfall (gateway.profile_routes)
+
+Hermes supports per-chat routing to independent profiles (`gateway/profile_routes` in config.yaml, see `gateway/profile_routing.py` — hierarchical match on platform + chat_id + thread_id, most specific wins). **Pitfall**: routes are chat_id-bound — one chat routes to exactly one profile. If you route the chat the user is *currently talking in* to another profile, the current persona is replaced instantly (user suddenly talks to a different character). Confirm which chat a chat_id belongs to before adding a route; leave the active conversation un-routed. For switching personas within the SAME chat, use `/personality <name>` (main profile's preset library), not profile routes. Profile routes suit "different chat/group → different profile" setups only.
+
+Full multi-profile editing recipe (sub-profile SOUL.md + config.yaml `agent.system_prompt` two-place sync, underage-profile safety boundary): `references/multi-profile-personas.md`.
