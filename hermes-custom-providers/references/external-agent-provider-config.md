@@ -45,6 +45,11 @@ export ASLNET_API_KEY="sk-your-key-here"
 ASLNET_API_KEY=sk-your-key-here
 ```
 
+On Windows, also run `setx ASLNET_API_KEY "sk-..."` so cmd/PowerShell and
+non-bash processes (e.g. the Codex desktop app, MCP servers) see it. `setx`
+only affects NEW terminals — export in the current session too. Missing env
+var surfaces as `Missing environment variable: ASLNET_API_KEY`.
+
 ### Verification
 
 ```bash
@@ -101,3 +106,53 @@ opencode exec "do something"
    their own API keys — your key goes to the proxy, not to OpenRouter.
 4. **Rate limits differ**: Proxies may have tighter rate limits than the
    original provider. Start with simple tasks and ramp up.
+
+## Codex remote_plugin vs MCP Servers (2026-07 verified)
+
+Switching Codex to a third-party provider triggers a startup error:
+`list remote plugin catalog: chatgpt authentication required for remote plugin catalog`.
+That comes from the `remote_plugin` feature (stable) trying to fetch OpenAI's
+plugin catalog without ChatGPT auth.
+
+- `codex features disable remote_plugin` → clean startup, but **`codex plugin list` only shows locally cached/bundled plugins** — you cannot search/install new plugins from OpenAI's catalog.
+- Keep `remote_plugin = true` if the user needs the catalog; the warning is non-fatal.
+- **Plugin missing → install an MCP server instead.** Most "plugins" wrap CLI/API capabilities. Example: Netlify plugin was not in the local catalog, so install the official MCP server:
+
+```bash
+npm install -g @netlify/mcp
+```
+
+```toml
+# ~/.codex/config.toml
+[mcp_servers.netlify]
+command = "node"
+args = ["C:\\Users\\<user>\\AppData\\Local\\hermes\\node\\node_modules\\@netlify\\mcp\\dist\\netlify-mcp.js"]
+startup_timeout_sec = 30
+```
+
+- **Do NOT use `${VAR}` interpolation in `[mcp_servers.X.env]`** — Codex does not expand it and `codex doctor` reports `MCP configuration has optional issues`. Drop the env block and let the server inherit the system env var (setx'd token works).
+- Verify: `codex doctor` shows `✓ mcp N server (N stdio) · 0 disabled`. Probe a stdio server directly by piping an initialize JSON-RPC to its stdin — expect `serverInfo.name` back.
+
+## Codex Desktop (Windows AppX) identification
+
+- `codex` in PATH may be the npm CLI (`codex-cli X.Y.Z`), while the **desktop GUI is a separate AppX package** `OpenAI.Codex` — it runs `app/ChatGPT.exe` and the desktop shortcut is named `ChatGPT.lnk`, not `Codex.lnk`. Don't tell the user "Codex isn't installed" based on the shortcut name.
+- `codex app` printing `Codex Desktop not found; opening Windows installer...` ≠ desktop uninstalled; it means the CLI can't locate the AppX.
+- AppX status: `powershell Get-AppxPackage *Codex*` → InstallLocation under `C:\Program Files\WindowsApps\OpenAI.Codex_...`.
+- Desktop logs: `C:\Users\<user>\AppData\Local\Packages\OpenAI.Codex_<hash>\LocalCache\Local\Codex\Logs\<YYYY>\<MM>\<DD>\`. Healthy marker: `install-primary-runtime ... problemCount=0`; `401 Unauthorized` warnings are normal without ChatGPT login.
+
+## config.toml edit accidents (important)
+
+Patching `~/.codex/config.toml` with fuzzy replace can swallow following
+top-level keys into the matched `[section]` (observed: three
+`[shell_environment_policy.set]` keys got merged into `[mcp_servers.netlify]`),
+which silently breaks the desktop app ("click icon, nothing happens").
+
+After ANY config.toml edit, verify:
+
+```bash
+python -c "import tomllib; tomllib.load(open(r'C:\Users\<user>\.codex\config.toml','rb')); print('TOML OK')"
+codex doctor
+```
+
+Re-read the whole file before re-patching (especially when the tool warns the
+file was modified externally).

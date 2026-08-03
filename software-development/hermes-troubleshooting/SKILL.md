@@ -146,6 +146,55 @@ or any `ImportError` mentioning `httpx` and `openai` together.
 
 See `references/qq-gateway.md` for full setup and debugging guide.
 
+## Scenario 8: Desktop "无法连接更新服务器" / update check fails or times out
+
+**Symptom**: Hermes Desktop shows "无法连接更新服务器" / update check fails; `hermes update --check` times out or errors; `git fetch` fails with `fatal: fetch-pack: invalid index-pack output`.
+
+**Root cause (China network)**: Hermes updates via `git fetch` from GitHub. In China, GitHub direct connection is unstable and git usually has no proxy configured (a previous `git config --global --unset http.proxy` cleanup can remove it). Also, an interrupted update leaves a stale `.git/shallow.lock` that blocks subsequent fetches.
+
+**Fix**:
+```bash
+# 1. Configure git proxy for GitHub ONLY (user's proxy: http://127.0.0.1:12450)
+git config --global http.https://github.com.proxy http://127.0.0.1:12450
+
+# 2. Remove stale shallow lock (from interrupted update)
+cd /c/Users/Windows/AppData/Local/hermes/hermes-agent
+rm -f .git/shallow.lock
+
+# 3. Verify fetch works
+timeout 30 git fetch origin main
+# Expected: "* branch main -> FETCH_HEAD"
+
+# 4. Verify update check works
+hermes update --check
+# Expected: "⚕ Update available (behind origin/main)."
+```
+
+**Note**: Do NOT run `hermes update` while the Desktop app is running — it will fail with "Other Hermes processes are running" (venv .pyd files locked). Close Desktop first, or run from a standalone terminal.
+
+### Why the Desktop may STILL show "无法连接更新服务器" after the network is fixed
+
+There are TWO independent update-check paths, and the Desktop renders **cached failure state** until something re-triggers it:
+
+1. **Electron self-update check** (local mode, the one that powers Settings → 关于): `apps/desktop/electron/main.ts` runs `git fetch --quiet origin <branch>` via `runGit()` (spawns `git`, no timeout). On failure it returns `error: 'fetch-failed'` → renderer shows `cantReach` (无法连接更新服务器). This only re-runs on: app startup, every 30 min, window refocus, or clicking the "检查更新" button.
+2. **Backend REST check** (remote mode): `GET /api/hermes/update/check?force=true` calls `banner.check_for_updates()` which **caches into `$HERMES_HOME/.update_check` for 6 hours**. `force=true` deletes that cache first.
+
+**Action after fixing the network**: have the user click Settings → 关于 → "检查更新", or fully restart the Desktop app. Do NOT conclude the fix failed from the still-stale banner — the state is cached, not live.
+
+**`.update_check` cache semantics** (in `hermes_cli/banner.py` `check_for_updates()`):
+- File: `~/AppData/Local/hermes/.update_check` → `{"ts": ..., "behind": N, "rev": ..., "ver": ...}`
+- `behind: -1` = `UPDATE_AVAILABLE_NO_COUNT` — update exists but count unknown. **This is NOT a network error.** It is the designed behavior for **shallow clones** (official `install.sh` clones with `--depth 1`): the code fetches with `--depth 1` to stay shallow, compares `HEAD` vs `FETCH_HEAD` SHAs, and returns -1 when they differ (can't count commits across the shallow boundary).
+- `behind: null` = check could not run at all (offline / no remote / exception).
+- Delete the file (or call the API with `force=true`) to bust the 6h cache.
+
+**Debug recipe** (mirrors what the checker does — run inside `hermes-agent/`):
+```bash
+git rev-parse --is-shallow-repository        # true = shallow install
+git fetch origin --quiet                     # checker uses this (no branch arg)
+git rev-parse HEAD FETCH_HEAD                # shallow: compare these two SHAs
+# Non-shallow path uses: git rev-list --count HEAD..origin/main
+```
+
 ## References
 
 - `references/desktop-connectivity.md` — detailed Desktop app connectivity troubleshooting

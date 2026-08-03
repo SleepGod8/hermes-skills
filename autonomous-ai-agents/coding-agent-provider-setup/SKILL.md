@@ -181,6 +181,79 @@ curl -s "https://api.example.com/v1/models" \
   Set the env var at the system level (`setx`, `~/.bashrc`, or Hermes `.env`)
   and omit the `[mcp_servers.<name>.env]` subsection entirely.
 
+## Codex Desktop "打不开" (won't open) — debugging path
+
+When the Codex **Desktop** app (as opposed to the CLI) won't open after
+config edits, don't assume the app is broken — walk this path:
+
+1. **Desktop runs as `ChatGPT.exe`** on Windows. The AppX package is
+   `OpenAI.Codex_2p2nqsd0c76g0` (find with
+   `powershell.exe -Command "Get-AppxPackage *Codex*"`). A running
+   `ChatGPT.exe` process (~500MB) means the Desktop IS running — the user may
+   just be looking for the wrong shortcut (desktop shortcut is named
+   `ChatGPT.lnk`, not `Codex.lnk`).
+2. **`codex app` from the npm CLI can't find the AppX install** — the two are
+   separate release channels (CLI `0.144.x` vs AppX `26.x.y`). The AppX
+   executable lives under `C:\Program Files\WindowsApps\...` which is
+   **permission-protected**; you cannot launch it directly from a shell.
+   Launch via Start Menu / desktop shortcut instead.
+3. **The usual real cause after config edits: a corrupted `config.toml`**.
+   Validate it:
+   ```bash
+   python -c "import tomllib; f=open(r'C:\Users\Windows\.codex\config.toml','rb'); tomllib.load(f); print('Valid TOML'); f.close()"
+   ```
+   If invalid, check for orphaned keys (patch-tool fuzzy merge moved lines
+   across `[section]` boundaries — see TOML pitfall above).
+4. **Desktop logs** live in the AppX package:
+   `C:\Users\Windows\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\Codex\Logs\<date>/*.log`
+   — check `install-primary-runtime` lines (expect `problemCount=0`) and
+   `desktop_fetch_auth_401` warnings (harmless when using a third-party
+   provider instead of ChatGPT auth).
+5. `codex doctor` validates the CLI side; a clean doctor + broken Desktop
+   usually points to the Desktop renderer/bridge, not the provider config.
+
+### Codex Desktop update check fails with "提交 unknown" / can't reach update server
+
+Separate failure from "won't open": the Desktop's self-update check errors
+(`fetch-failed`, UI shows "无法连接更新服务器" / "提交 unknown") even when the
+CLI `codex doctor` is healthy.
+
+**Root cause (common on Windows): Electron cannot find git.**
+
+`apps/desktop/electron/main.ts` → `resolveGitBinary()` searches ONLY:
+1. `%LOCALAPPDATA%\hermes\git\cmd\git.exe` / `bin\git.exe` (Hermes PortableGit)
+2. `C:\Program Files\Git\cmd\git.exe` and `(x86)` variant
+3. `%LOCALAPPDATA%\Programs\Git\cmd\git.exe`
+4. `findOnPath('git')` — but GUI-launched processes get a MINIMAL PATH
+
+If git is installed on **another drive** (e.g. `D:\Program Files\Git`) and is
+not in the Windows **user** PATH, the Desktop finds no git → fetch fails →
+"提交 unknown" (current commit unknown). `which git` working in bash is NOT
+proof — bash uses `/mingw64/bin/git` from the MSYS distribution.
+
+**Fix — add Git to the Windows user PATH (does not overwrite existing):**
+```bash
+powershell.exe -Command "
+\$currentPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+\$gitPath = 'D:\Program Files\Git\cmd'
+if (\$currentPath -like '*D:\Program Files\Git*') { Write-Host 'already present' }
+else { [Environment]::SetEnvironmentVariable('Path', \$currentPath.TrimEnd(';') + ';' + \$gitPath, 'User'); Write-Host 'added' }
+"
+```
+
+**Verify Electron's search will find it** (simulate `findOnPath` over the user
+PATH), then **fully restart the Desktop app** — PATH changes don't apply to
+already-running processes.
+
+Also check the CLI-side git connectivity while you're in there (China network):
+```bash
+git config --global http.https://github.com.proxy http://127.0.0.1:12450
+# stale .git/shallow.lock from an interrupted update also blocks fetch:
+rm -f /c/Users/Windows/AppData/Local/hermes/hermes-agent/.git/shallow.lock
+```
+
+**Same root cause affects Hermes Studio** (Hermes Desktop's own update check, UI shows "分支 main / 提交 unknown" + red "无法连接更新服务器"): Hermes Studio is a separate Electron app (`D:\Program Files\Hermes Studio`) whose `resolveGitBinary()` search mirrors the Codex one (PortableGit → C:\Program Files\Git → PATH). Same fix: append `D:\Program Files\Git\cmd` to the Windows user PATH, fully restart the app, re-check in 设置 → 关于 → 立即检查. The CLI `hermes update --check` may pass while the Desktop still fails — they resolve git differently.
+
 ## Examples
 
 See `references/aslnet-example.md` for a complete working example using

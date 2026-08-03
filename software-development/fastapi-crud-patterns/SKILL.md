@@ -172,6 +172,50 @@ dao.update(obj, update_data)
 
 `_clear` 是 DAO 内部约定 key（被 pop 掉不写入数据库）。只在主动清空字段时使用，普通更新仍走默认行为（跳过 None）。
 
+## 角色联动字段校验（三层模式）
+
+当某字段只对部分角色有意义（如"部门"只属于员工/主管/管理层，学生不该有），且用户能通过管理界面改角色时，需要**后端 + 前端三层**同时防护，否则会出现"给学生设置了部门"这类 bug：
+
+**① Service 层校验（核心）**：`update` 时根据目标角色决定放行/拒绝/清空：
+```python
+def update_user(self, user_id, data):
+    user = self.dao.get_by_id(user_id)
+    update_data = data.model_dump(exclude_unset=True)
+
+    target_role = update_data.get("role", user.role)
+    # 目标是学生却带部门 → 拒绝
+    if target_role == "学生" and "department" in update_data:
+        raise param_error("学生用户不能设置部门")
+    # 原角色是学生且没改角色 → 拒绝
+    if user.role == "学生" and "role" not in update_data and "department" in update_data:
+        raise param_error("学生用户不能设置部门")
+    # 角色改为学生 → 自动清空（配合 _clear=True 才能写入 None）
+    if "role" in update_data and update_data["role"] == "学生":
+        update_data["department"] = None
+        update_data["department_path"] = None
+        update_data["_clear"] = True
+    return self.dao.update(user, update_data).to_dict()
+```
+
+**② 前端隐藏 + 清空**：角色下拉切换时联动——
+```html
+<el-form-item v-if="form.role !== '学生'" label="部门" prop="department">...</el-form-item>
+<el-select v-model="form.role" @change="onRoleChange">...</el-select>
+```
+```js
+function onRoleChange(val) { if (val === '学生') form.department = '' }
+// 打开编辑框时，若行数据是学生也清空
+if (row.role === '学生') form.department = ''
+```
+
+**③ 提交时过滤**：payload 按角色组装，不该有的字段不发——
+```js
+const payload = { ...基础字段 };
+if (form.role !== '学生') payload.department = form.department
+```
+
+后端校验是底线（防 API 直调），前端是体验（防误操作），提交过滤是双保险。改 `create` 时也要同样校验（学生创建时不允许带部门）。
+
 ## 筛选查询模式
 
 在查询接口上加可选参数实现筛选，不传就不筛：
