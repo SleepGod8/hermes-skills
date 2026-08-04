@@ -80,6 +80,8 @@ profiles/<名>/config.yaml   ← agent.system_prompt 镜像 SOUL.md 全文
 用 execute_code 循环处理全部档案，每处打印 ✅/❌ 确认无遗漏、无旧文本残留。
 default 的 `agent.system_prompt` 若是基础版（无该设定）可跳过——先检查关键词。
 
+可复用脚本骨架：`templates/profile-sync-batch.py`（复制后填 updates/default_updates 字典、锚点、新内容即可跑；自动备份 + 读回验证）。
+
 ## 生效规则
 
 - 修改后**新开会话（/new）才生效**，运行中的会话 system prompt 已固定、不热更新——回复用户时务必提醒。
