@@ -1,0 +1,180 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "animagine-xl-4.0.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "1girl, maid, silver hair, long hair, straight hair, narrowed eyes, calm expression, serene face, mature, elegant, tall, voluptuous, curvy, wide hips, thick thighs, big breasts, hourglass figure, standing, hands clasped in front, good hands, perfect hands, detailed hands, 5 fingers, apron, frilled headband, long dress, classic maid uniform, modest, dignified, composed, soft lighting, simple background, ((artist:melon22)), artist:ikarin, masterpiece, best quality, very aesthetic, amazing quality, year 2024",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "lowres, worst quality, low quality, normal quality, censored, mosaic, watermark, signature, ugly, deformed, bad anatomy, bad hands, missing fingers, extra fingers, fused fingers, too many fingers, poorly drawn hands, mutated hands, malformed hands, disfigured hands, blurry, jpeg artifacts, cropped hands, out of frame, long neck, nsfw, sexy, lewd, erotic, cleavage, open clothes, underboob, smile, laughing, excited, energetic, petite, skinny, thin, flat chest",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "4": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 896,
+      "height": 1152,
+      "batch_size": 1
+    }
+  },
+  "5": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 0,
+      "steps": 32,
+      "cfg": 7,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "2",
+        0
+      ],
+      "negative": [
+        "3",
+        0
+      ],
+      "latent_image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "5",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    }
+  },
+  "10": {
+    "class_type": "UltralyticsDetectorProvider",
+    "inputs": {
+      "model_name": "bbox/hand_yolov8s.pt"
+    }
+  },
+  "14": {
+    "class_type": "SAMLoader",
+    "inputs": {
+      "model_name": "sam_vit_b_01ec64.pth"
+    }
+  },
+  "11": {
+    "class_type": "FaceDetailer",
+    "inputs": {
+      "image": [
+        "6",
+        0
+      ],
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ],
+      "vae": [
+        "1",
+        2
+      ],
+      "bbox_detector": [
+        "10",
+        0
+      ],
+      "sam_model_opt": [
+        "14",
+        0
+      ],
+      "guide_size": 768,
+      "guide_size_for": true,
+      "max_size": 1152,
+      "seed": 0,
+      "steps": 24,
+      "cfg": 6,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 0.4,
+      "feather": 5,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "wildcard": "",
+      "cycle": 1,
+      "inpaint_model": false,
+      "noise_mask_feather": 20,
+      "positive": [
+        "12",
+        0
+      ],
+      "negative": [
+        "13",
+        0
+      ]
+    }
+  },
+  "12": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "bad hands, missing fingers, extra fingers, fused fingers, too many fingers, poorly drawn hands, mutated hands, malformed hands, disfigured hands",
+      "clip": [
+        "1",
+        1
+      ]
+    }
+  },
+  "7": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "character_detailer",
+      "images": [
+        "11",
+        0
+      ]
+    }
+  }
+}
