@@ -50,6 +50,12 @@ for workflow execution.
   KSampler calls tqdm via API: root cause (LogInterceptor + asyncio tqdm),
   SafeStderr fix, logger patch fallback, bytecode cache cleanup, and
   standalone-env Python path on Comfy Desktop.
+- `desktop-update-crash-fix.md` — ComfyUI Desktop「自动更新后自动关闭」循环：
+  pendingDownloadedUpdateVersion 装不上 → 每次启动应用失败退出。清除标记 +
+  手动拉起后端全流程（含 .venv vs standalone-env 环境真相、正斜杠路径坑）。
+- `hand-detailer-setup.md` — 手部精修链路搭建：Impact-Subpack + ultralytics
+  (--no-deps 防 torch 被覆盖成 CPU) + hand_yolov8s.pt 国内下载 + SAM +
+  FaceDetailer 新版必填字段 (sam_mask_hint_*/device_mode) + 手部提示词加固。
 
 **Scripts (`scripts/`):**
 
@@ -607,6 +613,14 @@ ADE node output.
 - cfg: 4.0–5.0, steps: 20, sampler: euler
 
 ## Pitfalls
+
+0. **ComfyUI Desktop 反复「自动更新后自动关闭」** — 见
+   `references/desktop-update-crash-fix.md`：清 `settings.json` 里的
+   `pendingDownloadedUpdateVersion` 即可；别往 standalone-env 装包，
+   ComfyUI 真实环境是 `.venv`。
+0b. **手部畸形/缺指** — 见 `references/hand-detailer-setup.md`：
+   Subpack + hand_yolov8s + FaceDetailer 精修；装 ultralytics 必须
+   `--no-deps` 防止 torch 被覆盖成 CPU 版。
 
 1. **PYTHONPATH contamination from Hermes** — When running ComfyUI's Python
    from within a Hermes session, the `PYTHONPATH` env var includes Hermes's
