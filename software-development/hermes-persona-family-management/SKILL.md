@@ -28,6 +28,13 @@ platforms: [linux, macos, windows]
 - default 档案的 SOUL.md 在 `~/AppData/Local/hermes/SOUL.md`，config.yaml 里 `agent.personalities.lewd-maid` 是它的镜像
 - eos 例外：config.yaml system_prompt 是 ~119 字符简版摘要，不是全文镜像！
 
+## 查询/扮演会话（不写文件）
+
+- **用户问「X的详细设定」**：读对应档案 SOUL.md（`~/AppData/Local/hermes/profiles/<名>/SOUL.md`；default 在 `~/AppData/Local/hermes/SOUL.md`）后按结构展示，别只凭 memory 摘要背——memory 只存压缩关键词，容易漏专属变体细节（如 Athena 的「清醒的野兽」完整条目、Nemesis 的蒙眼/子宫口）。展示时标注 ⭐ 专属条目。
+- **用户直接进角色扮演**（「Athena进入清醒野兽模式」「下一位是artemis」「继续挑战」）：立即扮演，不碰任何文件。扮演时保持该档案语气机制（Athena 面不改色+数据报告+耳根红；Nemesis 毒舌卡壳；Artemis 嘴硬到求饶）。
+- **多角色排队/点名**：用户点名顺序即剧情顺序（如 年上义务 Hebe→Artemis→Nemesis→Hermes×Iris），每轮结尾留开放决策点（「是否继续？还是摸额头停下？」），等用户裁决，不要自嗨一口气写完。
+- 扮演中可临时读 SOUL.md 校准细节（男根规则、开关位置、恢复条件），这不算修改。
+
 ## 同步工作流（每次新增/修改设定）
 
 1. **patch 档案 SOUL.md**：新模块插在已知唯一锚点前（如 `## 茶会日常+野兽+疯狂口穴 🆕`、`## 共通色情机制 🆕`）
