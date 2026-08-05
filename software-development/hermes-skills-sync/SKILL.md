@@ -111,14 +111,23 @@ cronjob(action='create',
 
 **Important**: New cron jobs default to `repeat=once`. You MUST set `repeat=0` either at creation time (as shown above) or update after:
 ```bash
-hermes cron update <job-id> --repeat 0
+hermes cron edit <job-id> --repeat 0
 ```
+
+> ⚠️ **`hermes cron update` 不存在**（实测 2026-08）：合法子命令只有 `list, create, add, edit, pause, resume, run, remove, rm, delete, status, runs, history, tick`。凡是要"改已有任务"一律用 `hermes cron edit <job-id> [--script X] [--repeat N] [--schedule "..."]`。无参数 `edit` 报 `No updates provided`。
+
+**创建任务的正确 CLI 语法**（实测 2026-08）：schedule 是**位置参数**，不是 `--schedule`（`--schedule` 报 unrecognized arguments）；`--no-agent` 使脚本 stdout 直接交付（空输出静默）；`--repeat 0` = 无限循环。
+```bash
+hermes cron create "0 9 * * *" --name "📥 pull-skills" --script skills-sync-pull.py --no-agent --repeat 0
+hermes cron create "60m" --name "📤 push-skills" --script skills-sync-push.py --no-agent --repeat 0
+```
+如需把 .sh 任务改为 .py（Windows cron 无 bash），优先 `hermes cron edit <id> --script skills-sync-pull.py`，不要 remove+create（重建需重填全部参数）。
 
 **After Hermes restart, verify cron jobs are still `enabled=true` and `state=scheduled`**:
 ```bash
 hermes cron list
 # If a job shows enabled=false and state=completed, re-enable it:
-hermes cron update <job-id> --schedule "0 9 * * *"  # re-schedule to reactivate
+hermes cron edit <job-id> --schedule "0 9 * * *"  # re-schedule to reactivate
 ```
 
 **Conflict resolution during push** (`skills-sync-push-rebase.sh`):
@@ -175,14 +184,14 @@ git config --global user.name "Your Name"
 - **China network / GitHub blocked**: Use a local proxy (Clash/V2Ray). Configure: `git config --global http.proxy http://127.0.0.1:PORT`. See `references/git-proxy.md` for full guide.
 - **Cron jobs need repeat=forever**: Newly created cron jobs default to `once`. Update them: `hermes cron edit <job_id>` and set repeat to 0 (forever).
 - **Script-only jobs are silent by design**: With `no_agent=true`, empty stdout means no message is delivered. This is intentional — you don't want a notification every 5 minutes when nothing changed.
-- **Cron jobs silently accumulate `last_status=error` after Hermes restart**: After a Hermes Desktop restart or profile change, cron jobs may stop running silently — they appear in the list with `last_status: error` and `enabled: false`. Always verify after a restart: `hermes cron list`. If jobs show as `completed`/`error` instead of `scheduled`, re-enable them with `hermes cron update <job_id> --schedule "..."` (set the schedule to re-activate).
+- **Cron jobs silently accumulate `last_status=error` after Hermes restart**: After a Hermes Desktop restart or profile change, cron jobs may stop running silently — they appear in the list with `last_status: error` and `enabled: false`. Always verify after a restart: `hermes cron list`. If jobs show as `completed`/`error` instead of `scheduled`, re-enable them with `hermes cron edit <job_id> --schedule "..."` (set the schedule to re-activate).
 - **Git authentication**: The machine must have Git push access to the remote (SSH key or credential helper). Without it, push silently fails.
 - **Transient push failure through proxy — just retry**: `git push` can fail once with `fatal: unable to access '...': Recv failure: Connection was reset` (especially via China proxy) even when `git pull --rebase` in the same run succeeded. The commit is already made locally, so simply re-running `git push origin master` usually succeeds on the second attempt. Do NOT assume the remote or credentials are broken — retry before diagnosing. (Seen live 2026-08: first push reset, immediate retry pushed fine.)
 - **GitHub token expiration (classic PAT)**: Classic personal access tokens expire. When this happens, push fails with `remote: Permission denied ... 403`. Fix: generate a new token at https://github.com/settings/tokens with `repo` scope, then update the remote URL: `git remote set-url origin "https://USER:NEW_TOKEN@github.com/USER/REPO"`. The token embedded in the remote URL overrides the credential helper.
 - **Conflicts**: The pull script uses `git stash` before pull and `git stash pop` after. If the pop produces a conflict, the local changes are preserved in the stash for manual resolution.
 - **Windows path separators**: Always use `$HERMES_HOME` not `~/.hermes` in scripts. On Windows, `HERMES_HOME` defaults to `%LOCALAPPDATA%\\hermes`, not `~/.hermes`.
 - **Windows: use .py scripts, not .sh**: The cron scheduler does not have bash on its PATH. Scripts must be Python (`.py`) on Windows. The `.sh` versions are for Linux/macOS only.
-- **Cron jobs go `enabled: false` after error state**: When a cron job fails (e.g. due to network), Hermes may mark it as `enabled: false` and move it to `completed` state. The job stops running entirely — no retry. To recover: `hermes cron update <job_id> --enabled true`. Monitor with `hermes cron list` after any network outage or Hermes Desktop restart.
+- **Cron jobs go `enabled: false` after error state**: When a cron job fails (e.g. due to network), Hermes may mark it as `enabled: false` and move it to `completed` state. The job stops running entirely — no retry. To recover: `hermes cron edit <job_id> --enabled true`. Monitor with `hermes cron list` after any network outage or Hermes Desktop restart.
 - **Initial setup on second machine needs proxy for git clone**: During `git clone` of the skills repo, GitHub may be blocked. Use `git -c http.proxy=... clone ...` or ensure VPN is active before running the clone command.
 
 ## Linked Files

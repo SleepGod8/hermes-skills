@@ -888,3 +888,4 @@ while True:
   # ✅ CORRECT — use base_occupation
   avail = [s for s in SKILL_DATA[character.base_occupation] if character.level >= s["lv"]]
   ```
+- **脚本式测试文件不会被 pytest 收集**: 旧项目（尤其终端游戏）测试文件常是"模块级 `assert` + `print`"脚本（无 `def test_*` 函数）。`python test_x.py` 能跑但 `pytest tests/ -v` → `collected 0 items`。修复：把断言包进 `def test_xxx():` 函数（保留顶部 `sys.path.insert`）；转换时保持断言语义不改逻辑。排查先 `pytest --collect-only` 确认收集数；注意 rootdir 的 `pytest.ini testpaths` 若指向项目外（如磁盘根 `D:\pytest.ini`）会收集错目录，`cd 项目根` 后用项目内 `pytest.ini`/`conftest.py` 覆盖。真实案例：Land of Heroes 3 个脚本式测试文件重构为 pytest 函数格式后 25 用例一次通过。
