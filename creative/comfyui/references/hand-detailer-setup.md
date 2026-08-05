@@ -216,3 +216,17 @@ models/ultralytics/bbox/）：主采样 → 手部 detailer → 脸部 detailer 
 2. 主负向：`arms up, hands up, arms raised, hands raised, arms crossed, arms in air, hands on head, magic circle, holding object, holding tray, hands together, hands clasped, hands folded`
 3. 手部 detailer 的 positive/negative 也注入同样的手势词（局部重绘跟着走）
 
+**手势词实战调教记录**（「身前叠放」4 轮迭代结论）：
+- ✅ **有效**：`((one hand resting on the other hand)), right hand on left hand,
+  hands in front of waist, resting hands, relaxed hands`
+- ❌ **无效**：`palms stacked` / `hands placed on top of each other` →
+  模型画成掌心向上张开（呈献式）
+- ❌ **无效**：`hands clasped` / `hands folded` / `hands together` →
+  画成交握祈祷
+- ❌ **注意**：`hands resting in front` 可能被理解成「抱着东西」→
+  模型塞枕头/抱枕（负向必须锁 `holding pillow, hugging pillow, pillow, plushie`）
+- **教训**：手势词越直白越好——一个核心表达 + 位置限定（in front of waist）
+  就够；堆同义词会让模型困惑，各取一半反而全错
+- **侧身角度**：`three-quarter view, slight turn, body slightly angled` 稳定有效
+
+
