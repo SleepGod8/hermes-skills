@@ -881,3 +881,10 @@ while True:
 - Equipment `equip_item` removes old item's effect (subtracts) before applying new one (adds)
 - **Menu index offset**: when menu items (status, backpack, etc.) are added BEFORE movement options, the movement option numbering shifts. Code like `moves[int(cmd)-1]` breaks because `cmd` no longer maps to `moves[0]`. Fix: subtract the menu offset: `n = int(cmd) - menu_offset; moves[n]`
 - **Occupation input**: allow both full name and number input; validate against `occupation_list` using index lookup
+- **SKILL_DATA lookup uses base_occupation**: Data dicts like `SKILL_DATA` use base occupation keys. After advancement, `character.occupation` changes (e.g., "战士" → "剑圣") but `SKILL_DATA` still has "战士". Always use `character.base_occupation` for dict lookups. Example:
+  ```python
+  # ❌ WRONG — KeyError after advancement
+  avail = [s for s in SKILL_DATA[character.occupation] if character.level >= s["lv"]]
+  # ✅ CORRECT — use base_occupation
+  avail = [s for s in SKILL_DATA[character.base_occupation] if character.level >= s["lv"]]
+  ```

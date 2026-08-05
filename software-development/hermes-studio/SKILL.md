@@ -72,6 +72,37 @@ IDE 产品，无法接入群聊。
 - 可粘贴文件/图片到群聊
 - 人类成员名称与描述按房间独立保存
 
+## 群聊 @all 与 API 限速
+
+**核心结论**：@all N 个 Agent = 瞬间并发 N 个 API 请求，且它们共享同一段群聊
+上下文（每个 Agent 各带一份完整历史，Token 消耗翻 N 倍）。是否触发限速取决于
+**供应商的限速维度**：
+
+| 供应商 | 限速维度 | 群聊 @all 影响 |
+|---|---|---|
+| DeepSeek | **只有并发限制**（v4-pro: 500 / v4-flash: 2500，按账号粒度） | 几乎不可能触发 429 ✅ |
+| OpenAI / Anthropic / OpenRouter | 按账号统计 RPM + TPM | 同供应商换模型**不能**避开，只有换供应商/账号才行 ❌ |
+
+**真正的开销**：Token 成本（每个 Agent 各带一份上下文）与上下文质量（压缩配置
+不合理时响应变差）。缓解：调低群聊压缩阈值、减少 @ 数量、接入本地 Ollama。
+
+**最优解法 — Profile 分散模型**：每个 Profile 有独立的 `config.yaml`
+（`%LOCALAPPDATA%\hermes\profiles\<name>\config.yaml`），可配置**不同的
+provider + 默认模型**。群聊添加 Agent 时选不同 Profile，@all 请求即分散到
+不同供应商/账号的配额池。配置方法：
+
+```bash
+hermes profile create <name>            # 新建 Profile
+hermes profile show <name>              # 查看
+# 直接编辑 profiles/<name>/config.yaml 的 model 段：
+#   model:
+#     provider: <provider>              # 如 deepseek / custom:agnes
+#     default: <model-id>
+```
+
+群聊 Agent 列表 = 已有 Profile 列表；想让每个 Agent 用不同模型，先给每个
+角色建一个配好模型的 Profile。
+
 ## 输入框浮动（popout）↔ 固定
 
 输入框有 docked（固定）↔ floating（浮动）两种状态（`use-composer-popout.ts`）：
@@ -101,9 +132,59 @@ Studio 的 UI 文案在 `D:\Program Files\Hermes Studio\resources\webui\dist\cli
 （压缩 bundle）。用 `grep -o` 搜中文关键词（如"群聊"、"创建房间"）可快速确认
 功能存在及配置流程，再配合更新日志（changelog 节）了解版本行为。
 
+## 内置浏览器（Hermes Studio Browser）
+
+Studio 内置 Chromium 浏览器，可通过标准 browser_* 工具或 MCP 工具操作：
+
+### 可用工具
+
+| 工具 | 功能 |
+|------|------|
+| `browser_navigate` | 打开 URL |
+| `browser_snapshot` | 获取无障碍树快照（含 ref 引用） |
+| `browser_vision` | 截图+视觉分析 |
+| `browser_click` | 点击元素（需 ref） |
+| `browser_type` | 输入文字（需 ref） |
+| `browser_back` | 返回上一页 |
+| `browser_scroll` | 滚动页面 |
+
+### MCP 工具（mcp__hermes_studio_browser__hermes_studio_browser_toolset）
+
+更精细的控制：
+- `hermes_studio_browser_tabs` - 管理标签页
+- `hermes_studio_browser_navigate` - 导航（open/back/forward/reload/stop）
+- `hermes_studio_browser_snapshot` - 获取快照（需 tab_id）
+- `hermes_studio_browser_read_text` - 读取页面文本
+- `hermes_studio_browser_interact` - 点击/输入/按键/滚动
+- `hermes_studio_browser_screenshot` - 截图
+- `hermes_studio_browser_console` - 控制台日志
+
+### ⚠️ 安全注意事项
+
+**敏感操作（登录）建议用户自己在浏览器中完成**：
+- 不要代替用户输入账号密码
+- 飞书/语雀等需要登录的文档：先用 browser_vision 截图分析，再引导用户手动登录
+- 登录按钮点击后可能跳转到登录页，需要用户手动完成验证
+
+### 典型场景
+
+```python
+# 打开网页并分析
+browser_navigate(url="https://xxx.feishu.cn/wiki/xxx")
+browser_vision(question="页面上有什么可交互元素？是否有登录框？")
+
+# 读取页面内容
+browser_snapshot()  # 获取 ref 引用
+browser_click(ref="@e12")  # 点击某个按钮
+
+# 读取登录后的内容
+browser_snapshot(full=true)  # 获取完整页面内容
+```
+
 ## 常见坑
 
 - **不要假设功能不存在** — 先搜 webui zh.js 文案确认，Studio 功能迭代很快
 - 群聊里能添加的 Agent 数量 = 已有的 Profile 数量；想多角色先
   `hermes profile create xxx` + SOUL.md
 - PATH 修改对已运行的 Studio 不生效，必须完全重启（关掉所有 Hermes Studio.exe）
+- **浏览器登录类敏感操作**：引导用户在内置浏览器中手动完成，不要代输入密码

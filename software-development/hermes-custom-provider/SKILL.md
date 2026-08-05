@@ -146,9 +146,9 @@ See `references/ollama-local-provider.md` for:
 ## Real-world example: Agnes AI
 
 Provider: `custom:agnes`  
-Base URL: `https://apihub.agnes-ai.com/v1`  
-Model: `agnes-2.0-flash`  
-Pricing: Free ($0/1M tokens), 512K context
+Base URL: `https://api.agnes-ai.cn/v1`  ⚠️ 2026-08 实测：旧域名 `apihub.agnes-ai.com` 已失效（返回空响应），国内版改走 `.cn` 域名  
+Models: `agnes-2.0-flash`（带 reasoning_content）/ `agnes-2.5-flash` / `agnes-2.5-pro` / `agnes-2.5-pro-alpha` / `agnes-image-2.1-flash`（文生图）/ `agnes-video-v2.0`（视频生成）  
+Pricing: Free, 512K context. 验证细节与响应结构见 `references/agnes-ai.md`
 
 Discovery process for finding the API base URL when the platform frontend is a Next.js SPA:
 1. Check the official website for "Developer Docs" or "API" links

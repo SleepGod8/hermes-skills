@@ -377,6 +377,24 @@ For shop: fetch `/api/shop-items` from the backend (NOT hardcoded frontend list)
 
 ## Pitfalls
 
+### Skill Data Lookup Pitfall
+
+**CRITICAL**: `SKILL_DATA` uses **base occupation** as keys, NOT `character.occupation` (which changes after advancement).
+
+```python
+# ❌ WRONG — KeyError after advancement (occupation = "剑圣" but SKILL_DATA has "战士")
+avail = [s for s in SKILL_DATA[character.occupation] if character.level >= s["lv"]]
+
+# ✅ CORRECT — use base_occupation for data lookup
+avail = [s for s in SKILL_DATA[character.base_occupation] if character.level >= s["lv"]]
+```
+
+**Why**: Character has two occupation fields:
+- `occupation` — current class (changes after advancement: "战士" → "剑圣")
+- `base_occupation` — original class (always "战士", used as dict key)
+
+Data dicts (`SKILL_DATA`, `INIT_STATS`, `STAT_PER_LEVEL`) all use base occupation keys.
+
 1. **`=== true` fails for undefined** — Use truthy check (`if (conn)`) instead of `conn === true` for JSON booleans from optional API fields.
 2. **Hardcoded shop item list desyncs** — Frontend and backend must use the same item list. Fetch from `/api/shop-items` endpoint.
 3. **`input()` in API handler** — Never call terminal `input()` from an API handler. The thread blocks and the request hangs.

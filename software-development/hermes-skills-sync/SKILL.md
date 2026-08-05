@@ -31,10 +31,6 @@ Two cron jobs run on each machine:
 - **Pull** (`git pull`): Fast-forward merge from remote. Does NOT delete local-only skills — it only adds/updates skills that exist in remote.
 - **Push** (`git pull --rebase` first, then push): Before pushing local changes, rebase on top of remote to avoid conflicts. This ensures the remote always has both machines' contributions.
 
-**Key design principle**: pull and push use different strategies.
-- **Pull** (`git pull`): Fast-forward merge from remote. Does NOT delete local-only skills — it only adds/updates skills that exist in remote.
-- **Push** (`git pull --rebase` first, then push): Before pushing local changes, rebase on top of remote to avoid conflicts. This ensures the remote always has both machines' contributions.
-
 ## Setup
 
 ### 1. Create a private Git repo
@@ -181,6 +177,7 @@ git config --global user.name "Your Name"
 - **Script-only jobs are silent by design**: With `no_agent=true`, empty stdout means no message is delivered. This is intentional — you don't want a notification every 5 minutes when nothing changed.
 - **Cron jobs silently accumulate `last_status=error` after Hermes restart**: After a Hermes Desktop restart or profile change, cron jobs may stop running silently — they appear in the list with `last_status: error` and `enabled: false`. Always verify after a restart: `hermes cron list`. If jobs show as `completed`/`error` instead of `scheduled`, re-enable them with `hermes cron update <job_id> --schedule "..."` (set the schedule to re-activate).
 - **Git authentication**: The machine must have Git push access to the remote (SSH key or credential helper). Without it, push silently fails.
+- **Transient push failure through proxy — just retry**: `git push` can fail once with `fatal: unable to access '...': Recv failure: Connection was reset` (especially via China proxy) even when `git pull --rebase` in the same run succeeded. The commit is already made locally, so simply re-running `git push origin master` usually succeeds on the second attempt. Do NOT assume the remote or credentials are broken — retry before diagnosing. (Seen live 2026-08: first push reset, immediate retry pushed fine.)
 - **GitHub token expiration (classic PAT)**: Classic personal access tokens expire. When this happens, push fails with `remote: Permission denied ... 403`. Fix: generate a new token at https://github.com/settings/tokens with `repo` scope, then update the remote URL: `git remote set-url origin "https://USER:NEW_TOKEN@github.com/USER/REPO"`. The token embedded in the remote URL overrides the credential helper.
 - **Conflicts**: The pull script uses `git stash` before pull and `git stash pop` after. If the pop produces a conflict, the local changes are preserved in the stash for manual resolution.
 - **Windows path separators**: Always use `$HERMES_HOME` not `~/.hermes` in scripts. On Windows, `HERMES_HOME` defaults to `%LOCALAPPDATA%\\hermes`, not `~/.hermes`.

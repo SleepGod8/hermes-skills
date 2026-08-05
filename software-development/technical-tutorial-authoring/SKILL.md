@@ -44,6 +44,7 @@ related_skills: [hermes-agent-skill-authoring]
 - 通过 `browser_snapshot(full=true)` 获取页面文字内容
 - 点击目录中的各个章节，逐一提取内容
 - 注意页面可能的**登录遮罩**——未登录状态下只能读取部分内容，记下能读到的内容
+- **如果用户已在 Hermes Studio 内置浏览器打开文档**（已登录/有权限，如飞书），优先用 `hermes_studio_browser_toolset` 读取当前标签页，流程和坑见 [references/hermes-studio-browser-reading.md](references/hermes-studio-browser-reading.md)
 
 ### Step 2: 整理网页原始信息
 将提取到的文字归纳：
@@ -170,6 +171,7 @@ print("hello")
 8. **截图内容不完整**：用户发的截图可能只截了部分内容（如只截到代码一半、表格被截断等），需要用上下文推断完整内容，并标注"截图截断，已补充完整"
 9. **多截图顺序错乱**：用户可能不是按顺序发截图的（先发中间页，再发前面页）。根据内容推断正确顺序，必要时在文档中标注"根据内容推测章节顺序"
 10. **XMind 导入后代码块格式异常**：XMind 对代码块的渲染可能丢失缩进或语法高亮。建议代码块前后加空行，内部不要用制表符
+11. **Hermes Studio 内置浏览器 MCP 工具**：`hermes_studio_browser_toolset` 调用必须给 `action` 参数（list/describe/call），tabs 空参数会报 "Invalid browser tab action"；`read_text` 对 RootWebArea/Iframe 返回空文本，需读具体 StaticText 节点或直接用 snapshot 的 text 字段；长文档要循环 scroll+snapshot 直到内容不再变化。详见 [references/hermes-studio-browser-reading.md](references/hermes-studio-browser-reading.md)
 
 ## Verification Checklist
 
