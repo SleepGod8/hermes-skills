@@ -90,6 +90,22 @@ ComfyUI Desktop 装了两个 Python。**装自定义节点依赖必须用 `.venv
 
 Detailer 二次精修提示词：positive `good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers`；negative 坏手全套。
 
+## ⚠️ 手部精修翻车案例与最优参数（athena_maid_detailer）
+
+实测 4 轮迭代（2026-08，animagine-xl 1024×1536）发现的关键坑：
+
+| 坑 | 症状 | 解法 |
+|---|---|---|
+| 手叠手姿势 `((one hand resting on the other hand))` 高权重 | 主图手部直接画糊，detailer 也救不回来 | 降权为 `hands gently resting in front of waist` |
+| denoise 0.7 + `slender fingers/detailed finger joints` | 手被重绘成"机械义体"（金属质感、分段指节、手腕管道） | denoise 用 **0.62**，提示词改 `soft skin, natural skin texture, normal hand proportions`；负向加 `mechanical hands, robotic hands, metallic hands, claw hands, elongated fingers` |
+| 指根蹼状粘连（连指） | 手指根部像鸭掌连在一起 | 正向加 `fingers spread apart, visible gaps between fingers, separated finger bases`；负向加 `webbed fingers, finger webbing, connected fingers, fused finger bases` |
+| 手部区域小、放大倍数不足 | 细节修不精细 | guide_size 用 **640**（不要 896），max_size 896 |
+| 只跑一遍手部 detailer | 漏修 | 三段链：主采样 → 手粗修(denoise 0.62, cycle 3, dilation 20, crop 3.2) → 脸(denoise 0.45) → 手收尾复查(denoise 0.5, cycle 2, dilation 18) |
+
+最优手部 FaceDetailer 参数组合：`denoise 0.62, cycle 3, bbox_threshold 0.3, bbox_dilation 20, bbox_crop_factor 3.2, guide_size 640, max_size 896, sam_threshold 0.8, feather 10`。
+手部 bbox 检测：`bbox/hand_yolov8s.pt` 或 `bbox/hand_yolov9c.pt` 均可（本地两个都有，v8s 召回更稳）。
+验证技巧：手部在整图中只占小区域，先用 PIL 按位置裁剪（如 x0~0.45, y0.40~0.62）放大 3 倍再喂视觉模型，避免整图缩放后看不清细节。
+
 ## 输出路径坑
 
 `run_workflow.py --output-dir /e/ai1/...`（MSYS 风格路径）会**拼接错误**（报告 `E:\e\ai1\...` 不存在）。实际文件在服务器配置的输出目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`。交付时用真实路径，别信脚本回显的相对拼接路径。
