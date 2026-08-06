@@ -107,6 +107,10 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 **三 pass 交叉检测（成功率 50%→75%）**：单检测器对"画面左侧的手"漏检率高（手小+与围裙对比度低）→ FaceDetailer 跳过不修。双检测器交叉覆盖可显著提升：`手pass1(v9c, denoise 0.65, cycle 3, dilation 25, threshold 0.25) → 手pass2(v8s, denoise 0.6, cycle 2, dilation 20) → 脸(denoise 0.45) → 手pass3(v8s收尾, denoise 0.5, dilation 18)`。
 
 **成功率天花板（重要认知）**：animagine-xl 下"双手交叠身前"姿势天然成功率仅 ~50%（6张3坏），detailer 只能修"接近正确"的手，主图太烂救不回。实测：2个手部pass=50%，3个pass=75%。要上 90% 必须：简化手势（双手垂下两侧）或 ControlNet openpose 或手部 LoRA（civitai 需 API key，国内直连/代理均拿不到）。
+
+**⚠️ 垂放姿势（主人指定方案，2026-08-07 实测）**：主 prompt 改 `arms down, arms relaxed at sides, hands at sides, hands hanging down naturally, arms hanging straight down, hands by hips, fingers relaxed`；**关键陷阱：负向 prompt 里的 `arms at sides, hands at sides, hands hanging down, arms hanging down` 会压制垂放姿势，必须从主负向+手detailer负向全部删除**（用 remove_terms 宽松替换，注意词可能是列表结尾没有尾逗号）。实测 4 seed：3/4 合格（75%），seed 42 达 8/10（比交叠的 7 分更好），失败案例（seed 13579）是手垂到画面底部边缘（y0.87）被 detailer 漏检——可加 `hands near waist level` 或加大 bbox_dilation。注意：模型不会严格垂放，常自由发挥成"一手前伸一手搭腹"，但手部质量已达标（主人接受）。
+
+**端口坑（2026-08-07）**：Comfy Desktop 重启后 API 端口会从 8189 变回默认 **8188**（netstat 确认；MCP 的 COMFY_URL 若之前改成 8189 需同步改回）。提交前先 `curl http://127.0.0.1:8188/system_stats` 确认。批量脚本 run_batch.py 已内置 8188。
 批量兜底脚本：`E:\ai1\comfyui_workflow\run_batch.py <workflow.json> <seed1> <seed2>...`（自动改 seed 提交 + 等待 + 裁剪手部区域）。75% 成功率下跑 4 张至少一张合格的概率 99.6%。
 验证技巧：手部在整图中只占小区域，先用 PIL 按位置裁剪（如 x0~0.55, y0.35~0.72）放大 3 倍再喂视觉模型，避免整图缩放后看不清细节。构图漂移检测：euler_ancestral 比 dpmpp_2m 构图稳定；Hires fix 会引入构图漂移（手跑到画面边缘+幻视物件），不要盲目加。
 
