@@ -86,6 +86,7 @@ Verification (2026-08): `hermes mcp test fetch` → `✓ Connected (10937ms)`, 1
 
 ## Pitfalls
 
+- **stdio frame format MUST be JSONL (mcp SDK ≥1.x)**: the official mcp Python SDK (`mcp/client/stdio`) reads/writes **one JSON per line, `\n`-separated**. A custom stdio server that speaks LSP-style `Content-Length:` framing will hang: `hermes mcp test` times out (~35s), tools never appear in new sessions, and the server's stderr stays empty (it's waiting for a frame the SDK never sends). Fix: `sys.stdout.buffer.write(json.dumps(payload) + b"\n")` and `json.loads(stdin.readline())`. Verified against mcp 1.28.1 (2026-08): after switching hermes-comfyui's server.py to JSONL, `mcp test` went from ✗ 35s timeout to ✓ 219ms and all 9 comfy_* tools loaded in a fresh session.
 - **Interactive prompts hang in non-TTY tool calls**: `hermes mcp add` without piped stdin times out after 60s at the auth prompt. Always pipe `printf 'n\ny\n'`.
 - **Partial pipe input cancels the add**: answering only the auth prompt (`printf 'n\n'`) leaves the "Enable all tools?" prompt unanswered → `Cancelled`. Answer both prompts.
 - **Config key is `mcp_servers`, not `mcp` or `servers`** — wrong key silently disables MCP discovery.

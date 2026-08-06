@@ -169,6 +169,64 @@ path.write_text(content, encoding='utf-8')
 
 这是安全机制，必须用 `execute_code`（Python yaml 库）或手动编辑。
 
+### config.yaml 中文乱码修复（UTF-8 误存成 GBK）
+
+**症状**：config.yaml 里中文全部变成乱码（如「你是霸道总裁」显示为
+`浣犳槸闇搁亾`），`yaml.safe_load` 解析报 ParserError。重启 Hermes 后所有
+中文人格（boss/kohai/lewd-maid 等）全乱码。
+
+**根因**：某次用错误编码（GBK 解码 UTF-8 字节）写回 config.yaml 导致
+不可逆乱码。可能由第三方脚本/工具 merge 配置时引起，**与 Hermes 本身无关**。
+
+**修复流程（2026-08 实战验证）**：
+
+1. **先备份再动手**：`cp config.yaml config.yaml.bak-编码修复`
+2. **确认备份完好**：`config.yaml.bak` 通常可正常解析（YAML 无乱码）：
+   ```python
+   import yaml
+   cfg = yaml.safe_load(open('config.yaml.bak', encoding='utf-8'))
+   ```
+3. **用备份的 personalities 替换乱码区块**（保留其他配置）：
+   ```python
+   import yaml
+   from pathlib import Path
+   bak = yaml.safe_load(Path('config.yaml.bak').read_text(encoding='utf-8'))
+   bak_personas = bak['agent']['personalities']   # 18 个基础人格
+
+   # 定位乱码文件的 personalities 区块边界（从 "  personalities:" 到下一个顶层键）
+   lines = Path('config.yaml').read_text(encoding='utf-8', errors='replace').split('\n')
+   start = next(i for i, l in enumerate(lines) if l.startswith('  personalities:'))
+   end = next(i for i in range(start+1, len(lines)) if lines[i] and not lines[i].startswith(' ') and not lines[i].startswith('#'))
+   persona_block = yaml.dump({'personalities': bak_personas}, allow_unicode=True,
+                             default_flow_style=False, sort_keys=False, width=1000).split('\n')[1:]
+   Path('config.yaml').write_text('\n'.join(lines[:start] + persona_block + lines[end:]), encoding='utf-8')
+   ```
+4. **⚠️ 注意 yaml.dump 后结构**：直接替换会把人格挂到 `agent:` 下丢 `personalities:` 层，
+   需再包一层：
+   ```python
+   agent = cfg['agent']
+   persona_keys = ['helpful','concise',...,'lewd-maid']  # 所有人格键
+   personas = {k: agent.pop(k) for k in persona_keys if k in agent}
+   agent['personalities'] = personas
+   ```
+5. **补回备份后新增的档案**（备份可能过旧）：从 profiles 目录提取：
+   ```python
+   for name in ['eos','hebe','athena','artemis','nemesis']:
+       pc = yaml.safe_load(Path(f'profiles/{name}/config.yaml').read_text(encoding='utf-8'))
+       personas[name] = pc['agent'].get('system_prompt', '')  # 或 personalities[name]
+   ```
+   注意：eos 在 profile 里是**压缩摘要**（182 字符，官方设计如此），不是 bug。
+6. **全面验证**：
+   - `yaml.safe_load` 整体解析通过
+   - 人格数量正确（23 = 18 基础 + 5 新档案）
+   - 无乱码：`re.search(r'[\uFFFD]|鈥|馃|浣|閬', str(v))` 检查每个条目
+   - mcp_servers 等其他区块未被破坏（用 `git diff` 或对比备份）
+
+**关键教训**：
+- 第三方工具 merge config.yaml 时可能破坏编码 → 改配置前先备份
+- 修复时**保留 mcp_servers / custom_providers 等新配置**，只替换乱码的人格区块
+- 用 Python yaml 库操作，**不要**用 patch 工具（config.yaml 被保护 + 转义问题）
+
 ### 人格切换不即时生效？
 
 `/personality` 修改的是 system prompt，下一轮对话生效。如果切了感觉没变，多发一条消息触发新 prompt。
