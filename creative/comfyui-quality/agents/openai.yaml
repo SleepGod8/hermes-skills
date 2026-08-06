@@ -1,0 +1,6 @@
+interface:
+  display_name: "ComfyUI Quality"
+  short_description: "Quality-first ComfyUI image workflows"
+  default_prompt: "Use $comfyui-quality to generate a controlled, high-quality ComfyUI image workflow."
+policy:
+  allow_implicit_invocation: true
