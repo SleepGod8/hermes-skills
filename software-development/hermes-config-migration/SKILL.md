@@ -17,10 +17,20 @@ platforms: [windows]
 
 ## 触发条件
 
-- 用户提供 `hermes-multiagent-config.tar.gz` 之类迁移包，要求"解压合并到 %LOCALAPPDATA%\\hermes"、"6 个档案 + 人设/技能/记忆/协作机制"
+- 用户提供 `hermes-multiagent-config.tar.gz` 之类迁移包，要求"解压合并到 %LOCALAPPDATA%\hermes"、"6 个档案 + 人设/技能/记忆/协作机制"
 - 用户提供 rar/zip 的 skill/文档导出包，要求"按 Hermes 档案配置分别导入"（如 multi-agent-export.rar 按 6 档案分开装 skill）
 - 用户要求把本机 Hermes 打包搬到另一台电脑
-- 关键词：迁移、合并、hermes profile show、另一台电脑的配置
+- 用户要求**统一多个档案中同名技能的命名/路径/结构**（同机规范化，2026-08-07 实测：六档案 multi-agent-protocol 目录/文件名/岗位文件/共享档案 MD5 全统一）
+- 用户要求**新写一个全档案共享的技能/协议并同步到所有女仆档案**（2026-08-07 实测：group-chat-autonomous-chat 同步 9 档案 + 根级）
+- 关键词：迁移、合并、hermes profile show、另一台电脑的配置、统一命名、统一路径、同步到所有档案
+
+## ⚠️ 档案列表会变（2026-08-07 实测）
+
+**不要按记忆里的旧档案列表硬编码**。本机女仆档案已从 6 个变为 9 个：
+`aphrodite/ares/artemis/athena/dionysus/eos/hebe/hypnos/nemesis`（iris 已迁移为 hypnos，
+另有 3 个新增：aphrodite 冷感魅魔 / ares 假小子 / dionysus 微醺直球）。用户可能在其他会话
+里用 Studio 或 CLI 增删档案（迁移痕迹如 `config.yaml.bak-iris-migrate`）。**同步/遍历前
+先 `ls $HERMES_HOME/profiles/` 确认实际档案名**，用实际列表循环，不要写死。
 
 ## 用户铁律（先过问，不可跳过）
 
@@ -76,6 +86,26 @@ platforms: [windows]
 - **单反斜杠 vs 双反斜杠混淆**：文件里实际是单反斜杠 `C:\Users\...`，但 `repr()`/终端显示为双反斜杠；用 raw string `r"C:\Users\..."`（单反斜杠）匹配才成功。且 `C:\Users` 是 `C:\\Users` 的子串，肉眼检查会假阳性——拿不准就读原始字节确认。
 - **⚠️ 删"重复目录"前先看父目录内容**：iris 的 `skills/autonomous-ai-agents/multi-agent-protocol` 是重复副本，但父目录 `autonomous-ai-agents/` 下还有 13 个正常技能（claude-code/codex/opencode 等）。`shutil.rmtree(父目录)` 会**连坐误删**正常技能。只删精确目标目录；若已误删，同技能在其他档案都有副本（如 artemis），`shutil.copytree` 恢复 + MD5 校验。
 - **MSYS 删目录 busy**：bash cwd 停在被删目录内时 `rm -rf`/`cmd rmdir` 报 Device or resource busy——先 `cd` 出去再删。
+
+## 新写全档案共享技能/协议（同步到所有女仆档案）
+
+用户要求"写一个 X 协议/技能并同步到所有档案"时（2026-08-07 实测：群聊自主沟通协议
+`group-chat-autonomous-chat` 同步 9 档案 + 根级）：
+
+1. **先问清用途范围，别自作主张**：用户要「群聊自主沟通协议」时只写**日常聊天**场景，
+   **绝不混入多 Agent 协作开发内容**（A1-A6 接力链、[STATUS]/[HANDOFF] 格式、契约冻结、合流发布）。
+   首次起草混入开发协议被用户明确纠正：「这份协议只是用于群聊聊天，不涉及多agent协作开发」。
+   开发协作另走 `multi-agent-protocol.md`。拿不准时用 clarify 确认「聊天 vs 开发」定位。
+2. **组装 SKILL.md**：YAML frontmatter（name 小写连字符 + description 含 Use when 触发词）+ 正文。
+   正文用自然语言规则表（优先级 P0-P4、接力轮次上限、防刷屏纪律、冷场兜底、主人边界），
+   不套开发消息格式；触发词按各档案人设写（Aphrodite↔穿搭魅力、Ares↔体力、Athena↔推理、
+   Hypnos↔困、Nemesis↔毒舌）。
+3. **同步目标 = 所有女仆档案 + 根级**：`profiles/<名>/skills/<分类>/<技能名>/SKILL.md` 逐个写 +
+   根级 `skills/<分类>/<技能名>/SKILL.md`（default 档案也参与群聊）。**先 `ls profiles/` 拿实际
+   档案列表**（见上节档案会变），不要用记忆里的旧列表。
+4. **CRLF + MD5 全一致**：内容用 `\r\n`（`content.replace('\n','\r\n')`），写完 `hashlib.md5(open(p,'rb'))`
+   校验全部档案 MD5 一致。
+5. **验证**：`hermes profile show <各档案>` Skills 数增加 + 抽查 SKILL.md frontmatter 可读。
 
 ## 合并前差异分析（必做）
 
