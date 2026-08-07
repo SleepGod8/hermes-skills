@@ -29,6 +29,15 @@ platforms: [linux, macos, windows]
 - eos 例外：config.yaml system_prompt 是 ~119 字符简版摘要，不是全文镜像！
 - **lewd-maid 也可能是简版摘要**（实测 ~2355 字符）：只含核心双人格部分，**不含跨档案联动/配对段落**（如「Hermes 的玩弄癖好」× Athena）。改 default SOUL.md 的配对段落时，若 lewd-maid 里找不到对应锚点，直接跳过同步，不要强行写入
 
+## 新增档案（从零建档）🆕
+
+新增女仆档案（如 hypnos）：
+1. 写 SOUL.md：人格设定（身份/性格/说话/口头禅/行为/信念/禁忌/记忆偏好）+ `## 🎂 年龄定位`（含新排序）+ `# 🔞 色情设定（主人专属）`（按角色气质设计专属玩法，如睡神的「睡梦野兽/梦游口穴/半梦半醒敏感体质/催眠亲和」）+ `## 共通色情机制 🆕`（10 条全文照搬）+ 家族玩法模块（当众自慰/排队侍奉/姐妹对决/茶会日常+野兽+疯狂口穴）+ 姐姐联动
+2. config.yaml **不手写**：复制现有成人档案的 config（artemis 骨架最稳——platforms/MCP/custom_providers 全齐）→ `yaml.safe_load` → 只替换 `agent.system_prompt` 为新 SOUL 全文 → `yaml.dump(allow_unicode=True, default_flow_style=False, sort_keys=False)` 写回
+3. SOUL.md 用 CRLF 写：`open(..., newline='')` + `text.replace('\n','\r\n')`，与家族一致
+4. 建完立刻问用户「年龄排序是否同步到其他档案」——插队会改变别人的排行（见下节）
+5. 更新 memory：档案列表 + 一句角色摘要
+
 ## 查询/扮演会话（不写文件）
 
 - **用户问「X的详细设定」**：读对应档案 SOUL.md（`~/AppData/Local/hermes/profiles/<名>/SOUL.md`；default 在 `~/AppData/Local/hermes/SOUL.md`）后按结构展示，别只凭 memory 摘要背——memory 只存压缩关键词，容易漏专属变体细节（如 Athena 的「清醒的野兽」完整条目、Nemesis 的蒙眼/子宫口）。展示时标注 ⭐ 专属条目。
@@ -54,6 +63,24 @@ config.yaml 写入参数（必须，用 yaml 库时）：`allow_unicode=True, de
 config.yaml 修改方式按存储形态分：
 - **转义字符串形态**（system_prompt 以双引号包裹、`\n` 是字面反斜杠-n 两字符）→ **patch 工具可直接改**：old_string/new_string 里写字面 `\n`（即反斜杠+n），锚点取文件中相邻两行（如 `- 组合名：冰山与火焰\n\n### × Iris`）即可唯一命中，lint 会自动跑。改完仍要 yaml.safe_load 验证。
 - **块标量/真实换行形态** → patch 会被拒，必须 execute_code + yaml 库改。
+
+## 家族级年龄排序变更 🆕
+
+插入新成员/调整排行时，排序文本在**各档案存储格式不同**，先扫描再逐个处理（2026-08 实测）：
+
+| 文件 | 格式 |
+|---|---|
+| default SOUL.md | 加粗行 `**Athena > … > Eos**` + markdown 表格（`\| 排行 \| 女仆 \| 定位 \|`，每人一行）→ 新成员加一行 + 被挤者改排行数字 |
+| athena/artemis/hebe/nemesis SOUL + config | 普通行 `- 女仆家族年龄排序：Athena > … > Eos` |
+| eos SOUL | 普通行 + 定位行「本档案定位：…（排行第六）」——**排行数字也要跟着改**（6→7） |
+| eos config / iris SOUL+config / default config(lewd-maid) | **没有**排序行（简版摘要）→ 跳过，不强行写入 |
+
+处理要点：
+- 排序行锚点 `Athena > Hermes×Iris > Hebe > Artemis > Nemesis > Eos` 各档案一致，批量替换成新排序即可
+- 替换前逐个 `count(锚点)` 必须 ==1，SOUL 侧用 CRLF 文本、config 侧用 LF 变体（`old.replace('\r\n','\n')`）
+- **验证子串要匹配实际格式**：新档案自身排序行可能带加粗（如 `**Hypnos（18）**`），用普通版 SORT_NEW 匹配会误报 FAIL——换加粗版子串再验证一次
+- config 改前 `shutil.copy2` 备份 `.bak-<标签>`；验证断言新排序 count>=1 且旧排序 count==0
+- 完整扫描/替换/验证脚本：见 `references/new-profile-bootstrap.md`
 
 ## 配对设定跨档案同步（Hermes×Athena 这类）
 
