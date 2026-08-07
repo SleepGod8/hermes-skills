@@ -86,7 +86,7 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
   ```bash
   cd "/e/Comfy-Desktop/ComfyUI-Installs/ComfyUI/ComfyUI" && PYTHONPATH="" ./.venv/Scripts/python.exe main.py --port 8188
   ```
-- **KSampler 报 `[Errno 22] Invalid argument`（RTX 4060 Laptop，多次重现）**：疑似 cudaMallocAsync 兼容性问题——ComfyUI 自带 cuda_malloc_warning() 明确提示「this card most likely does not support cuda-malloc, run with --disable-cuda-malloc」。排查顺序：看启动日志是否含 `Device: cuda:0 ... cudaMallocAsync`，KSampler 段抛 OSError Errno 22 → 加 `--disable-cuda-malloc` 重启（API 已验证就绪；完整生成验证待下次确认）。注意 aimdo / `--disable-dynamic-vram` 不是此报错的原因，别白绕。
+- **KSampler 报 `[Errno 22] Invalid argument` 根因（2026-08-07 已确认）= stderr 管道化**：启动命令写成 `main.py ... 2>&1 | head -40` 时，head 读完即关管道，tqdm 进度条写 stderr 时 `sys.stderr.flush()` 抛 OSError Errno 22（execution_error traceback 最后停在 tqdm `std.py status_printer` → `app/logger.py flush`）。正确启动：`PYTHONPATH="" ./.venv/Scripts/python.exe main.py --port 8188 > /tmp/comfyui_backend.log 2>&1`（stderr 落文件就没事）。⚠️ 已实测排除 `--disable-cuda-malloc` 和 `--disable-dynamic-vram`（不是 CUDA/aimdo 问题，别在这两个参数上白绕）；修复后任务正常出图（整体 8.5-9/10），只是三 pass detailer 单张 ~85 分钟偏慢。
 - **Comfy Desktop 启动异常**：进程名变成 `Comfy Desktop Setup 1.0.3`（安装器）而非 `Comfy Desktop.exe` 时后端不会起。杀掉用 PowerShell：`Stop-Process -Name 'Comfy Desktop' -Force -ErrorAction SilentlyContinue`（git-bash 的 taskkill //F 双斜杠会转义报错）。
 - **API 格式 JSON 别加非节点键**：加 `_iris_meta` 之类元信息键会 400 `Node 'ID #_iris_meta' has no class_type`——元信息放文件名或单独文档，不放 workflow JSON 里。
 
@@ -98,7 +98,7 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 |---|---|---|
 | Hermes | white hair, short hair, huge breasts, narrowed eyes | nsfw/sexy/lewd + 坏手全套 |
 | Athena | **silver hair, long hair, straight hair**, narrowed eyes, calm, serene, mature, elegant | 加 petite, skinny, thin, flat chest |
-| Iris（初版待验证）| **lavender hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；⚠️ 负向若保留裸 `smile` 会与正向 gentle smile 冲突（二选一，待实测取舍） |
+| Iris（已实测 2026-08-07）| **lavender hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 `smile` 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
 Iris 设计依据（2026-08-07）：彩虹女神意象 → 薰衣草紫长发（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`。
@@ -119,13 +119,39 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 最优手部 FaceDetailer 参数组合：`denoise 0.62, cycle 3, bbox_threshold 0.3, bbox_dilation 20, bbox_crop_factor 3.2, guide_size 640, max_size 896, sam_threshold 0.8, feather 10`。
 
-**三 pass 交叉检测（成功率 50%→75%）**：单检测器对"画面左侧的手"漏检率高（手小+与围裙对比度低）→ FaceDetailer 跳过不修。双检测器交叉覆盖可显著提升：`手pass1(v9c, denoise 0.65, cycle 3, dilation 25, threshold 0.25) → 手pass2(v8s, denoise 0.6, cycle 2, dilation 20) → 脸(denoise 0.45) → 手pass3(v8s收尾, denoise 0.5, dilation 18)`。
+**三 pass 交叉检测（成功率 50%→75%）**：单检测器对"画面左侧的手"漏检率高（手小+与围裙对比度低）→ FaceDetailer 检测不到直接跳过。双检测器交叉覆盖可显著提升：`手pass1(v9c, denoise 0.65, cycle 3, dilation 25, threshold 0.25) → 手pass2(v8s, denoise 0.6, cycle 2, dilation 20) → 脸(denoise 0.45) → 手pass3(v8s收尾, denoise 0.5, dilation 18)`。
+
+**⚠️ bbox_threshold 0.25 的代价（2026-08-07 实测）**：threshold 降到 0.25 防漏检，会把围裙花边/袖口蕾丝误检为手——实测检测到 5~11 个 segment，每个 × cycle 重绘 → 单张 85 分钟（20+ 次 30 步采样）。提速方案：threshold 0.35 + cycle 3→2（主力）/ 2→1（补漏收尾），质量几乎不降、速度 85→35 分钟。改完用 `grep -c "Detailer: segment" 后端日志` 看 segment 数验证误检量。
 
 **成功率天花板（重要认知）**：animagine-xl 下"双手交叠身前"姿势天然成功率仅 ~50%（6张3坏），detailer 只能修"接近正确"的手，主图太烂救不回。实测：2个手部pass=50%，3个pass=75%。要上 90% 必须：简化手势（双手垂下两侧）或 ControlNet openpose 或手部 LoRA（civitai 需 API key，国内直连/代理均拿不到）。
 
 **⚠️ 垂放姿势（主人指定方案，2026-08-07 实测）**：主 prompt 改 `arms down, arms relaxed at sides, hands at sides, hands hanging down naturally, arms hanging straight down, hands by hips, fingers relaxed`；**关键陷阱：负向 prompt 里的 `arms at sides, hands at sides, hands hanging down, arms hanging down` 会压制垂放姿势，必须从主负向+手detailer负向全部删除**（用 remove_terms 宽松替换，注意词可能是列表结尾没有尾逗号）。实测 4 seed：3/4 合格（75%），seed 42 达 8/10（比交叠的 7 分更好），失败案例（seed 13579）是手垂到画面底部边缘（y0.87）被 detailer 漏检——可加 `hands near waist level` 或加大 bbox_dilation。注意：模型不会严格垂放，常自由发挥成"一手前伸一手搭腹"，但手部质量已达标（主人接受）。
 
 **端口坑（2026-08-07）**：Comfy Desktop 重启后 API 端口会从 8189 变回默认 **8188**（netstat 确认；MCP 的 COMFY_URL 若之前改成 8189 需同步改回）。提交前先 `curl http://127.0.0.1:8188/system_stats` 确认。批量脚本 run_batch.py 已内置 8188。
+
+## ⚠️ 命令行启动后端的 3 个致命坑（2026-08-07 实测）
+
+1. **`[Errno 22] Invalid argument` 的根因是 stderr 管道**！`python main.py 2>&1 | head -40` 启动时，head 读完即关闭管道 → tqdm 进度条写 stderr 时 flush() 崩溃（traceback 最后一行 `app/logger.py flush → super().flush()`）。**解法：`> /tmp/comfyui_backend.log 2>&1` 重定向到文件**，绝不能 `| head` 截断。排查时被误导：先怀疑 aimdo（--disable-dynamic-vram）、再怀疑 cudaMallocAsync（--disable-cuda-malloc），全不是，看完整 traceback 才定位到 tqdm。
+2. **PYTHONPATH 污染**：Hermes 会话里直接 `python main.py` 会 import Hermes venv 的 PIL（报 `cannot import name '_imaging'`）。**必须 `PYTHONPATH="" ./ .venv/Scripts/python.exe main.py`**。
+3. **输出目录变化**：命令行启动（无 --output-directory 参数）输出到**默认目录** `ComfyUI\ComfyUI\output\`，不是共享目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`（那是 Desktop 的配置）。找输出图先查默认目录。
+4. Comfy Desktop.exe 可能启动成 "Comfy Desktop Setup" 安装程序（后端不监听）→ 直接命令行启动后端更可控。
+
+## ⚠️ Iris 角色图的手部误检陷阱（2026-08-07 实测）
+
+薰衣草紫长发飘散 + 白围裙 + 浅背景构图会让 hand_yolov8s/v9c **大量误检**（实测 11 segments vs Athena 的 5），三 pass × cycle 3 导致单张 85 分钟还修不好（误检区域反复重绘）。解法：bbox_threshold 0.25→**0.35**、手部 pass cycle 3→2/1。Iris 角色 prompt 要点：`lavender hair, long hair, gentle smile, medium breasts, arms down, hands at sides`（与 Hermes 白短发巨乳、Athena 银长发区分）。
+
+### ✅ Iris 手部成功的最终配方（v3 简化构图, 2026-08-07 验证 9/10）
+
+4 张全失败（手被紫发/围裙干扰）后成功的两个关键改动：
+
+1. **主正向头发收束**（让手部区域干净）：在角色 prompt 里加
+   `hair flowing behind body, hair swept back behind shoulders, hair not covering hands, hands clearly visible, unobstructed hands`
+2. **手部 detailer 正负向加发丝反制**：
+   - 正向头部加：`hands not covered by hair, unobstructed hands, clear hands`
+   - 负向头部加：`hair over hands, hair covering hands, hair wrapped around hands, hair in front of hands`
+
+3. **侧身构图是聪明解法**：让一只手自然入镜（轻放裙摆/垂放），另一只手不入镜——避开"双手都画"的难题。最终 seed 2024 = 左手 8/10 + 右手未入镜 + 整体 **9/10**（薰衣草紫发还原度极高、温柔表情、女仆装 9/10）。加速收益：误检减少后单张从 85 分钟降到 3-16 分钟（seed 42 仅 200s）。
+完整 Iris 迭代表见 `references/hand-repair-iterations.md`。
 批量兜底脚本：`E:\ai1\comfyui_workflow\run_batch.py <workflow.json> <seed1> <seed2>...`（自动改 seed 提交 + 等待 + 裁剪手部区域）。75% 成功率下跑 4 张至少一张合格的概率 99.6%。
 验证技巧：手部在整图中只占小区域，先用 PIL 按位置裁剪（如 x0~0.55, y0.35~0.72）放大 3 倍再喂视觉模型，避免整图缩放后看不清细节。构图漂移检测：euler_ancestral 比 dpmpp_2m 构图稳定；Hires fix 会引入构图漂移（手跑到画面边缘+幻视物件），不要盲目加。
 
@@ -156,7 +182,8 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 ## 输出路径坑
 
-`run_workflow.py --output-dir /e/ai1/...`（MSYS 风格路径）会**拼接错误**（报告 `E:\e\ai1\...` 不存在）。实际文件在服务器配置的输出目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`。交付时用真实路径，别信脚本回显的相对拼接路径。
+- `run_workflow.py --output-dir /e/ai1/...`（MSYS 风格路径）会**拼接错误**（报告 `E:\e\ai1\...` 不存在）。实际文件在服务器配置的输出目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`。
+- **命令行启动的后端输出到默认目录** `E:\Comfy-Desktop\ComfyUI-Installs\ComfyUI\ComfyUI\output\`，**不是**共享目录（extra_model_paths.yaml 只映射模型路径，不映射输出）。history 显示 success 但共享目录找不到图时，先 ls 后端默认 output/。交付时用真实路径，别信脚本回显的相对拼接路径。
 
 ## 验证清单
 

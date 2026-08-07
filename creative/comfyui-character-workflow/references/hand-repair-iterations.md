@@ -17,7 +17,29 @@ Workflow: `E:\ai1\comfyui_workflow\athena_maid_detailer_api.json`
 | v3.0 | 加 Hires fix(768→1024 denoise 0.35) + dpmpp_2m + "hands slightly apart" | ❌ 构图漂移, 手跑左下角, 幻视金色物件, detailer 没救回 |
 | v3.1 | 回退提示词, 保留 dpmpp_2m | ❌ 手部位置仍漂移(搭腰/握物), 左手粘连 |
 | v3.2 | 完全恢复 v2.3 配置(euler_ancestral 40 steps), 批量 6 seed | ⚠️ 成功率 50% (3/6), 失败全在画面左侧手并指 |
-| v3.3 | 三 pass 交叉检测: v9c主力(0.65)→v8s补漏(0.6)→脸(0.45)→v8s收尾(0.5); bbox_threshold 0.25 | 🔄 未验证（会话结束时仍在跑） |
+| v3.3 | 三 pass 交叉检测: v9c主力(0.65)→v8s补漏(0.6)→脸(0.45)→v8s收尾(0.5); bbox_threshold 0.25 | ✅ 成功率 75% (3/4), 最好 7 分; 失败 1 张手垂到底部边缘漏检 |
+
+## 垂放姿势迭代（v4 系列, 主人指定 2026-08-07）
+| 版本 | 关键改动 | 结果 |
+|---|---|---|
+| v4.0 | 主 prompt 改 `arms down, arms relaxed at sides, hands at sides, hands hanging down naturally`; **负向删掉 arms/hands at sides、hanging down 等压制词**; 保留三 pass | ✅ 75% (3/4), seed 42 达 **8/10**（比交叠的 7 分更好）; 失败 seed 13579 是手垂到 y0.87 底部被漏检 → 可加 `hands near waist level` 或加大 dilation |
+
+## Iris 画像验证（2026-08-07, workflow: iris_maid_detailer_api.json）
+- 角色配方: lavender hair(薰衣草紫长发, 整体 8.5-9/10 完美还原) + gentle smile + medium breasts + 双手垂放
+- seed 42: 整体 8.5-9/10, 但**前伸的手(画面左侧)特写畸形 2/10**（荧光色+多指）, 垂放的手 7/10 → 印证\"姿势越简单手越稳\"
+- ⚠️ bbox_threshold 0.25 误检爆炸: Iris 布局检测到 5~11 个 segment（围裙花边/蕾丝误检）, 单张 **85 分钟**（20+ 次 30 步采样）; 提速 = threshold 0.35 + cycle 3→2 / 2→1（~35 分钟, 质量几乎不降）
+
+### Iris v3 简化构图（最终成功, 2026-08-07）
+前 4 张（v1 旧参数 seed42/2024 + v2 提速 seed42/777）手部全失败——紫发飘散覆盖手部区域，检测器分不清手和发丝，detailer 修不动。成功改动：
+| 改动 | 内容 |
+|---|---|
+| 主正向头发收束 | 加 `hair flowing behind body, hair swept back behind shoulders, hair not covering hands, hands clearly visible, unobstructed hands` |
+| 手detailer正向 | 头部加 `hands not covered by hair, unobstructed hands, clear hands` |
+| 手detailer负向 | 头部加 `hair over hands, hair covering hands, hair wrapped around hands, hair in front of hands` |
+| 侧身构图 | 让一只手入镜(轻放裙摆)、另一只手不入镜，避开双手难题 |
+
+结果：seed 42 右手 8/10(左手被裙摆遮挡 2/10) → seed 777 失败 → **seed 2024 左手 8/10、右手未入镜、整体 9/10** ✅。提速收益：误检减少后 seed 42 仅 200s。
+经验：**构图里大色块/发丝/装饰物覆盖手部区域 = 检测器误检 + 修复无效**；prompt 层"把干扰物从手部区域挪走"比调 detailer 参数更根本。
 
 ## 验证过的最优参数（v2.3）
 - 主采样: **euler_ancestral + normal, 40 steps, cfg 7**（构图稳定性关键; dpmpp_2m 会漂移构图）
