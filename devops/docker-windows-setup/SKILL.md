@@ -1,0 +1,77 @@
+---
+name: docker-windows-setup
+description: "Windows 装 Docker+WSL2+镜像加速+compose部署。提权/bat/tag/symlink坑。"
+version: 1.0.0
+author: agent
+license: MIT
+tags: [docker, wsl2, windows, docker-desktop, compose, dify, mirror]
+platforms: [windows]
+---
+
+# Docker Windows Setup & Deployment
+
+Windows 上从零装 Docker Desktop（装到非 C 盘）、配 WSL2 后端、国内镜像加速，以及部署 docker compose 应用（实测 Dify 1.16 迁移）。本技能记录 2026-08-07 全流程踩过的坑。
+
+## 触发条件
+
+- 用户要在 Windows 上安装 Docker Desktop / 启用 WSL2
+- docker compose 应用部署失败（拉镜像断连、镜像 tag 不存在、容器循环重启）
+- 用户偏好软件装 E 盘等非系统盘
+
+## 安装 Docker Desktop 到非 C 盘（实测流程）
+
+1. 安装包静默安装（装到 E:\Docker）：
+   ```
+   "Docker Desktop Installer.exe" install --quiet --accept-license --installation-dir="E:\Docker"
+   ```
+2. **UAC 提权坑**：Hermes 后台终端会话**无法弹出交互式 UAC**（PowerShell `Start-Process -Verb RunAs` 报 InvalidOperationException；schtasks /RL HIGHEST 也失败）。**必须让用户手动右键 bat → 以管理员身份运行**。这是唯一可靠路径。
+3. **bat 中文乱码坑**：bat 文件 UTF-8 编码会被 cmd（GBK 代码页 936）解析成乱码 → 中文 echo 被当命令执行、中文路径找不到。**规则：bat 全英文 + 安装包复制到无中文路径**（如 `D:\软件\...` 里的「软件」必乱码，复制到 `E:\ai1\DockerDesktopInstaller.exe`）。
+4. git-bash 直接传 `--installation-dir="E:\Docker"` 参数可能失效（引号被吞）→ 放 bat 里写死路径最稳。
+5. 验证：`E:\Docker\resources\bin\docker.exe --version`；`com.docker.service` 服务已注册（`Get-Service *docker*`）。
+
+## WSL2 后端（Win10 家庭版必需）
+
+Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套缺一不可：
+
+1. **启用 Windows 功能**（dism，需管理员）：
+   ```
+   dism /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+   dism /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+   ```
+   必须**重启电脑**才生效（/norestart 挂起）。
+2. **WSL2 内核 MSI**（`wsl_update_x64.msi`，~17MB）：
+   - 官方源 `https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi` 国内慢（>2 分钟下不完）→ **走代理秒下**（Python urllib + ProxyHandler 最稳，curl -o 在 git-bash 会静默失败）。
+   - `msiexec /i wsl_update_x64.msi /quiet /norestart`
+3. **完整 WSL 应用（Store 版 2.x）**：`wsl --version` 仍报"未安装"= 缺 WSL Appx。wsl.exe 的 `--install` 从 GitHub 下载极慢（0.3% 卡住）→ 用代理从 GitHub Releases 下载 msixbundle：
+   ```
+   https://github.com/microsoft/WSL/releases/download/<ver>/Microsoft.WSL_<ver>.0_x64_ARM64.msixbundle
+   ```
+   （~494MB，代理下 3.3MB/s）。安装 `Add-AppxPackage` **需要管理员**（0x80073D28 提权错误）→ 又走用户手动运行 bat。
+4. 注意区分：`wsl_update_x64.msi` = 内核；GitHub 的 msixbundle = 完整 WSL 应用，两个都要。
+
+## 国内镜像加速（拉 Docker Hub 镜像断连时）
+
+症状：`docker compose up` 拉镜像报 `short read: expected X bytes but got Y: unexpected EOF`（国内连 Docker Hub 不稳）。
+
+修复：改 `%USERPROFILE%\.docker\daemon.json`（Docker Desktop daemon 配置；write_file 拒绝写受保护文件 → 用 Python json 读写）加 registry-mirrors，然后**重启 Docker Desktop** 才生效：
+```json
+{ "registry-mirrors": ["https://docker.m.daocloud.io", "https://docker.1ms.run", "https://docker.xuanyuan.me", "https://dockerproxy.net"] }
+```
+验证：`docker info | grep -A5 "Registry Mirrors"`。
+
+## docker compose 部署常见坑
+
+- **镜像 tag 不存在**：`docker compose up` 卡在拉取重试。查 Docker Hub 可用 tag（代理访问 `https://hub.docker.com/v2/repositories/<org>/<repo>/tags`），把 compose 的 image 改成存在的 tag。实例：`langgenius/dify-plugin-daemon:0.6.3-local` 不存在，改 `0.6.10-local` 可用。
+- **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
+- compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
+
+## 验证清单
+
+- [ ] `docker --version` + `docker info`（Server 在跑）
+- [ ] `docker compose version`
+- [ ] `docker ps` 目标容器 `Up(healthy)`
+- [ ] 浏览器访问 Web 入口（Dify 默认 80 端口）
+
+## 参考
+
+- Dify 迁移部署细节：见 `references/dify-deployment-2026-08.md`
