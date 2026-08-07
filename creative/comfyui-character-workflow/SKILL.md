@@ -29,7 +29,7 @@ platforms: [windows]
 | 输出 | `E:\Comfy-Desktop\ComfyUI-Shared\output\` |
 | 工作流 | `E:\ai1\comfyui_workflow\`（API 格式 JSON）|
 | 检查点 | `animagine-xl-4.0.safetensors`（角色图主力）|
-| API | `http://127.0.0.1:8189` |
+| API | `http://127.0.0.1:8188`（重启后可能在 8188/8189 间变，先 curl system_stats 确认）|
 
 ## ⚠️ 最大陷阱：`.venv` 才是运行环境，不是 standalone-env
 
@@ -78,6 +78,18 @@ ComfyUI Desktop 装了两个 Python。**装自定义节点依赖必须用 `.venv
   ```
 - 大文件下载易断连（阿里对 >1GB 限速重置）：用 curl `-C -` 断点续传，后台 background=true；先查 wheel 列表：`curl -s <mirror>/cu130/ | grep -o 'torch-2\.13[^"]*cp313[^"]*win_amd64\.whl'`
 
+## 后端启动与 KSampler 故障排查（2026-08-07 实测）
+
+Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
+
+- **必须 `PYTHONPATH=""`**：否则 Hermes 自己的 venv 的 PIL 会 shadow ComfyUI 的，`main.py` 启动报 `ImportError: cannot import name '_imaging'`（PIL 来自 hermes-agent venv）。启动命令：
+  ```bash
+  cd "/e/Comfy-Desktop/ComfyUI-Installs/ComfyUI/ComfyUI" && PYTHONPATH="" ./.venv/Scripts/python.exe main.py --port 8188
+  ```
+- **KSampler 报 `[Errno 22] Invalid argument`（RTX 4060 Laptop，多次重现）**：疑似 cudaMallocAsync 兼容性问题——ComfyUI 自带 cuda_malloc_warning() 明确提示「this card most likely does not support cuda-malloc, run with --disable-cuda-malloc」。排查顺序：看启动日志是否含 `Device: cuda:0 ... cudaMallocAsync`，KSampler 段抛 OSError Errno 22 → 加 `--disable-cuda-malloc` 重启（API 已验证就绪；完整生成验证待下次确认）。注意 aimdo / `--disable-dynamic-vram` 不是此报错的原因，别白绕。
+- **Comfy Desktop 启动异常**：进程名变成 `Comfy Desktop Setup 1.0.3`（安装器）而非 `Comfy Desktop.exe` 时后端不会起。杀掉用 PowerShell：`Stop-Process -Name 'Comfy Desktop' -Force -ErrorAction SilentlyContinue`（git-bash 的 taskkill //F 双斜杠会转义报错）。
+- **API 格式 JSON 别加非节点键**：加 `_iris_meta` 之类元信息键会 400 `Node 'ID #_iris_meta' has no class_type`——元信息放文件名或单独文档，不放 workflow JSON 里。
+
 ## 角色形象提示词配方（animagine-xl-4.0）
 
 基础参数：896×1152（竖版）、euler_ancestral、cfg 7、steps 25-32、`((artist:melon22)), artist:ikarin`、`masterpiece, best quality, very aesthetic, amazing quality, year 2024` 结尾。
@@ -86,7 +98,10 @@ ComfyUI Desktop 装了两个 Python。**装自定义节点依赖必须用 `.venv
 |---|---|---|
 | Hermes | white hair, short hair, huge breasts, narrowed eyes | nsfw/sexy/lewd + 坏手全套 |
 | Athena | **silver hair, long hair, straight hair**, narrowed eyes, calm, serene, mature, elegant | 加 petite, skinny, thin, flat chest |
+| Iris（初版待验证）| **lavender hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；⚠️ 负向若保留裸 `smile` 会与正向 gentle smile 冲突（二选一，待实测取舍） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
+
+Iris 设计依据（2026-08-07）：彩虹女神意象 → 薰衣草紫长发（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`。
 
 Detailer 二次精修提示词：positive `good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers`；negative 坏手全套。
 
@@ -145,7 +160,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 ## 验证清单
 
-- [ ] `curl http://127.0.0.1:8189/system_stats` 通
+- [ ] `curl http://127.0.0.1:8188/system_stats` 通（8188 或 8189 任一，netstat 确认）
 - [ ] `.venv` torch CUDA 可用
 - [ ] `UltralyticsDetectorProvider` object_info 非空（Subpack 已加载）
 - [ ] 输出图在 ComfyUI-Shared/output/，交付前用真实路径
