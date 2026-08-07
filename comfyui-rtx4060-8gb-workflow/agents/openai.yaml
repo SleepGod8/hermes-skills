@@ -1,0 +1,4 @@
+interface:
+  display_name: "ComfyUI RTX 4060 8GB"
+  short_description: "Optimize ComfyUI for RTX 4060 8GB"
+  default_prompt: "Use $comfyui-rtx4060-8gb-workflow to choose a stable ComfyUI workflow and VRAM-safe settings."

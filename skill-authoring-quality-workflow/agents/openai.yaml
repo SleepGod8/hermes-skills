@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Authoring Quality Workflow"
+  short_description: "Create and validate reliable Hermes skills"
+  default_prompt: "Use $skill-authoring-quality-workflow to create or improve a Hermes skill with clear triggers, safeguards, tests, and maintenance rules."

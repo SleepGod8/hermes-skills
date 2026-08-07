@@ -59,11 +59,37 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 ```
 验证：`docker info | grep -A5 "Registry Mirrors"`。
 
+### 拉镜像卡死（不是断连）诊断
+
+症状：`docker compose up` 长时间停在 `Downloading` 同一进度不动。Docker Hub 直连在国内是**超时**（`curl -m 10 https://registry-1.docker.io/v2/` → 000），daemon 在镜像源缺 layer 时会回落 Docker Hub → 挂起。
+
+诊断步骤：
+1. **看数据盘是否增长**：`du -sh <docker-data目录>` 隔 30 秒对比（本例 E:\docker-data 0 增长 = 卡死；在涨 = 只是慢，耐心等）。本例 750MB 大 layer 走镜像源只有 ~1MB/s，milvus v2.6.1 约 1.1GB 拉 15-25 分钟属正常。
+2. **测加速源连通性**：对 `https://<mirror>/v2/<org>/<repo>/manifests/<tag>` 发请求（带 `Accept: application/vnd.docker.distribution.manifest.list.v2+json`）。**401 是正常的**（registry token 认证，非失败）；**完全没有 WWW-Authenticate 响应 = 该源不可达/不代理**（实测 docker.xuanyuan.me、dockerproxy.net 均不可达，daocloud/1ms.run 可用）。
+3. **token 服务地址从 401 的 WWW-Authenticate realm 拿**，不要猜：
+   - daocloud realm：`https://m.daocloud.io/auth/token`（注意**不是** `docker.m.daocloud.io/token`，猜错会 TOKEN_FAIL）
+   - 1ms.run realm：`https://docker.1ms.run/openapi/v1/auth/token`
+4. 镜像源可用时不需要手动干预，重启 `docker compose up -d` 让 daemon 自己走镜像源即可。
+
+### 中断 compose up 后的残留容器
+
+`docker compose up -d` 是**边拉镜像边建容器**的：拉到一半杀掉进程，已建容器会残留，再次 up 报 `Conflict. The container name "/xxx" is already in use by container "..."`。修复：`docker compose down` 清残留（volumes 若是 bind mount 到宿主机则数据不丢），再 up。注意 compose 输出带 `version` 属性会告警 obsolete（无害，可删）。
+
 ## docker compose 部署常见坑
 
 - **镜像 tag 不存在**：`docker compose up` 卡在拉取重试。查 Docker Hub 可用 tag（代理访问 `https://hub.docker.com/v2/repositories/<org>/<repo>/tags`），把 compose 的 image 改成存在的 tag。实例：`langgenius/dify-plugin-daemon:0.6.3-local` 不存在，改 `0.6.10-local` 可用。
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
+
+## Windows 保留端口范围导致端口绑定失败
+
+症状：容器能创建但报 `Error response from daemon: ports are not available: exposing port TCP 0.0.0.0:8900 -> ... bind: An attempt was made to access a socket in a way forbidden by its access permissions`。**不是端口被占用**，是 Hyper-V/WinNAT 保留端口段。
+
+排查命令：
+```
+netsh interface ipv4 show excludedportrange protocol=tcp
+```
+实测（2026-08 本机）：8749-8848、8849-8948、8949-9048 **三连段被保留**（覆盖 8749-9048），8900/8901 都中招；9100/9091/19530 不受影响。**避开保留段选端口**（本例 attu 改 9500）。改 compose 的 ports 后 `docker compose up -d <service>` 单独重建即可。
 
 ## 验证清单
 
@@ -75,3 +101,4 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 ## 参考
 
 - Dify 迁移部署细节：见 `references/dify-deployment-2026-08.md`
+- Milvus 迁移包还原部署细节（含端口保留段实测、镜像拉取时间线、Docker Desktop 启动方式）：见 `references/milvus-migration-deploy-2026-08.md`
