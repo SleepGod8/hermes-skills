@@ -67,6 +67,21 @@ git-bash（MSYS）直接调 exe 时 `--installation-dir="E:\Docker"` 可能被�
 - 或 PowerShell：`Start-Process -FilePath '...' -ArgumentList @('install','--quiet','--accept-license','--installation-dir=E:\Docker')`
   （注意：`-Verb RunAs` 在后台会话会失败——见上）
 
+## 案例：Ollama 安装到 E 盘（0.32.6 实测 2026-08）
+
+OllamaSetup.exe 是 **Inno Setup** 打包（安装后目录有 `unins000.exe` 确认），支持静默+指定目录，**用户级安装无需 UAC**（装 E 盘根目录用户可写，不用走管理员 bat）：
+```
+"OllamaSetup.exe" /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /DIR=E:\Ollama
+```
+- `/DIR=E:\Ollama` 指定安装目录（默认 `%LOCALAPPDATA%\Programs\Ollama`）
+- 验证：`E:\Ollama\ollama.exe --version`；安装后自动启动 `ollama app.exe`（托盘）
+- **模型存储改 E 盘**（省 C 盘，关键）：
+  ```powershell
+  [Environment]::SetEnvironmentVariable('OLLAMA_MODELS', 'E:\Ollama\models', 'User')
+  ```
+  环境变量对**已运行实例不生效**，需重启 ollama（或重启电脑）后新模型才存 E 盘。
+- 判断安装器类型：Inno Setup → 目录有 `unins000.exe`；NSIS → 有 `uninstall.exe`。Inno 用 `/VERYSILENT /DIR=`，NSIS 用 `/S /D=`（`/D=` 必须是最后一个参数且不带引号）——**先试 Inno 参数，装完看 unins000 确认**。
+
 ## 验证安装
 
 - `docker --version`（需新开 shell 或重登 PATH）
