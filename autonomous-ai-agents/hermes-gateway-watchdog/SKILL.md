@@ -42,6 +42,35 @@ Place the health-check script via `scripts/gateway-health-check.py` in this skil
 - Empty stdout = silent when healthy; non-empty = alert/notice when action taken
 - Tune the MEMUSAGE threshold to the bloated-process size you observe in Task Manager
 
+## ⚠️ 看门狗误杀 Desktop 的致命坑（2026-08-07 实测）
+
+**症状**：Hermes Desktop 端每 5 分钟断开一次；agent.log 显示 `gateway.lifecycle_ledger: Previous gateway life ... exited UNCLEANLY (SIGKILL / OOM / VM death)` 每 5 分钟一条，`suspected_oom=False`。
+
+**根因**：看门狗脚本 `gateway-health-check.py` 的 taskkill 条件是
+`taskkill /F /FI "IMAGENAME eq hermes.exe" /FI "MEMUSAGE gt 300000"`——两个致命缺陷：
+1. **IMAGENAME 误杀**：`hermes.exe` 同时匹配 **Hermes Desktop（Electron）主进程** 和 gateway venv 入口进程；Desktop 主进程内存 **300-600MB 是正常水平**，300MB 阈值必杀 → Desktop 整个被杀 → 桌面端断开 + gateway 重启。
+2. **`hermes gateway status` 10s 超时太紧**：gateway 忙（API 慢/大会话）时 status 超时 → 看门狗误判"无响应" → 走 taskkill 分支。
+
+**修复**（已验证）：`timeout=10`→`timeout=30`，`MEMUSAGE gt 300000`→`MEMUSAGE gt 1500000`（只杀真正内存爆炸的）。改完计划任务下次运行即生效，无需重启任务。验证：观察 Hermes 进程连续两个 5 分钟周期不被杀。
+
+**经验**：看门狗宁可"漏杀"不可"误杀"——误杀 Desktop 的代价是用户桌面端整个断开，比 gateway 卡住更糟。
+
+## ⚠️ status 误报 → 看门狗反复杀真 gateway（2026-08-07 追加，止血已验证）
+
+**症状**：修复 MEMUSAGE 阈值后 gateway 仍每 5 分钟 SIGKILL 一次（agent.log `lifecycle_ledger ... exited UNCLEANLY (SIGKILL)` 每 5 分钟一条，`suspected_oom=False`）。
+
+**根因**：`hermes gateway status` 对 **Desktop/计划任务(Hermes_Gateway) 启动的 gateway 间歇性误报 "✗ No gateway process detected"**——手动 `hermes gateway run --replace` 启动的能检测到（`✓ Gateway process running (PID: ...)`），Desktop 拉起的检测不到。看门狗误判 not running → 走脚本第 3 步 `gateway run --replace` → **杀掉真实 gateway** → 新 gateway 起来 → 5 分钟后重复。这是比 300MB 阈值更深的坑：即使 status 大部分时间正常，只要某次误报就会触发杀进程。
+
+**止血方案（已验证有效）**：
+```bash
+schtasks /change /tn "Hermes Gateway Watchdog" /disable   # 禁用计划任务
+hermes gateway run --replace                              # 手动拉起（确认无残留进程）
+# 验证：gateway status 显示 running + agent.log 出现 ✓ weixin connected + response ready
+```
+禁用看门狗后 gateway 稳定（代价：失去自动恢复能力，需 Desktop 或手动接管）。
+
+**根治方向（未完成，勿当已验证方案）**：查 `hermes gateway status` 的进程检测实现（PID 文件 vs 进程名匹配，为何 Desktop 启动方式检测不到）；或把看门狗改为"status 误报时只告警不杀，连续 N 次才重启"。
+
 ## Platform-config pitfall: QQ Bot 'open' policy kills the WHOLE gateway
 
 **Symptom**: `gateway.log` shows `ERROR gateway.run: Refusing to start: qqbot has dm_policy/group_policy set to 'open' but neither GATEWAY_ALLOW_ALL_USERS nor QQ_ALLOW_ALL_USERS is enabled` then `Gateway exiting cleanly`. **ALL platforms go down** (WeChat too), because the refusal happens at gateway startup.
