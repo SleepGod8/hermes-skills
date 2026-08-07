@@ -46,6 +46,10 @@ platforms: [linux, macos, windows]
 
 **共通机制/家族级设定的同步目标 = 9 个文件**：default SOUL.md + 四个成人女仆档案（athena/artemis/hebe/nemesis）各 SOUL.md + config.yaml；eos 跳过。批量改时先逐个 `count(锚点)` 确认唯一（必须 ==1），再替换，最后统一读回验证。
 
+**CRLF/LF 双变体**：SOUL.md 是 CRLF（`\r\n`），config.yaml 经 yaml 库读写后 system_prompt 是 LF（`\n`）。同步同一段文本要准备 old/new 两个变体（`old_lf = old.replace('\r\n','\n')`），yaml 侧用 LF 变体，SOUL 侧用 CRLF 变体——直接复用 CRLF 文本会在 config.yaml 里 count=0。
+
+**锚点链追加**：连续加多个共通条目时，用「上一条刚加的条目」作锚点（实测链条：深度贯穿→状态冻结→感官遮蔽→时间停止→催眠，每轮 old_string 取当前文件最后一条共通行的全文，new_string = old + 新行）；改已有条目（增强措辞，如状态冻结升级版）就原地替换该行，不要删旧行加新行。
+
 config.yaml 写入参数（必须，用 yaml 库时）：`allow_unicode=True, default_flow_style=False, sort_keys=False`
 config.yaml 修改方式按存储形态分：
 - **转义字符串形态**（system_prompt 以双引号包裹、`\n` 是字面反斜杠-n 两字符）→ **patch 工具可直接改**：old_string/new_string 里写字面 `\n`（即反斜杠+n），锚点取文件中相邻两行（如 `- 组合名：冰山与火焰\n\n### × Iris`）即可唯一命中，lint 会自动跑。改完仍要 yaml.safe_load 验证。
@@ -66,6 +70,7 @@ config.yaml 修改方式按存储形态分：
 - **patch 前先重读文件**：多会话并行编辑时 patch 工具警告 `was modified since you last read it`；模块顺序可能变了，锚点可能匹配 2 处（`Found 2 matches for old_string`）。先 read_file 全文再选唯一锚点。
 - **锚点选唯一性**：如 `- 结束后互相瞪眼：「哼！下次我一定赢！」` 在多个模块出现（三人同侍/四人同侍），必须带上后一行（如 `\n\n## 共通色情机制 🆕`）才唯一。
 - **验证字符串必须用文件原文**：读回验证用与写入文本完全一致的子串（「仿佛永远不会满足」≠「永远不满足」），别凭记忆猜措辞。
+- **短关键词会命中专属旧内容**：验证「催眠」「时间停止」这类通用词时，count 可能是 5+——因为该词已存在于角色专属设定（Nemesis 蒙眼、Athena 清醒野兽等）。count>1 不是失败！验证要用**新增条目的完整行**（如 `- 催眠：女仆们可以被主人「催眠」…`）作为子串，count>=1 即成功；报告时注明「专属设定中本来也有出现，新共通条目已写入」避免误报 ❌。
 - **config.yaml 形态决定改法**：转义字符串形态（双引号 + 字面 `\n`）patch 工具直接改成功过；块标量形态被拒，必须 execute_code + yaml 库。改完一律 yaml.safe_load 验证。
 
 ## 用户工作流偏好（设定添加会话）
