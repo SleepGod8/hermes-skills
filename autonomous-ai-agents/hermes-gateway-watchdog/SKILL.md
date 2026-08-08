@@ -42,6 +42,19 @@ Place the health-check script via `scripts/gateway-health-check.py` in this skil
 - Empty stdout = silent when healthy; non-empty = alert/notice when action taken
 - Tune the MEMUSAGE threshold to the bloated-process size you observe in Task Manager
 
+## ⚠️ 多档案抢 token：.env 凭据强制启用平台（2026-08-09 实测）
+
+**症状**：default 档案的微信/QQ 突然断连，日志显示 `Weixin bot token already in use (PID xxx)` / `QQBot app ID already in use (PID xxx)`，占用者是非 default 档案的 gateway 进程。改了 `profiles/<名>/config.yaml` 的 `enabled: false` 也没用。
+
+**根因**：`gateway/config.py` 有自动启用逻辑——**只要 .env 里有 `WEIXIN_TOKEN`/`WEIXIN_ACCOUNT_ID` 或 `QQ_APP_ID`+`QQ_CLIENT_SECRET`，就会强制 `platforms.weixin.enabled = True` / `platforms.qqbot.enabled = True`，覆盖 config.yaml 的 false**（config.py ~2333 行 weixin、~2415 行 qqbot）。多档案同步配置时把 default 的 .env 凭据复制给了所有档案 → 每个档案的 gateway 进程都抢同一个 token。
+
+**修复**（三步）：
+1. `profiles/<名>/config.yaml` 里 `platforms.weixin.enabled: false` + `platforms.qqbot.enabled: false`
+2. **删掉** `profiles/<名>/.env` 里的 `WEIXIN_*`、`QQ_*`、`QQBOT_*` 全部键（先备份 `.bak-wechat-qq`）——光改 config 无效！
+3. 杀掉非 default 的 gateway 进程（Desktop 会自动用新配置重启；验证：`psutil` 查进程 environ 里 `WEIXIN_TOKEN` 应为 False）
+
+**飞书（Feishu）接入要点**：插件在 `plugins/platforms/feishu/`（官方自带），`.env` 配 `FEISHU_APP_ID` + `FEISHU_APP_SECRET` + `FEISHU_ALLOW_ALL_USERS=true`，config.yaml 加 `platforms.feishu.enabled: true` 即可。**无独立 toolset**（`hermes-feishu` 只是线程名前缀，不要加进 platform_toolsets 否则启动报错）。飞书支持多 agent 协作（Approach B：每档案一个飞书应用 + profile，群 @ 触发），比 QQ 强——AIGC 机器人也能进普通飞书群。
+
 ## ⚠️ 看门狗误杀 Desktop 的致命坑（2026-08-07 实测）
 
 **症状**：Hermes Desktop 端每 5 分钟断开一次；agent.log 显示 `gateway.lifecycle_ledger: Previous gateway life ... exited UNCLEANLY (SIGKILL / OOM / VM death)` 每 5 分钟一条，`suspected_oom=False`。
