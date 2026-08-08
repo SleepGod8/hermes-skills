@@ -236,6 +236,14 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 2. LoadImage 节点选图前，图片先放 `ComfyUI\input\`
 3. 桌面端和命令行后端是两套进程，桌面端打开时若端口占用，先停掉命令行拉起的后端
 
+## 模型下载与网络路由（2026-08 实测）
+
+- **大模型下载首选 hf-mirror.com 直连**（`https://hf-mirror.com/<org>/<repo>/resolve/main/<file>`），无需代理。代理（127.0.0.1:12450）可能未监听/掉线——**先 `netstat -ano | grep 12450` 确认端口在监听，再决定走代理还是直连**（`curl -x http://127.0.0.1:12450 -o /dev/null -w "%{http_code}" https://huggingface.co` 快速探测）。
+- 下载命令：`curl -L --max-time 5400 -C - -o <file> "<hf-mirror url>"`（`-C -` 断点续传），后台 `terminal(background=true)` + `notify_on_complete=true`；用 `stat -c %s` 轮询文件大小估算速度/ETA（6.8GB 模型 1.5-4MB/s 波动）。
+- **⚠️ 探测直链的坑**：`curl -sI`（HEAD）对 HF `resolve/main` 可能返回空；用 `curl -r 0-2047`（range GET）测，HTTP 206 = 可下载。API 能访问（`/api/models?search=`）不代表大文件 CDN 通——分别测。
+- 下载校验：safetensors 文件头部应为 `safetensors` 魔数（`head -c 8 | xxd`），下完重启 ComfyUI 刷新模型列表。
+- 候选动漫 SDXL 模型（8GB 显存可跑）：`animagine-xl-4.0`（主力，魔法书配方已调优）、`Illustrious-XL-v1.0`（6.6GB，更精细）、`NoobAI-XL-v1.1`（6.8GB，色彩细节强，HF: `Laxhar/noobai-XL-1.1`）。
+
 ## 模板库太少 / Browse Templates 空的（2026-08 实测）
 
 `system_stats` 里 `installed_templates_version: null` = 核心模板数据包 `comfyui-workflow-templates` 没装（缩略图媒体包装了也没用，两者独立）。修复：`.venv` 装该包 + 重启 Desktop。⚠️ Desktop 重启时会自动更新后端并重装依赖到它锁定的版本（会覆盖你手动装的版本，属正常）。完整诊断/修复/验证 + 杀启进程正确姿势见 `references/desktop-templates-process-mgmt.md`。
