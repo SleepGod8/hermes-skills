@@ -1,0 +1,107 @@
+[
+ {
+  "positive": "barbara_(genshin impact),{{1girl}}, solo, ,fist,pose,emphasis_lines,raised fist,hara tetsuo,{fist},art style, incoming punch, shaded face, fighting stance,motion lines, serious",
+  "negative": "lowres, {bad}, error, fewer, extra, missing, {{{{worst quality}}}}, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],{{weibo_username:2}},female_pubic_hair,{{weibo_logo:2}},",
+  "params": "cfg6.5"
+ },
+ {
+  "positive": "1girl,solo, {{half closed eyes}}, medium breasts, heavy breath, winter, steam, shy, {blush}, black hairs, long hairs, red scarf, black winter coat, sitting on chair, arms at side, outdoors, merry christmas , christmas, christmas bazaar, evening, street light, from side, upper body, looking down, blow, wind, blurry background,bokeh,,convenient censoring, best quality, amazing quality, very aesthetic, absurdres,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]",
+  "params": "steps:28"
+ },
+ {
+  "positive": "{{black rock shooter}}, art style,umetric light and shadow, light particles, blurry, light rays, shadow, {cinematic lighting}, from below, {backlighting}, 1girl, blue fire eyes, glowing eyes, solo, portrait, upper body, blood in eyes, cold expression, {{{{{point a pistol at viewer}}}}}}, {{{{{{{cracked screen}}}}}}}, broken face, {{{floating broken glass}}}, best quality, amazing quality, very aesthetic, absurdres, masterpiece",
+  "negative": "",
+  "params": "lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], very displeasing, displeasing, lowres, cleavage,lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, scan artifacts, photo, deformed, realism, disfigured, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username,"
+ },
+ {
+  "positive": "art style,{blue and grey streaked hair}, {choker}, {collarbone visible}, {hand holding picture frame}, {expressionless look at viewer},flower accents, {holding empty photo frame}, {portrait with photo frame},ribbon choker,{simple background}, solo, {straight-on view}, upper body, {white background}, subtle light on hand and frame,high resolution, best quality, very aesthetic , best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits,username, scan, [abstract], lowres, {bad},fewer, extra,{{{{worst quality}}}}, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]，{{weibo_username:2}},female_pubic_hair,error, missing_finger ,{{weibo_logo:2}},teeth,penis,{{upside-down}},",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 363795146, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "cowboy_shot,one girl,solo,Steampunk,{{{loli}}},delicate,silver_hair,medium hair,Wear goggles on head,cat ear,red pupil,{{maid}},Black trench coat,bare shoulder dress,white gloves,black tights,Leg holster,courtyard,{{sniper rifle}},steam style, {{heavy rain}},night,",
+  "negative": "lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], pregnant,lowres,logo,text,blurry,low quality,bad anatomy,out of focus,bad proportions,watermark,signature,worstquality, weibo username,",
+  "params": "steps:28,height:768,width:1344,scale:12.5,uncond_scale:1,cfg_rescale:0.2,seed:3015620212"
+ },
+ {
+  "positive": "art style,looking_at_viewer,{on one knee},light red eyes,1 girl,solo,long white hair,{black antlers},bang,toast,deer tail,hair_between_eyes,black shirt,transparent sleeves,transparent jacket,bare shoulders,neck ribbon,showing shoulder,[black air jordan 1],{long hair},toast,black pantyhose,ahoge, happy,pose,arknights, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, {{{{worst quality}}}}, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration,jacket,uniform, {{peaked cap}},{{cap}}",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 3120323708, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "ruto,naruto(series),1boy,upper_body,1boy,black_hair,chokutou,holding,holding_sword,holding_weapon,japanese_clothes,male_focus,open_clothes,open_shirt,red_eyes,sharingan,shirt,snake,solo,sword,weapon,white_background,white_shirt,white_snake,volumetric light and shadow, light particles,blurry,light rays,shadow,{cinematic lighting},{backlighting}, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres,{bad}, error,worst quality, [bad quality], {{unfinished}}, very displeasing,displeasing,artistic error,{bad hands}, bad anatomy,extra digits,inaccurate limbs,anime_screencap,sketch,bad id,[[username]], [abstract]r,blurry,chromatic aberration, jpeg artifacts,[[signature, watermark]],[text],fewer,extra,missing",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 4088065696, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "Tarot card border, beautiful frame, from side, {1 girl} carrying a cloth bag walking on the road, looking up, giggling, beggar clothes, head scarf, {braided bun}, text:Fools, a dog walking at the feet, beautiful dog,, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{{low quality}}},",
+  "params": "steps:28，Size: 832x1216，seed:347550，Sampler: DPM++SDE，CFG scale: 5"
+ },
+ {
+  "positive": "2girls, Hu tao (Genshin Impact),Xiangling(Genshin Impact) ,symmetrical composition,best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 7.0, Seed: 1746763116, Size: 1024x1024, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{kamisato ayaka},finger to viewer, holding spear, white hair, Wedding Dress, white gloves,best quality, amazing quality, very aesthetic, absurdres, anime,  best quality, amazing quality, very aesthetic, absurdres, , best quality, amazing quality, very aesthetic, absurdres, , best quality, amazing quality, very aesthetic, absurdres,",
+  "negative": "",
+  "params": "lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], very displeasing, displeasing, lowres, cleavage,lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, scan artifacts, photo, deformed, realism, disfigured, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username,"
+ },
+ {
+  "positive": "kal'tsit (arknights),blurry, blurry foreground,dark environment\\\\uff0c art style,Rainwater on clothes, raindrops falling on the body,from side,1girl,{{black raincoat}},outside,upper body,solo,Streets, streetlights, neon lights, reflected lights, plastic umbrellas, light reflected from umbrellas,wet clothes,rainning outside,overcast sky,neon lights, lights, cyberpunk, windows, reflections, reflections,Neon lights outside the window, raindrops hitting the window at night,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], normal quality, bad quality, low quality, worst quality, lowres, aesthetic, displeasing, very displeasing, bad anatomy, bad hands, text, error, missing finger, extra digits, fewer digits, cropped, JPEG artifacts, signature, watermark, username, blurry, artist name, bad face, fat, duplicate, mutation, deformed, disfigured, extra arms, extra legs, long neck, bad feet, bad proportions ,ship,mosaic,cap,head gear",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.0, Seed: 630010297, Size: 1920x1088, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "masterpiece, best quality,super detail,ultra detail,heroic,1girl,black school uniform, hime_cut,black long hair, black eye,,hold sword,dyname pose,hyperrealistic,black background,monochrome,{{{chiaroscuro}}}, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres,{bad}, error,worst quality, [bad quality], {{unfinished}}, very displeasing,displeasing,artistic error,{bad hands}, extra digits,inaccurate limbs,anime_screencap,sketch,bad id,[[username]], [abstract],blurry,chromatic aberration, jpeg artifacts,[[signature, watermark]],[text],fewer,extra,missing",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 6.8, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "!?, 1girl, daiwa_scarlet_(umamusume), > <,{1 girl is losing her balance and falling down}, unbalance, dutch angle, motion lines, {slipping,fallen_down, banana_peel}, hands up, one leg up, art style, animal ears, black footwear, breasts,speed line, wallpaper,colorful,ultra-detailed,dreamcore,realistic,commercial light and shadow,film light and shadow, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "lineart,flat_color, limited color, 1 girl,messy_hair, fetal position, looking at viewer, black and red tone,biomechanical tattoo,full body,simple background, beautifully detailed background,geometric,cables connected to body,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{chibi,mini,watermark,signature,doll}},glasses, {{censored,mosaic_censoring}},long body,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.5, Seed: 2034323065, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{Chinese martial arts style},{1boy}, male focus, monochrome, weapon, long hair, greyscale, scarf, bandages, black hair, Holding a spear, topless,hair over one eye,Dragon-shaped pauldrons,bloody sunset, Showdown under the plum tree,best quality, ,amazing quality, very aesthetic, absurdres",
+  "negative": "",
+  "params": "lowres, Japan,Japanese,{bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, text, error, missing, extra, fewer, cropped, jpeg artifacts, worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, scan artifacts, photo, deformed, realism, disfigured, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, screencap"
+ },
+ {
+  "positive": "1girl,solo,{realistic},full body,ballet,ballet dress,dark background,reflection,best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "llowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], tear,artistname,nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan,, anime screencap,",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 1959605910, Size: 1920x1088, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "[[The background features a Weird Core style]],weird core art,{{{glitch art}}},{pixel art},horrifying,absurdres,{{mosaic}},Internet Aesthetics,Aberrant Art,Surreal",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "masterpiece,best quality,amazing quality,commercial light and shadow,8K, realistic,1woman,medium breasts,{{{{{{kiana kaslana}}}}}},two long braids,white hair},closed eyes,looking at viewer,{{closed eyes}},mouth drool,in bed,pillow hug,polka_dot_pajamas,sleeping,:3,from above , best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "",
+  "params": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], nsfw,lowres,{bad},error,fewer,extra,missing,worst quality,jpeg artifacts,bad quality,watermark,unfinished,displeasing,chromatic aberration,signature,extra digits,artistic error,username,scan,[abstract],text,watermark,lowres,bad,error,missing,extra,fewer,cropped,jpeg artifacts,worst quality,bad quality,watermark,displeasing,unfinished,chromatic aberration,scan,scan artifacts,photo,deformed,realism,disfigured,lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,username,futa,yaoi,tail"
+ },
+ {
+  "positive": "masterpiece, best quality,super detail,ultra detail,1girl,T-shirt,office lady,evening, solo,in office, working, use computer,chiaroscuro,Realistic, fireworks outside the window,Spring Festival,sad,tired,Spring couplets,l,art style,art style,,desk lamp, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres,{bad}, error,worst quality, [bad quality], {{unfinished}}, very displeasing,displeasing,artistic error,{bad hands}, extra digits,inaccurate limbs,anime_screencap,sketch,bad id,[[username]], [abstract],blurry,chromatic aberration, jpeg artifacts,[[signature, watermark]],[text],fewer,extra,missing",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 6.1, Seed: 1063425360, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "1girl,solo,onono_imoko,yellow background,cowboy shot,colorful background, lolita fashion, , best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, {cropped},displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan,[abstract], tear,artistname,nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan,anime screencap,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 708139087, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "masterpiece, best quality,super detail,ultra detail,1girl,sleepy, sleepyUsing phone in bed, phone light illuminates face,chiaroscuro,Realistic,art style,cool color, {{{lonely}}}, night,dark room, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres,{bad}, error,worst quality, [bad quality], {{unfinished}}, very displeasing,displeasing,artistic error,{bad hands}, extra digits,inaccurate limbs,anime_screencap,sketch,bad id,[[username]], [abstract],blurry,chromatic aberration, jpeg artifacts,[[signature, watermark]],[text],fewer,extra,missing",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 6.1, Seed: 773387924, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ }
+]

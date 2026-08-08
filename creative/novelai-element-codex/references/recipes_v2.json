@@ -1,0 +1,177 @@
+[
+ {
+  "positive": "((floating)),(paint),((disheveled hair)),",
+  "negative": "",
+  "params": "(solo),(1girl), loli, ((small_breasts)), (((detailed anima face))),((beautiful detailed face)),collar,bare shoulders,"
+ },
+ {
+  "positive": "white hair, ((colorful hair)),((streaked hair)),",
+  "negative": "",
+  "params": "beautiful detailed eyes,(Gradient color eyes),(((colorful eyes))),"
+ },
+ {
+  "positive": "(((colorful background))),(((high saturation))),(((surrounded by colorful splashes))),(((surrounded by colorful dot))),colorful bubble,((shining))",
+  "negative": "nsfw,nipples,(black skin),dark background,lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts,signature, watermark, username, blurry, artist name,bad feet",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 6, Size: 1280x512, Model hash: e6e8e1fc, Eta: 0.68, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "masterpiece, best quality, (girls), gathering, 其它自定义内容",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "复数形式 + gathering 可以确保群像。如果要加入男性角色，还可以加入 (boys)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((beijing opera))), (sketch),(wash painting),((color splashing)),((ink splashing)),((((dyeing)))),((Chinese painting)),((colorful))(beautiful and delicate mountain),",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(solo),(Fantasy creatures),((Chinese white tiger)),(solo;1.8),Black markings,(white tiger),((solo)),beautiful and delicate golden eyes,Huge claws Big and strong,Diabolical,Tyrannica,",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "国风：(((beijing opera))), (sketch),(wash painting),((color splashing)),((ink splashing)),((((dyeing)))),((Chinese painting)),((colorful))(beautiful and delicate mountain),： 狡描述：Stone figure,(solo),(Fantasy creatures),dog body,((Chinese jiao)),(((Horns))),Horns,(golden dog body:1.3),(golden lion head), Leopard print,(solo), Canines,lion head,fly up to the cloudy regions,fly up to the cloudy regions Big and strong,Diabolical,Tyrannica",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "NAI Diffusion Anime (Full) （不能选择curated，否则故障艺术效果完全无法体现）",
+  "negative": "",
+  "params": "steps=28，scale=11，ddim，建议生成portrait（w<h）"
+ },
+ {
+  "positive": "穷奇描述：((a mythical ferocious animal)),{{The bull}},{{ long horns}}，{{With wings on its back}},(Red and black wings,)(solo),mountain,Big and strong,Diabolical,Tyrannical",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, More than four hooves, less than four hooves，Too many hooves，Too many horns，Less than two wings, more than two wings，More than two cows",
+  "params": "Steps：40"
+ },
+ {
+  "positive": "(((full body but Arms in sleeves))), ((Red traditional Chinese ethnic gown))",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((little girl, solo, Jiangshi girl, Chinese vampire, canines,1girl,delicate beautiful face, Chinese Charms on the forehead )))",
+  "negative": "nsfw, text font ui, error, blurred, bad shadow, JPEG artifacts, signature, 3D, 3D game, 3D game scene, 3D character, duplicate, blurry, strong girl, obesity, worst quality, low quality, normal quality, black-white, lowers, cropped, watermark, username, QR code, bar code, censored, mosaic, excrement, faeces, shit",
+  "params": "Steps: 40, Sampler: Euler, CFG scale: 8, Size: 512x512, Model hash: 925997e9, Clip skip: 2"
+ },
+ {
+  "positive": "Maidens of Avignon, colorful, flat_color, limited palette, {{by Picasso}}, {{cubism}}, {{a girl}}, pretty face, upper body,  flat_chest, floating black jacket, white school uniform, white beret), bowknot over white beret Scale=10, steps=26可以生成少女在画中的效果。（如果并没有，可以复刻seed调高scale：同一个seed调高scale，少女会慢慢变得具体）如果需要让少女变得精致，可以去掉tag{ Maidens of Avignon} , 加入painting style。",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet",
+  "params": "dramatic angle,(fluttered detailed ink splashs), (illustration),(((1 girl))),(long hair),(rain:0.6),(expressionless ,hair ornament:1.4),there is an ancient palace beside the girl,chinese clothes,(focus on), color Ink wash painting,(ink splashing),color splashing,((colorful)),[sketch], Masterpiece,best quality, beautifully painted,highly detailed,(denoising:0.7),[splash ink],yin yang"
+ },
+ {
+  "positive": "可以加入(female focus on,lens 135mm f1.8)（据说有摄像机的原理）",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(comic), (creative frame design), flat_color,{{{ limited palette}}},story, {girl}, gothic, {speech bubble}, (monochrome:3) , {speak arrow (symbol)} ,meme,  manga frame, ((dark intense shadows)), ((cinematic lighting)), ((overexposure)),cute anime faces, sketch,{{storyboards}}, (pretty face), section, frame, {border}, {split_theme}, {{split screen}}, {Cartoon split},",
+  "negative": "",
+  "params": "river, (forest),palace, (fairyland,feather,flowers, nature),(sunlight),Hazy fog, mist,(beautiful detailed sky), {2 girls}, flat_chest, diamond and glaring eyes, black eyes, beautiful detailed cold face, {short red hair}, short wavy hair, beautiful detailed eyes, glowing eyes, touhou project, 1girl,braid,dress,eyelashes,frilled skirt,holding knife, holster,maid,maid headdress, medium hair,pocket watch,puffy short sleeves,silver chain, thigh strap, wrist cuffs, open mouth,blank stare, smile,angry,tears"
+ },
+ {
+  "positive": "红色为画风相关tag，其中monochrome去掉可以变为彩色漫画，flat_color,{{{ limited palette}}}去掉基本可以兼容其它画风。蓝色是场景相关，绿色为人设相关（其中加粗的是需要让ai自行分配的神态等） (特别声明，touhou project 因其二次创作约定，不在版权限制内)",
+  "negative": "multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) , black-white, bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, anatomical nonsense, text font ui, error, malformed hands, long neck, blurred, lowers, lowres, bad anatomy, bad proportions, bad shadow, uncoordinated body, unnatural body, fused breasts, bad breasts, huge breasts, poorly drawn breasts, extra breasts, liquid breasts, heavy breasts, missing breasts, huge haunch, huge thighs, huge calf, bad hands, fused hand, missing hand,watermark,Unshaped, watermarks， duplicate",
+  "params": "steps=28，scale=10，k_euler_ancestral"
+ },
+ {
+  "positive": "(((best quality)))，((Dunhuang frescoes))，(Only murals ),chinece_ancient ，macro shot，longsleeve，(tradictional_chinese_painting), Shadow Play，Old Animation，three-dimensional，temple，（traditional Chinese painting），cloud，Painted on a rock wall，mural，cave，Characters step on the cloud，Tang painting，Rich rhyme，Buddhism，comic，chinese characters",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((ancient egyptian mural))),story，Pharaoh",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((best quality)))，((fresco)), Christianity，dome，angel，（The Creation of Adam）",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((best quality)))，((fresco)), street mural，(character  graffiti )，(Colourful), Cyberpunk",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "((art of paper-cut))，china ，Red and white，PAPER-CUT，calligraphy，man and wife，(Flower, bird, insect and fish)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "Gold coin<>或silver coin<>,｛Relief craft｝，Stereoscopic feeling，Grey background",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "classicism, masterpiece, best quality, 人物描述, portrait, picture frame",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(((masterpiece))), ((the best quality, super fine illustrations, beautiful and delicate water)),Depth of field, fine 8KCG wallpapers, ( delicate light), ((cinematic lighting)),(portrait),Portrait lens,(((Alphonse Mucha))),((Fantasy style)),((shine)),(((Tarot card)))",
+  "negative": "",
+  "params": "(young girl),(((China_Cheongsam))),(delicate eyelash),((cute anime face)),(extremely delicate and beautiful),(hair_flower),(Gem),(crystal),((colored inner long hair)),(multicolored),(beautiful detailed face ),((( detailed long hair ))),floating long hair,gradient hair,(lace),(ribbon),((crown)),(detailed cloth)"
+ },
+ {
+  "positive": "((extra limbs)),((missing arms)),((missing legs)),((poorly drawn hands)),((poorty drawn face)),(mutation,poorly drawn :1.2),",
+  "negative": "(((ugly))),(((duplicate))),((morbid)),((mutilated)),(((tranny))),(((trans))),(((trannsexual))),(((mutation))),(((deformed))),(((long neck))),((bad anatomy)),(((bad proportions))),(((extra arms))),(((extra legs))), (((disfigured))),(((more than 2 nipples))),malformed,mutated,(hermaphrodite), (long body :1.3),multiple breasts,cloned face,gross proportions, mutated hands,bad hands,bad feet,long neck,missing limb,(malformed limbs),malformed hands, (fused fingers),(too many fingers),extra fingers,missing fingers,extra digit,fewer digits,(mutated hands and fingers :1.5), lowres,text,error,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,text font ui,futa,yaoi",
+  "params": "Step:40 cfg:4.5 ddim"
+ },
+ {
+  "positive": "(Plastic building blocks)，Grey background，Stereoscopic feeling，想要的城市建筑或动物",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet",
+  "params": ""
+ },
+ {
+  "positive": "本反咒並非複製貼上或隨意堆疊，扣除最前面的幾個常見反咒(cropped, blurry等)之外，其他皆是為了畫面元素做調整。首先四肢、五官的各類型反咒(malformed, misplaced, weird等)，然後對耳朵做特殊的指定(不然極其容易生成三隻、四隻耳朵的貓娘)，最後指定strange animal避免生成奇怪的貓。(生成獸耳娘時有用)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "最一開始是常見的一些品質類詞條，後續則是畫面主體(狐耳少女)，最後指定一下各種元素。(pink hair表現不明顯但可以顯著改善整體畫面的色溫表現，改成blue hair可以得到相當藍的畫面)",
+  "negative": "(poorly drawn hands), (poorly drawn face), weird, (((fat))), ((cropped)), ((fused fingers)), ((too many fingers)), (malformed limbs), (((bad anatomy))), ((ugly)), out of frame, blurry, gross propotions, distorted face, distorted body, ((distorted fingers)), missing leg, more than 2 leg, more than 2 feet, more than 2 arms, text, ui, signature, icon, watermark, misplaced limbs, leg too big, leg too small, fused hands, fused arms, distorted backgroud, fused buildings, ((finger too short)), more than 1 right hand, more than 1 left hand, wrong direction of limbs, wrong direction of legs, wrong direction of feet, misplaced facial features, unbalanced facial features, ((body too long)), ((arm too short)), (poorly drawn joint), misplaced joint, wrong joint angle, disappearing legs, disappearing arms, disappearing limbs, ((fused limbs)), thumb too long, fingers too long, missing hands, missing arms, ((misplaced animal tail)), ((malformed animal tail)), poorly drawn animal tail, less than 2 ears, ((more than 2 ears)), ((more than 2 animal ears)), ((one arm longer than another)), ((missing palm)), ((palm disappeared)), sharp fingers, ((two eyes in different size)), weird ears, weird animal ears, (weird finger), (weird hand), weird limbs, weird arms, weird legs, thin wrist, more than 2 eyes, malformed eyes, misplaced eyes, strange animals, (3 fox ears:1.7), (fox ear in middle), (hands)",
+  "params": ""
+ },
+ {
+  "positive": "此反咒雖然相當長，但並非隨意堆疊複製而成。首先最一開始是一些常見的反咒(如blurry、cropped等)，爾後是對四肢、五官、耳朵、尾巴相關的反咒(weire, malformed, misplaced, 數量錯誤等)，然後因為偶爾會出現轉了180度的腳等情況，因此也另外加了關節(joint)相關的反咒。最後因為AI有高機率生成3隻或以上的狐耳，因此特別對3 fox ears做了限制。",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "可以试着使用1024*640生成出喜歡的圖後，使用hires fix將firstpass的長寬設定成1024*640，並將原本的長寬拉成2048*1280，可以有效提升細節並避免過度鮮豔。(denoise strength可照個人喜好調整)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "核心：(legendary Dragon Queen:1.3) 风格： (illustration) (fantasy wind)",
+  "negative": "nsfw,owres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry, missing arms,long neck,humpbacked,shadow,nude,2 girl",
+  "params": "Steps: 30, Sampler: DPM2 a, CFG scale: 7, Size: 1280x512, Model hash: 925997e9, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "[[((Wings made of golden lines,angel wing,gold halo around girl,many golden ribbon,Aureate headgear,gold magic circle in sky,ight, black sky):1.3):((galaxy background, snowflakes, night sky, black pupils, starts sky background, stars behind girl, view on sky,standing):0.8)],[(Elegant hair,Long hair,The flying golden lines,Messy golden lines,halo,hairs between eyes,Small breasts,ribbons, bowties,red eyes, golden pupil, white hair,flowing hair,disheveled hair,lowing long hair):(Delicate arms and hands):0.8]",
+  "negative": "(mutated hands and fingers:1.5 ),(mutation, poorly drawn :1.2), (long body :1.3), (mutation, poorly drawn :1.2) , liquid body, text font ui, long neck, uncoordinated body,fused ears,huge breasts,((((ugly)))),one hand with more than 5 fingers, one hand with less than 5 fingers",
+  "params": "Steps: 150, Sampler: Euler, CFG scale: 7.5, Size: 1216x576, Model hash: e6e8e1fc, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "(masterpiece), best quality, 8k wallpaper, illustration, 1 girl, (cat girl), child, [deep skin|dark skin], dark orange eyes, glowing eyes, slit pupils, (blue hair), short hair, bangs, (whiskers), [maroon cat sunhat|cat ears], (hat bow:1.35), long purple scarf, flat chest, (closed firebrick robe), wide sleeves, sleeves past wrists, (sleeves past fingers), (leggings:0.85), (cat tail:0.6), looking to the side, [(lateral view)|(back view:1.35)], cowboy shot, dynamic angle, no light, (dark wheat field), in field, (fireflies:0.65), wide view, (night:1.2), (black sky), cloud, cirrus, [(dark shadow:1.2)|greyscale], (single high tower at far distance)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "cat hat 与 sunhat 是两个不同的tag，但因为它们有着相同的“建议前置”(tag存在着树状的“建议前置”分布)，所以可以融合使用，cat ears与cat hat也是。同理robe作为sleeves past wrists的建议前置，再作为sleeves past fingers的建议前置，强调前置树的叶即可强化整棵树的存在感。",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(girl sitting inside a long crystal bottle),bottle with stopper,water in bottle,grass background,nature",
+  "negative": "mutated hands and fingers:1.5 , long body :1.3, mutation, poorly drawn :1.2 ,bad shadow, unnatural body, bad breasts,bad face, bad eyes, extra eyes,{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet,{{{{{monotone}}}}},Abnormal eye size, Abnormal eye distribution,Abnormal eye proportion,Abnormal hands,Abnormal legs,Aabnormal feet,Abnormal fingers,sharp face",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 11, Size: 512x1024, Model hash: 925997e9, Clip skip: 2"
+ }
+]

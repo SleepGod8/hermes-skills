@@ -1,0 +1,132 @@
+[
+ {
+  "positive": "{{texas the omertosa (arknights)}}1girl,solo white background,dymanic pose, cute,smile,floating,floating hair,hand on own chest,, best quality, amazing quality, very aesthetic, absurdres, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, text, error, missing, extra, fewer, cropped, jpeg artifacts, worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, scan artifacts, photo, deformed, realism, disfigured, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, screencap",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 156263018, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "very aesthetic,1boy, 1girl, {{{ambriel (arknights))}}}, alternate costume, {armor},gauntlets ,pauldrons ,thighhighs,excited,{{punching viewer}},motion lines ,action, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing, weapon, earphones,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 6.0, Seed: 2915172687, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{2girl},1girl upside-down,circle,lying,floating hair, back-to-back,multiple girls, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{watermark, signature}}, glasses,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 38316216, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "cu chulainn (fate) ,1boy, armor, black background,blue bodysuit, bodysuit, foreshortening, from side, furrowed brow, gae bolg (fate), holding, holding polearm, holding weapon, long hair, looking at viewer, male focus, parted lips, polearm, red eyes, shattered, shoulder armor, solo, spear, weapon, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, microblog watermark,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, hot air balloon username, scan, [abstract], (worst quality, low quality:1.4),",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 1131373758, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "kal'tsit (arknights)1girl,8k wallpaper,extremely detailed figure, amazing beauty, detailed characters, indoor,black dress, holding flowers, light and shadow, depth of field, light spot, reflection,upper body,nigth,street,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{{artist name}}}nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], (worst quality, low quality:1.4),",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 2491320724, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{1girl ,{upside-down} , {ho'olheyak (arknights)}, 1girl,eatting noodle,holding chopsticks, head wings, alternate costume, aqua eyes,large breasts, pectoral apron, black choker, black dress, white hair, rolling up the hem of tights, black pantyhose, looking at viewer ,{indoors background},shirt , smile ,solo ,white shirt, best quality, amazing quality, very aesthetic, absurdres, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], text ,lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.5, Seed: 1877831658, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "kal'tsit (arknights)1girl,8k wallpaper,extremely detailed figure, amazing beauty, detailed characters, indoor,from back,bare back, tied hair,Mirror, self reflected in the mirror, stool, sitting on the stool, table, mirror on the table, light and shadow, depth of field,light spot, reflection",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{{artist name}}}nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], (worst quality, low quality:1.4),",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 2024978526, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "very aesthetic,1girl, 1girl, {one arm handstand}, outdoors, upside-down,armpits, asymmetrical legwear, black footwear, black jacket, black shorts, black socks, black thighhighs, blue sky, boots, breasts, pink hair, ribbon, short shorts, shorts, sky, smile, socks, solo, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], very displeasing, displeasing, lowres, cleavage,lowres, bad, text, error, missing, extra, fewer, cropped, jpeg artifacts, worst quality, bad quality, watermark, displeasing, unfinished, chromatic aberration, scan, scan artifacts, photo, deformed, realism, disfigured, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 6.0, Seed: 1815587863, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "(arknights),{The scar on the eye},ultra-detailed face,{{numen}},{huge monster},{no humans},{{close up}}{fighting stance},{armored dress},steam,{Armored gloves},{armour},{{glowing translucent ice sword}},{closed up},{glowing eyes},Upper armlet,evil smile,cowboy shot,Ferocious eyes,illustration, beautiful detailed, finely detailed, dramatic light, intricate details, perfect anatomy , best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, {microblog watermark},unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, hot air balloon username, scan, [abstract], (worst quality, low quality:1.4)",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.0, Seed: 2926542299, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{kal'tsit (arknights)(arknights)}1girl,solo,cat ears,white background,falling down,floating,in air,floating hair,Bubbles, refracted sunlight, light spots, sadness, lowered head,short hair,",
+  "negative": " nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], artist name,lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark,",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 3987263764, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{{texas the omertosa (arknights)}}1girl,white background,White,sitting, grass, from side,head down,sad,solo,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], tear,artistname,nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], weapon, earphones,",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 7.0, Seed: 3665045460, Size: 1536x1024, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "year 2022,1girl,{mudrock (arknights)},demon horns, white background, white hair,red eyes,bare shoulder,{{{holographic hair,iridescent,reflective clothes,holographic clothing}}},jacket,reflection,upper body, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{{{{stuffed toy,doll,glasses,horn,character doll,3boys,4girl,6girls,6girls+,split screen,chart,chibi,grid ,forehead,yukkuri shiteitte ne,}},1male,cock,pov,1boy,hikimayu,multiple views,anime screencap,ai-generated,sketch}}},transparent background,{{{jacket,shirt,open jacket,robot,holding,{holding helmet}}}}",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 1939040511, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{{1girl}},eyes,cyborg,{Medium Breast},joints,looking at viewer,Medium mechanical arms,{huge Mechanical claw},mechanical hands,mechanical legs,Mechanical tail,Hydraulic rod,mechanical spine,mechanical parts,official alternate costume,robot joints,science fiction,Mechanical Horn,skin tight,{mask},solo,barcode,robot,suspension,tube,{running},Simple background, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "lowres, {bad}, error, fewer, extra, missing, {{{{worst quality}}}}, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],weibo_username,female_pubic_hair,",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 7.0, Seed: 1667590767, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "reed (arknights), 1girl, solo,green eyes,track jacket, shorts,large breasts, squirtle on head, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra,missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], (worst quality, low quality:1.4)",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 4003169650, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "ultraman monster, bodysuit, claws, closed mouth, fighting, horns, kaijuu, mask, open mouth, sharp teeth, simple background, single horn, tail, teeth, tokusatsu, white background, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], text ,lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.0, Seed: 2685592338, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "year 2022,1girl,{mudrock (arknights)},demon horns, white background, white hair,red eyes,bare shoulder,{{{holographic hair,iridescent,reflective clothes,holographic clothing}}},jacket,reflection,upside-down,spread legs,lingerie, {reflection}, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{{{{stuffed toy,doll,glasses,horn,character doll,3boys,4girl,6girls,6girls+,split screen,chart,chibi,grid ,forehead,yukkuri shiteitte ne,}},1male,cock,pov,1boy,hikimayu,multiple views,anime screencap,ai-generated,sketch}}},transparent background,{{{jacket,shirt,open jacket,robot,holding,{holding helmet}}}}",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 211739836, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{2girls , {ump45 (girls' frontline) and ump9 (girls' frontline) holding a banner with \"404\" written on it}, apron, best quality, amazing quality, very aesthetic, absurdres, best quality, amazing quality, very aesthetic, absurdres ",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], text ,lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 7.0, Seed: 827888098, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "muelsyse (arknights),1girl, solo,hanfu,chinese clothes,splatter background, holding sword, best quality, amazing quality, very aesthetic, absurdres ",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra,missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], (worst quality, low quality:1.4)",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 268888129, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "{{{translucent body}}}}, 1girl,{{mask}},aqua eyes,cyborg,Medium Breast,grey hair,joints,looking at viewer,mechanical arms,mechanical hands,mechanical legs,Hydraulic rod,mechanical spine,mechanical parts,medium hair,official alternate costume,robot joints,science fiction,skin tight,solo,translucent skin,barcode,quadruple amputee,robot, sparks,suspension,tube,wire,{cross section},{Gnaku},standing,Simple background, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "mouth,lowres, {bad}, error, fewer, extra, missing, {{{{worst quality}}}}, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],weibo_username,female_pubic_hair,",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 7.0, Seed: 2507223098, Size: 768x1280, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "1 girl,{{Floating Fire Magic Spell and a burst of flam}},book,looking at viewer,close-up, cowboy shot,cinematic lighting, volume lighting, light particlestachie,dynamic angle ,ray tracing,, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],censored",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0, Seed: 2940142354, Size: 832x1216, Clip skip: 2, ENSD: 313"
+ },
+ {
+  "positive": "{{from below}}, {{{huge spider web}}},{1 loli caught in a spider web}, {bind}, {full body}, {{floating loli}}, red dress, {tears}, {fear}, {Crazy angle}, grey eyes, {cute face}, solo, {{gravity-free}}, {{winding}}, Dead tree, Dark clouds, {an extremely detailed and beautiful}, ultra-detailed, best quality, amazing quality, very aesthetic, absurdres, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],censored",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0,e: 832x1216, Clip skip: 2, ENSD: 313"
+ },
+ {
+  "positive": "[art:genshin impact], {{{{2 girls}}}}, Raiden Shogun(genshin impact) and Yae Miko(genshin impact), {upper body}, {{back to back}}, {{cool}}, grim expression, dynamic Angle, Japanese shrine with floating sakura background, {an extremely detailed and beautiful}, ultra-detailed, best quality, amazing quality, very aesthetic, absurdres, best quality, amazing quality, very aesthetic, absurdres ",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],censored",
+  "params": "Steps: 28, Sampler: Euler, CFG scale: 5.0,e: 832x1216, Clip skip: 2, ENSD: 313"
+ },
+ {
+  "positive": "kal'tsit (arknights),,blurry, blurry foreground,by rella,Dark environment, from above, full body,1girl,solo,curl up in bed, arms around her knees, in room, one of Her arm covered her eyes,very sad,she has long and smooth eyelashes,sad crying, tears drop from her face, wet clothes, White nightdress, rainning outside,overcast sky,neon lights, lights, cyberpunk, windows, reflections, reflections,Neon lights outside the window, raindrops hitting the window at night,",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], (worst quality, low quality:1.4),",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.0, Seed: 70294279, Size: 1536x1024, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "flying_kick ,symmetrical clothing, fighting pose, spreading legs, legs up,from below, kicking,midnight city,1girl,A tight muted color dress,taut_dress,bloomers",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], {{watermark, signature}}, glasses,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 2300499362, Size: 832x1216, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "masterpiece,best quality,amazing quality,8K,absurdres, wallpaper,colorful,ultra-detailed,dreamcore,realistic,commercial light and shadow,film light and shadow,{{detailed eyes}},oil-painting {1girl},loli,blonde hair,long hair,gothic lolita,in room,on side,head rest,on bed,looking at viewer, evil smile,shaded face, one eyes closed,{{black lace-trimmed panties}},{{from below}}, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, {{{{worst quality}}}}, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract],teeth,nsfw,tail,sock,",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 5.0, Seed: 1072782244, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "amiya(arknights), 1girl,8k wallpaper,extremely detailed figure, amazing beauty, detailed characters, {detailed background},aestheticism, sitting, winter, coffee shop, corner, coat, scarf, large breasts, gray hair, red eyes, emotionless, obedient, obedient, thick eyebrows, small nose, full lips, long eyelashes, delicate neck, slender shoulders, bare arms, delicate hands, long fingers, pointed nails, high cheekbones, oval face, smooth skin, rosy cheeks, cup of coffee, saucer, steam, warm, cozy, comfortable, relaxed, calm, quiet, peaceful, serene, contemplative, close-up, best quality, amazing quality, very aesthetic, absurdres",
+  "negative": "nsfw, lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, {microblog watermark},unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality,unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, hot air balloon username, scan, [abstract], (worst quality, low quality:1.4),",
+  "params": "Steps: 28, Sampler: DPM++ SDE, CFG scale: 5.0, Seed: 390987945, Size: 1216x832, Clip skip: 2, ENSD: 31337"
+ }
+]

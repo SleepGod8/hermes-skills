@@ -1,0 +1,374 @@
+[
+ {
+  "id": 1,
+  "positive": "((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), ((disheveled hair))",
+  "negative": "longbody, lowres, bad anatomy, bad hands, missing fingers, pubic hair,extra digit, fewer digits, cropped, worst quality, low quality",
+  "params": ""
+ },
+ {
+  "id": 2,
+  "positive": "nsfw, owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms, long neck, Humpbacked",
+  "negative": "((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), ((disheveled hair)), ((frills)), (1 girl), (solo), dynamic angle, big top sleeves, floating, beautiful detailed sky, on beautiful detailed water, beautiful detailed eyes, overexposure, (fist), expressionless, side blunt bangs, hairs between eyes, ribbons, bowties, buttons, bare shoulders, (((small breast))), detailed wet clothes, blank stare, pleated skirt, flowers",
+  "params": ""
+ },
+ {
+  "id": 3,
+  "positive": "cinematic lighting, ((best quality)),((extremely_detailed_eyes_and_face)),((((ink)))),((illustration)),depth of field,((extremely detailed)),((watercolor)),((anime face)),(((dramatic_angle))),medium_breast,(8k_wallpaper),((bright_eyes)), (looking_at_viewers),(an detailed organdie dress),(((((very_close_to_viewers))))),((sleepy)),((masterpiece)),((((((surrounded_by_heavy_floating_sand_flow_and_floating_sharp_stones)))))),(((((messy_long_hair))))),((((veil)))),focus_on_face,(upper_body),(bare_shoulder),((((1girl)))),(golden_bracelet),(long yarn),((sunset)),lens_flare,light_leaks,((detailed_beautiful_desert_with_cactus)),medium_wind,(detailed_beautiful_sky)",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts,signature, watermark, username, blurry, artist name,bad feet,nude,skeleton_girl",
+  "params": "CFG 5.5, euler_a, step 30"
+ },
+ {
+  "id": 4,
+  "positive": "cinematic lighting, ((best quality)),((single_human_girl)),((((upper_body)))),((extremely_detailed_eyes_and_face)),((church)),((annoyed)),((ink)),((illustration)),depth of field,((frown)),((expression)),((red_eyes)),((((white_hair)))),((extremely detailed)),((watercolor)),((anime face)),(skull_on_dress),(((yokozuwari))),((detailed_skeleton_church)),(((beautiful_detailed_black_gothic_Empire_Waist_Dress))),(((dramatic_angle))),medium_breast,(8k_wallpaper),((bright_eyes)), (looking_at_viewers),((close_to_viewers)),((masterpiece)),(((((messy_long_hair))))),((((1girl)))),lens_flare,light_leaks",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts,signature, watermark, username, blurry, artist name,bad feet,nude,skeleton_girl",
+  "params": "CFG 6.5，“其他参数随意”"
+ },
+ {
+  "id": 5,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), (1 girl), (solo), ((an extremely delicate and beautiful)), little girl, ((beautiful detailed sky)), beautiful detailed eyes, side blunt bangs, hairs between eyes, ribbons, bowties, buttons, bare shoulders, (small breast), blank stare, pleated skirt, close to viewer, ((breeze)), Flying splashes,  Flying petals, wind",
+  "negative": "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, missing fingers,  bad hands, missing arms, long neck, Humpbacked, shadow, nude",
+  "params": "CFG: 5.5, euler, step 50"
+ },
+ {
+  "id": 6,
+  "positive": "((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), ((disheveled hair)), beautiful detailed eyes, (1girl:1.2),(solo), dynamic angle, dark magician girl,(black kneehighs:1.1),(starry tornado:1.4), starry Nebula, ((frills)), beautiful detailed sky, beautiful detailed eyes,evil smile, expressionless,hairs between eyes,  white  hair,pleated skirt,((disreveled hair))",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms",
+  "params": "CFG: 6.0, euler_a, steps: 50"
+ },
+ {
+  "id": 7,
+  "positive": "{{masterpiece}}, flat chestbest quality},{highres},solo,flat_chest,a girl inside the church with white hair and blue pupil surrounded by {many} glowing {feathers} in cold face,detailed face,night with bright colorful lights whith richly layered clouds and clouded moon in the detailed sky,{a lot of glowing particles},high ponytail,mecha clothes,robot girl,cool movement,sliver bodysuit,{filigree},delicate and (intricate) hair,((sliver)) and (broken) body,blue streaked hair,full body,Depth of field, sitting on a {blue star}",
+  "negative": "lowres, bad anatomy, bad legs,bad hands, text,error, missing fngers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg,artifacts,signature,watermark, username, blurry, bad feet,artist name,bad anatomy,bad hands,bad body,bad proportions，worst quality,low quality，optical_illusion",
+  "params": "cfg12, euler_a, steps 28"
+ },
+ {
+  "id": 8,
+  "positive": "((((ink)))，((watercolor))，world masterpiece theater, ((best quality))，depth of field,((illustration))，(1 girl)，anime face，medium_breast,floating，beautiful detailed sky，looking_at_viewers，an detailed organdie dress，very_close_to_viewers，bare_shoulder，golden_bracelet，focus_on_face，messy_long_hair，veil，upper_body，,lens_flare,light_leaks,bare shoulders，detailed_beautiful_Snow Forest_with_Trees， spirit，grey_hair，White clothes，((Snowflakes)),floating sand flow,navel,(beautiful detailed eyes), (8k_wallpaper)",
+  "negative": "nsfw, owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms, long neck, Humpbacked，Glasses",
+  "params": "Steps: 30, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 9,
+  "positive": "{masterpiece},{best quality},{1girl},Amazing,beautiful detailed eyes,finely detail,Depth of field,extremely detailed CG,original, extremely detailed wallpaper,loli,white_hair,magic_circle,cat_ears,long_hair,white_hair/yellow_eyes,wand,pentagram,clock, {masterpiece},{best quality},{1girl},Amazing,beautiful detailed eyes,finely detail,Depth of field,extremely detailed CG,original, extremely detailed wallpaper,loli, white_hair",
+  "negative": "nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, nsfw, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
+  "params": "Steps: 20, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 10,
+  "positive": "A man with has short black hair, a round hat, no facial features, a high collar coat, Flashes of lightning from the hands,full body,, (((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), (detailed light),((Expressionless)),, (((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), (detailed light),((an extremely delicate and beautiful)),((man)),((lightning in hand)),Lightning surrounds men,(((Lightning chain))),Suspended crystal, with lightning inside the crystal,((Suspended colorless crystal))",
+  "negative": "lowres, bad anatomy, bad hands, text.error,missing fngers,extra digt ,fewer digits,cropped, wort quality .low quality,.normal quality,.jpegartifacts.signature.watermark, username, blurry, bad feet,girl,women",
+  "params": "Steps: 60, Sampler: Euler a, CFG scale: 7.5"
+ },
+ {
+  "id": 11,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), (detailed light),((an extremely delicate and beautiful)),(beautiful detailed eyes), (sunlight),(angel),solo,young girls,dynamic angle,floating, bare_shoulders,looking_at_viewer ,wings ,arms_up,halo,Floating white silk,(Holy Light),just like silver stars imploding we absorb the light of day",
+  "negative": "owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms,large breasts",
+  "params": "Steps: 36, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 12,
+  "positive": "dramatic_shadow,ray_tracing, ((best quality)),(((beautiful_detailed_dark_midnight_sky))),((((yellow_full_moon)))),(holding_wine_gourd),(((((surrounded_by_floating_sakura))))),dramatic_angle,(leaning_on_huge_stone),(((bare_shoulder))),((((very_close_to_viewer)))),(((tispy))),(((sleepy))),((far_from_viewer)),(((extremely_beautiful_detailed_anime_face_and_eyes))),((((((1girl)))))),((((open_hakama)))),((samurai)),(ink),((illustration)),depth of field,(((((beautiful_detailed_pampas_grass_field))))),watercolor,((upper_body)),medium_breast,(bright_eyes),((masterpiece)),((messy_white_long_hair))",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality,",
+  "params": ""
+ },
+ {
+  "id": 13,
+  "positive": "jpeg artifacts,signature, watermark, username, blurry, artist name,bad feet,nsfw,more_than_1_moon",
+  "negative": "",
+  "params": "cfg: 6.5, 其余默认"
+ },
+ {
+  "id": 14,
+  "positive": "{{{masterpiece}}}, {{best quality, super fine illustration , beautiful and delicate water,The finest grass}}. ((beautiful eyes)),{ very delicate light, perfect and delicate limbs}, {nature, painting, water spray},{{ fine luminescence ,very fine 8K CG wallpaper}},Lavender eyes, pink pupils, whole body, white hair, bright eyes,( (an extremely delicate and beautiful girl)), ((1 girl)), medium bust, dynamic angle, (white dress with gold decoration), (long hair flowing with the wind, beautiful hair ornaments, delicate wet skirt, nsfw, breeze, long bangs between eyes), wrinkled skirt, (staring blankly, lovely big eyes),messy_hair,payot,Lateral braid,(Tulle lace white skirt) Flowers and grass meadow, near the water edge, ((sunset, starry sky in a circle), randomly distributed clouds, (((river))), splashing water, falling petals",
+  "negative": "multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) ,{Multi foot},{{Multifold}},{Multi fingering}, lowers, bad anatomy, bad hands, missing fingers, pubic hair,extra digit, fewer digits, cropped, worst quality, low quality,colored sclera, monster girl,Black hands, multiple breasts, mutated hands and fingers:1.5 , long body :1.3, (mutation, poorly drawn :1.2) , black-white, bad anatomy, The background is incoherent,more than 2 thighs,huge thighs, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs,missing fingers, fused fingers, one hand with more than 5 fingers, one hand with less than 5 fingers,bad asshole, fused asshole, missing asshole, bad anus, bad pussy, bad crotch, bad crotch seam, fused anus, fused pussy,((abnormal eye proportion)),(Abnormal hands），( abnormal legs),(abnormal feet abnormal fingers),(sharp face)",
+  "params": "1280×720， cfg4，euler a，steps：30"
+ },
+ {
+  "id": 15,
+  "positive": "(((masterpiece))),best quality, illustration,(beautiful detailed girl),beautiful detailed glow,detailed ice,beautiful detailed water,(beautiful detailed eyes),expressionless,beautiful detailed white gloves, (floating palaces:1.2),azure hair,disheveled hair,long bangs, hairs between eyes, (skyblue dress),black ribbon,white bowties,midriff,{{{half closed eyes}}},,big forhead,blank stare,flower,large top sleeves,(((ice crystal texture wings))),{{{{{{{{Iridescence and rainbow hair:2.5}}}}}}},{{{{{{detailed cute anime face}}}}}},{{loli}},{{{{{watercolor_(medium)}}}},(((masterpiece)))",
+  "negative": "{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad",
+  "params": ""
+ },
+ {
+  "id": 16,
+  "positive": "a girl,Phoenix girl,fluffy hair,war,a hell on earth,Beautiful and detailed explosion,Cold machine,Fire in eyes,World War,burning,Metal texture,Exquisite cloth,Metal carving,volume,best quality,normal hands,Metal details,Metal scratch,Metal defects,{{masterpiece}},best quality,official art,4k,best quality,extremely detailed CG unity 8k,illustration,highres,masterpiece,contour deepening,Azur Lane,Girls' Front,Magical，Cloud Map Plan,contour deepening，long-focus，Depth of field，a cloudy sky，Black smoke,smoke of gunpowder, long-focus，Mature, resolute eyes, burning, burning sky, burning hair,Burn oneself in flames, fighting，Covered in blood，complex pattern，battleing，Flying flames，Flame whirlpool，Doomsday Scenes，float，Splashing blood,on the battlefield，Bloody scenes，Good looking flame，Exquisite Flame，Exquisite Blood,photorealistic,Watercolor,colourful, (((masterpiece))),best quality, illustration,beautiful detailed glow,detailed ice,beautiful detailed water,red moon, (magic circle:1,2), (beautiful detailed eyes),expressionless,beautiful detailed white gloves, own hands clasped, (floating palaces:1.1),azure hair,disheveled hair,long bangs, hairs between eyes, dark dress, (dark magician girl:1.1),black kneehighs, black ribbon,white bowties,midriff,{{{half closed eyes}}},,big forhead,blank stare,flower,large top sleeves,, (((masterpiece))),best quality, illustration,(beautiful detailed girl),beautiful detailed glow,detailed ice,beautiful detailed water,(beautiful detailed eyes),expressionless,beautiful detailed white gloves, (floating palaces:1.2),azure hair,disheveled hair,long bangs, hairs between eyes, (skyblue dress),black ribbon,white bowties,midriff,{{{half closed eyes}}},,big forhead,blank stare,flower,large top sleeves,(((ice crystal texture wings)),(((ice and fire melt)))",
+  "negative": "(((ugly))),(((duplicate))),((morbid)),((mutilated)),(((tranny))),mutated hands,(((poorly drawn hands))),blurry,((bad anatomy)),(((bad proportions))),extra limbs,cloned face,(((disfigured))),(((more than 2 nipples))),((((missing arms)))),(((extra legs))),mutated hands,(((((fused fingers))))),(((((too many fingers))))),(((unclear eyes))),lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet，text font ui,malformed hands,long neck,missing limb,(mutated hand and finger: 1.5),(long body: 1.3),(mutation poorly drawn: 1.2),disfigured,malformed mutated,multiple breasts,futa,yaoi",
+  "params": "Steps: 39, Sampler: Euler, CFG scale: 4.5, 512 x 1024"
+ },
+ {
+  "id": 17,
+  "positive": "((extremely detailed CG)),((8k_wallpaper)),(((masterpiece))),((best quality)),watercolor_(medium),((beautiful detailed starry sky)),cinmatic lighting,loli,princess,very long rainbow hair,side view,looking at viewer,full body,frills,(far from viewer),((extremely detailed face)),((an extremely delicate and beautiful girl)),((extremely detailed cute anime face)),((extremely detailed eyes)),(((extremely detailed body))),(ultra detailed),illustration,((bare stomach)),((bare shoulder)),small breast,((sideboob)),((((floating and rainbow hair)))),(((Iridescence and rainbow hair))),(((extremely detailed sailor dress))),((((Iridescence and rainbow dress)))),(Iridescence and rainbow eyes),beautiful detailed hair,beautiful detailed dress,dramatic angle,expressionless,(big top sleeves),frills,blush,(ahoge)",
+  "negative": "lowres,bad anatomy,bad hands,text,error,ugly,duplicate,morbid,boken limb,incorrect limb,fusion finger,lose finger,multiple finger,multiple digit,fusion hand,lose leg,fused leg,multiple leg,bad feet,fewer digits,cropped,worst quality,low quality,normal quality,simple background, jpeg",
+  "params": "step28   scale5  k_euler_a 832x512"
+ },
+ {
+  "id": 18,
+  "positive": "{{{{{masterpiece}}}}},{{{{best quality}}}},illustration,{{beautiful detailed girl}},(((beautiful detailed lighting))),beautiful detailed eyes,(((((disheveled hair))))),{{{beautiful detailed dress}}},midriff,{{female girl}},((off-shoulder jacket)),sailor dress,((((darkside)))),{{{{{bust}}}},{{{{{watercolor_(medium)}}}}},wholeblack bloomer,wet clothes,wet skin,flowers,hollow eyes,hollow night,hollow knight,{{{{{chain}}}}},dark soul,abyssal ship,deep dark,darkness,{{{{female girl}}}}},{{{small breast}}},death garden,{{{{emotionless eyes}}}},{{{cthulhu}}},((((extremely detailed dark clouds)))),{{{{{extremely detailed CG unity 8k wallpaper}}}}},(((extremely detailed face))),(((jitome))),((((dark_persona)))),{{ruins}},{{{{{{beautiful deatailed shadow}}}}}},{{{{chain storm}}}}},{{{{chain ring}}},",
+  "negative": "{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet",
+  "params": "step24 scale4.5 k_euler"
+ },
+ {
+  "id": 19,
+  "positive": "(((masterpiece))),best quality, illustration,(beautiful detailed girl),beautiful detailed glow,detailed ice,beautiful detailed water,(beautiful detailed eyes),expressionless,beautiful detailed white gloves, (floating palaces:1.3),azure hair,disheveled hair,long bangs, hairs between eyes, (skyblue dress),black ribbon,white bowties,midriff,{{{half closed eyes}}},,big forhead,blank stare,flower,large top sleeves,(((ice crystal texture wings)))",
+  "negative": "Negative prompt: multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) , black-white, bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, anatomical nonsense, text font ui, error, malformed hands, long neck, blurred, lowers, lowres, bad anatomy, bad proportions, bad shadow, uncoordinated body, unnatural body, fused breasts, bad breasts, huge breasts, poorly drawn breasts, extra breasts, liquid breasts, heavy breasts, missing breasts, huge haunch, huge thighs, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, fused ears, bad ears, poorly drawn ears, extra ears, liquid ears, heavy ears, missing ears, fused animal ears, bad animal ears, poorly drawn animal ears, extra animal ears, liquid animal ears, heavy animal ears, missing animal ears, text, ui, error, missing fingers, missing limb, fused fingers, one hand with more than 5 fingers, one hand with less than 5 fingers, one hand with more than 5 digit, one hand with less than 5 digit, extra digit, fewer digits, fused digit, missing digit, bad digit, liquid digit, colorful tongue, black tongue, cropped, watermark, username, blurry, JPEG artifacts, signature, 3D, 3D game, 3D game scene, 3D character, malformed feet, extra feet, bad feet, poorly drawn feet, fused feet, missing feet, extra shoes, bad shoes, fused shoes, more than two shoes, poorly drawn shoes, bad gloves, poorly drawn gloves, fused gloves, bad cum, poorly drawn cum, fused cum, bad hairs, poorly drawn hairs, fused hairs, big muscles, ugly, bad face, fused face, poorly drawn face, cloned face, big face, long face, bad eyes, fused eyes poorly drawn eyes, extra eyes, malformed limbs, more than 2 nipples, missing nipples, different nipples, fused nipples, bad nipples, poorly drawn nipples, black nipples, colorful nipples, gross proportions. short arm, (((missing arms))), missing thighs, missing calf, missing legs, mutation, duplicate, morbid, mutilated, poorly drawn hands, more than 1 left hand, more than 1 right hand, deformed, (blurry), disfigured, missing legs, extra arms, extra thighs, more than 2 thighs, extra calf, fused calf, extra legs, bad knee, extra knee, more than 2 legs, bad tails, bad mouth, fused mouth, poorly drawn mouth, bad tongue, tongue within mouth, too long tongue, black tongue, big mouth, cracked mouth, bad mouth, dirty face, dirty teeth, dirty pantie, fused pantie, poorly drawn pantie, fused cloth, poorly drawn cloth, bad pantie, yellow teeth, thick lips, bad cameltoe, colorful cameltoe, bad asshole, poorly drawn asshole, fused asshole, missing asshole, bad anus, bad pussy, bad crotch, bad crotch seam, fused anus, fused pussy, fused anus, fused crotch, poorly drawn crotch, fused seam, poorly drawn anus, poorly drawn pussy, poorly drawn crotch, poorly drawn crotch seam, bad thigh gap, missing thigh gap, fused thigh gap, liquid thigh gap, poorly drawn thigh gap, poorly drawn anus, bad collarbone, fused collarbone, missing collarbone, liquid collarbone, strong girl, obesity, worst quality, low quality, normal quality, liquid tentacles, bad tentacles, poorly drawn tentacles, split tentacles, fused tentacles, missing clit, bad clit, fused clit, colorful clit, black clit, liquid clit, QR code, bar code, censored, safety panties, safety knickers, beard, furry ,pony, pubic hair, mosaic, excrement, faeces, shit, futa, testis",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 20,
+  "positive": "(((masterpiece))),best quality, illustration,beautiful detailed glow,(beautiful detailed eyes), (dark magician girl:1.1),big forhead,flower,large top sleeves,Floating ashes, Beautiful and detailed explosion, red moon, fire,Fire cloud, Wings on fire, a cloudy sky, smoke of gunpowder, burning, black dress, (beautiful detailed eyes),expressionless,beautiful detailed white gloves, Dove of peace, (floating cloud:1.2),azure hair,disheveled hair,long bangs, hairs between eyes, black kneehighs, black ribbon,white bowties,midriff,{{{half closed eyes}}},",
+  "negative": "owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 21,
+  "positive": "(((masterpiece))),best quality, illustration,beautiful detailed glow,detailed ice,beautiful detailed water,red moon, (magic circle:1,2), (beautiful detailed eyes),expressionless,beautiful detailed white gloves, own hands clasped, (floating palaces:1.1),azure hair,disheveled hair,long bangs, hairs between eyes, dark dress, (dark magician girl:1.1),black kneehighs, black ribbon,white bowties,midriff,{{{half closed eyes}}},,big forhead,blank stare,flower,large top sleeves,",
+  "negative": "Negative prompt: multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) , black-white, bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, anatomical nonsense, text font ui, error, malformed hands, long neck, blurred, lowers, lowres, bad anatomy, bad proportions, bad shadow, uncoordinated body, unnatural body, fused breasts, bad breasts, huge breasts, poorly drawn breasts, extra breasts, liquid breasts, heavy breasts, missing breasts, huge haunch, huge thighs, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, fused ears, bad ears, poorly drawn ears, extra ears, liquid ears, heavy ears, missing ears, fused animal ears, bad animal ears, poorly drawn animal ears, extra animal ears, liquid animal ears, heavy animal ears, missing animal ears, text, ui, error, missing fingers, missing limb, fused fingers, one hand with more than 5 fingers, one hand with less than 5 fingers, one hand with more than 5 digit, one hand with less than 5 digit, extra digit, fewer digits, fused digit, missing digit, bad digit, liquid digit, colorful tongue, black tongue, cropped, watermark, username, blurry, JPEG artifacts, signature, 3D, 3D game, 3D game scene, 3D character, malformed feet, extra feet, bad feet, poorly drawn feet, fused feet, missing feet, extra shoes, bad shoes, fused shoes, more than two shoes, poorly drawn shoes, bad gloves, poorly drawn gloves, fused gloves, bad cum, poorly drawn cum, fused cum, bad hairs, poorly drawn hairs, fused hairs, big muscles, ugly, bad face, fused face, poorly drawn face, cloned face, big face, long face, bad eyes, fused eyes poorly drawn eyes, extra eyes, malformed limbs, more than 2 nipples, missing nipples, different nipples, fused nipples, bad nipples, poorly drawn nipples, black nipples, colorful nipples, gross proportions. short arm, (((missing arms))), missing thighs, missing calf, missing legs, mutation, duplicate, morbid, mutilated, poorly drawn hands, more than 1 left hand, more than 1 right hand, deformed, (blurry), disfigured, missing legs, extra arms, extra thighs, more than 2 thighs, extra calf, fused calf, extra legs, bad knee, extra knee, more than 2 legs, bad tails, bad mouth, fused mouth, poorly drawn mouth, bad tongue, tongue within mouth, too long tongue, black tongue, big mouth, cracked mouth, bad mouth, dirty face, dirty teeth, dirty pantie, fused pantie, poorly drawn pantie, fused cloth, poorly drawn cloth, bad pantie, yellow teeth, thick lips, bad cameltoe, colorful cameltoe, bad asshole, poorly drawn asshole, fused asshole, missing asshole, bad anus, bad pussy, bad crotch, bad crotch seam, fused anus, fused pussy, fused anus, fused crotch, poorly drawn crotch, fused seam, poorly drawn anus, poorly drawn pussy, poorly drawn crotch, poorly drawn crotch seam, bad thigh gap, missing thigh gap, fused thigh gap, liquid thigh gap, poorly drawn thigh gap, poorly drawn anus, bad collarbone, fused collarbone, missing collarbone, liquid collarbone, strong girl, obesity, worst quality, low quality, normal quality, liquid tentacles, bad tentacles, poorly drawn tentacles, split tentacles, fused tentacles, missing clit, bad clit, fused clit, colorful clit, black clit, liquid clit, QR code, bar code, censored, safety panties, safety knickers, beard, furry ,pony, pubic hair, mosaic, excrement, faeces, shit, futa, testis",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 6"
+ },
+ {
+  "id": 22,
+  "positive": "hiten_1, (((masterpiece))),best quality, illustration,beautiful detailed glow,detailed ice,beautiful detailed water,red moon,snowflake, (beautiful detailed eyes),expressionless,beautiful detailed white gloves, (floating cloud:1.2),azure hair,disheveled hair,long bangs, hairs between eyes, dark dress, (dark magician girl:1.1),black kneehighs, black ribbon,white bowties,midriff,{{{half closed eyes}}},big forhead,blank stare,flower,large top sleeves,",
+  "negative": "owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 23,
+  "positive": "(((crystals texture Hair)))，{{{{{extremely detailed CG}}}}},{{8k_wallpaper}},{{{{Crystalline purple gemstone gloves}}}},((beautiful detailed Glass hair)),((Glass shaped texture hand)),((Crystallize texture body)),Gem body,Hands as clear as jewels,Crystallization of clothes,((crystals texture skin)),sparkle, lens flare, light leaks, Broken glass，{{{{Detailed Glass shaped clothes}}}}，       ((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), ((disheveled hair)), ((frills)), (1 girl), (solo), dynamic angle, big top sleeves, floating, beautiful detailed gemstone sky, gemstone sea, beautiful detailed eyes, overexposure,  side blunt bangs, hairs between eyes, ribbons, bowties, buttons, bare shoulders, (((small breast))),  pleated skirt, crystals texture flowers， ((Detailed crystallized clothing)),(gemstone of body)，solo focus",
+  "negative": "lowres, bad anatomy, bad hands, text, error,  extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts,signature, watermark, username, blurry, artist name,bad feet,{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg  artifacts,signature,watermark,username,blurry,bad",
+  "params": "Steps: 40, Sampler: Euler a, CFG scale: 4.5"
+ },
+ {
+  "id": 24,
+  "positive": "{{{masterpiece}}}, {{best quality}}, {{super fine illustration}}, {{beautiful and delicate water}}, {{beautiful and detailed eyes}, {very detailed light}, {perfect and delicate limbs}, {nature}, {painting}, {water bloom}, {delicate glow}, {{very fine 8KCG wallpaper}}, lavender eyes, peach pink pupils, whole body, white hair, luminous eyes, an extremely delicate and beautiful girl, (1 girl), medium chest circumference, dynamic angle, (Violet dress with gold decoration), (long hair floating everywhere), (beautiful hair decoration), (delicate wet dress), (nsfw), (breeze), long hair blown up, ((messy hair style)), (long bangs between eyes), wrinkled skirt, Flowers meadow, near the water edge, (((sunset)), (less stars form a circle), randomly distributed clouds, (rivers), (willows with branches falling into the water)",
+  "negative": "{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet,{{{{{monotone}}}}}",
+  "params": "steps：20，cfg4，1280×768，euler a"
+ },
+ {
+  "id": 25,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), ((an extremely delicate and beautiful)),dynamic angle,floating, (beautiful detailed eyes), (detailed light) (1girl), loli, small_breasts, floating_hair,  glowing eyes, pointy_ears, white hair, green eyes,halter dress, feather, leaves, nature, (sunlight), river, (forest),(painting),(sketch),(bloom)",
+  "negative": "lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet",
+  "params": "step40，scale7"
+ },
+ {
+  "id": 26,
+  "positive": "(((masterpiece))),(((best quality))),((ultra-detailed)),((illustration)),((an extremely delicate and beautiful)),dynamic angle,floating, (beautiful detailed eyes), (detailed light), (((ink))),depth of field,((watercolor)) 1girl, small breasts, red hair, blue eyes, ((veil)), bare shoulders, navel, (starry sky),(desert),(floating sand flow), (((colorful bubble)))",
+  "negative": "lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet",
+  "params": "Steps: 40, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 27,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), ((an extremely delicate and beautiful)), beautiful detailed eyes,(detailed light),(beautiful deatailed shadow), 1girl, (loli), (small_breasts), floating_hair,  glowing eyes, black hair,red eyes, sad, lolita, bare shoulders, white_dress, ((rose)),(vines), (blood), cage, bandage, red rope, ((sketch)),(painting)",
+  "negative": "lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet",
+  "params": "Steps: 40, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 28,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration), ((an extremely delicate and beautiful)),cinematic angle,floating, (beautiful detailed eyes), (detailed light),cinematic lighting, beautifully detailed sky,",
+  "negative": "(1girl), white hair, blue eyes, (high ponytail), cloak, glowing eyes,",
+  "params": ""
+ },
+ {
+  "id": 29,
+  "positive": "((moon)),(moonlight), starry sky, (lighting particle), fog, snow",
+  "negative": "lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet",
+  "params": "Steps: 40, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 30,
+  "positive": "((((ink))))，((watercolor))，((best quality))，(spirit),((illustration))，(((1 girl)))，(beautiful detailed eyes)，world masterpiece theater,depth of field，(Burning forest)，spark，anime face，Black gauze skirt，(red_hair)，blue_eyes，focus_on_face,medium_breasts，(((((messy_long_hair)))))，Bare shoulder，very_close_to_viewers，veil，light_leaks，Burning sky，navel，((bustier))，flame，Red Gem Necklace，Rainbow in the sky，Flames burning around,A burning church，(((Fire butterflys )))，(Flying sparks)",
+  "negative": "Negative prompt: nsfw, owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms, long neck, Humpbacked，Glasses",
+  "params": "Steps: 30, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 31,
+  "positive": "(((masterpiece))), best quality, illustration,(((1girl))),((cute anime face)),(beautiful detailed girl),expressionless,cold attitude, red pupils, short hair, white hair,(((beautiful detailed eyes))),jacket,cracked floor,damaged classroom,Tables and chairs in disarray,The residual eaves DuanBi,beautiful sky,cumulus,mouldy,floating,wind,Dead end machine,(broken robot),(Mechanical girl)",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurrylowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,tidy classroom,Neat tables and chairs",
+  "params": "Steps: 45, Sampler: Euler a, CFG scale: 5.5"
+ },
+ {
+  "id": 32,
+  "positive": "(((masterpiece))),best quality, illustration,(beautiful detailed girl),beautiful detailed glow,detailed ice,beautiful detailed water,(beautiful detailed eyes),expressionless,(floating palaces),azure hair,disheveled hair,long bangs, hairs between eyes,(skyblue dress),black ribbon,white bowties,midriff,{{{half closed eyes}}},big forhead,blank stare,flower,large top sleeves",
+  "negative": "owres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,missing fingers,bad hands,missing arms,large breasts",
+  "params": "Steps: 27, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 33,
+  "positive": "(((masterpiece))),best quality, illustration,(beautiful detailed girl),beautiful detailed glow,((flames of war)),(((nuclear explosion behide))),rain,detailed lighting,detailed water,(beautiful detailed eyes),expressionless,palace,azure hair,disheveled hair,long bangs,hairs between eyes,(whitegrey dress),black ribbon,white bowties,midriff,big forhead,blank stare,flower,long sleeves",
+  "negative": "Negative prompt: owres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,missing fingers,bad hands,missing arms,large breasts",
+  "params": "Steps: 28, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 34,
+  "positive": "(masterpiece), best quality,{full body},((1 girl)),((beauty detailed eye)),{mecha,huge_filesize},(bare shoulders),science fiction,highly detailed,illustration,extremely detailed CG unity wallpaper,submerge,cinematic lighting,dramatic angle,{{beautiful face}},posing,caustics,fine water surface,,Mechanical wing,Metal wings,Mecha wing,{mecha clothes},robot girl,beautiful detailed face,",
+  "negative": "bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms, long neck, Humpbacked",
+  "params": "Steps: 38, Sampler: Euler a, CFG scale: 12"
+ },
+ {
+  "id": 35,
+  "positive": "masterpiece, best quality, best quality, Amazing, beautiful detailed eyes,((1girl)), finely detailed, Depth of field, extremely detailed CG unity 8k wallpaper, full body,(other Minato aqua), (((a girl wears Clothes with a silver texture)))，((Extremely gorgeous metal style))，((Metal crown with ornate stripes))，((((Various metals background))))，Sputtered molten iron,(floating hair),((Hair like melted metal)),(((detailed face))), (((detailed eyes))),(((Clothes made of silver))),(((Clothes with gold lace))),((full body)),((((flowing gold and silver)))),(((((everything flowing and melt))))),(((((flowing iron))))),(((((flowing silver))))),((((lace flowing and melt))))",
+  "negative": "(((ugly))),(((duplicate))),((morbid)),((mutilated)),(((tranny))),mutated hands,(((poorly drawn hands))),blurry,((bad anatomy)),(((bad proportions))),extra limbs, cloned face,(((disfigured))),(((more than 2 nipples))),((((missing arms)))),(((extra legs))),mutated hands,(((((fused fingers))))),(((((too many fingers))))),(((unclear eyes))),lowers, bad anatomy, bad hands,text,error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality,jpeg artifacts, signature, watermark, username, blurry, bad feet, text font ui,malformed hands, long neck, missing limb,(mutated hand and finger: 1.5),(long body: 1.3),(mutation poorly drawn: 1.2), disfigured, malformed mutated, multiple breasts, futa, yaoi",
+  "params": "Steps: 30, Sampler: Euler, CFG scale: 7"
+ },
+ {
+  "id": 36,
+  "positive": "cinematic lighting, ((best quality)),((single_human_girl)),((((upper_body)))),((extremely_detailed_eyes_and_face)),ink,(((bone))), (((ribs))), one girl, a young girl, upper body, rose, black hair, blue eyes,curly hair,greyscale,no shadow, simple background, bright skin,Cherry blossoms",
+  "negative": "multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) , black-white, bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, anatomical nonsense, text font ui, error, malformed hands, long neck, blurred, lowers, lowres, bad anatomy, bad proportions, bad shadow, uncoordinated body, unnatural body, fused breasts, bad breasts, huge breasts, poorly drawn breasts, extra breasts, liquid breasts, heavy breasts, missing breasts, huge haunch, huge thighs, huge calf, bad hands, fused hand, missing hand, disappearing arms, disappearing thigh, disappearing calf, disappearing legs, fused ears, bad ears, poorly drawn ears, extra ears, liquid ears, heavy ears, missing ears, fused animal ears, bad animal ears, poorly drawn animal ears, extra animal ears, liquid animal ears, heavy animal ears, missing animal ears, text, ui, error, missing fingers, missing limb, fused fingers, one hand with more than 5 fingers, one hand with less than 5 fingers, one hand with more than 5 digit, one hand with less than 5 digit, extra digit, fewer digits, fused digit, missing digit, bad digit, liquid digit, colorful tongue, black tongue, cropped, watermark, username, blurry, JPEG artifacts, signature, 3D, 3D game, 3D game scene, 3D character, malformed feet, extra feet, bad feet, poorly drawn feet, fused feet, missing feet, extra shoes, bad shoes, fused shoes, more than two shoes, poorly drawn shoes, bad gloves, poorly drawn gloves, fused gloves, bad cum, poorly drawn cum, fused cum, bad hairs, poorly drawn hairs, fused hairs, big muscles, ugly, bad face, fused face, poorly drawn face, cloned face, big face, long face, bad eyes, fused eyes poorly drawn eyes, extra eyes, malformed limbs, more than 2 nipples,missing nipples, different nipples, fused nipples, bad nipples, poorly drawn nipples, black nipples, colorful nipples, gross proportions. short arm, (((missing arms))), missing thighs, missing calf, missing legs, mutation, duplicate, morbid, mutilated, poorly drawn hands, more than 1 left hand, more than 1 right hand, deformed, (blurry), disfigured, missing legs, extra arms, extra thighs, more than 2 thighs, extra calf, fused calf, extra legs, bad knee, extra knee, more than 2 legs, bad tails, bad mouth, fused mouth, poorly drawn mouth, bad tongue, tongue within mouth, too long tongue, black tongue, big mouth, cracked mouth, bad mouth, dirty face, dirty teeth, dirty pantie, fused pantie, poorly drawn pantie, fused cloth, poorly drawn cloth, bad pantie, yellow teeth, thick lips, bad cameltoe, colorful cameltoe, bad asshole, poorly drawn asshole, fused asshole, missing asshole, bad anus, bad pussy, bad crotch, bad crotch seam, fused anus, fused pussy, fused anus, fused crotch, poorly drawn crotch, fused seam, poorly drawn anus, poorly drawn pussy, poorly drawn crotch, poorly drawn crotch seam, bad thigh gap, missing thigh gap, fused thigh gap, liquid thigh gap, poorly drawn thigh gap, poorly drawn anus, bad collarbone, fused collarbone, missing collarbone, liquid collarbone, strong girl, obesity, worst quality, low quality, normal quality, liquid tentacles, bad tentacles, poorly drawn tentacles, split tentacles, fused tentacles, missing clit, bad clit, fused clit, colorful clit, black clit, liquid clit, QR code, bar code, censored, safety panties, safety knickers, beard, furry ,pony, pubic hair, mosaic, excrement, faeces, shit, futa, testis",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 12"
+ },
+ {
+  "id": 37,
+  "positive": "masterpiece,{{{best quality}}},(illustration)),{{{extremely detailed CG unity 8k wallpaper}}},game_cg,(({{1girl}})),{solo}, (beautiful detailed eyes),((shine eyes)),goddess,fluffy hair,messy_hair,ribbons,hair_bow,{flowing hair}, (glossy hair), (Silky hair),((white stockings)),(((gorgeous crystal armor))),cold smile,stare,cape,(((crystal wings))),((grand feathers)),((altocumulus)),(clear_sky),(snow mountain),((flowery flowers)),{(flowery bubbles)},{{cloud map plane}},({(crystal)}),crystal poppies,({lacy}) ({{misty}}),(posing sketch),(Brilliant light),cinematic lighting,((thick_coating)),(glass tint),(watercolor),(Ambient light),long_focus,(Colorful blisters),ukiyoe style",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
+  "params": "Steps: 45, Sampler: Euler, CFG scale: 6.5"
+ },
+ {
+  "id": 38,
+  "positive": "(extremely detailed CG unity 8k wallpaper),(((masterpiece))), (((best quality))), ((ultra-detailed)), (best illustration),(best shadow), ((an extremely delicate and beautiful)),dynamic angle,floating, solo,((1girl)),{long wavy curly hair},expressionless,((white idol dress)), anglesailor dress,(detailed wet clothes),silk shawl,bikini,underboob, frills,cute anime face,blush,(beautiful detailed eyes), (detailed light),feather, nature, (sunlight), river, (forest),(((floating palace))),beautiful and delicate water,(painting),(sketch),(bloom),(shine),",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,Missing limbs,three arms, bad feet,text font ui,signature,blurry,text font ui,malformed hands,long neck,limb,Sleeveles,bad anatomy disfigured malformed mutated,(mutated hands and fingers :1.5).(long body :1.3),(mutation ,poorly drawn :1.2), bad anatomy, disfigured, malformed, mutated,multiple breasts,futa,yaoi,three legs",
+  "params": "Steps: 40-50, Sampler: Euler, CFG scale: 4-7"
+ },
+ {
+  "id": 39,
+  "positive": "((ink)),((watercolor)),{{best quality},(expressionless),((illustration)),(beautiful detailed girl),(beautiful detailed eyes),world masterpiece theater,depth of field,(blue spark),anime face,black gauze skirt,(red and blue hair),blue eyes,focus_on_face,medium_breasts,(((((messy_long_hair))))),Bare shoulder,very_close_to_viewers,burning sky,navel,((bustier)),flame,Rainbow in the sky,((Flames burning ice)),(((Fire  butterflys ))),(((ice crystal texture wings))),(Flying sparks),(detailed ice),{{a lot of luminous ice crystals}},((burning feathers)),{feathers_made_of_ice},(frozen feathers),{{{ice and fire together}}}",
+  "negative": "lowres,bad anatomy,bad hands, text, error, missing fingers,extra digit, fewer digits, cropped, worstquality, low quality, normal quality,jpegartifacts,signature, watermark, username,blurry,bad feet",
+  "params": "steps:23  scale:4.5  euler 832x512"
+ },
+ {
+  "id": 40,
+  "positive": "extremely detailed CG unity 8k wallpaper, (masterpiece), best quality, illustration, (1 girl), wet skin, expressionless, yellow eyes, (anger), horns, (silver armor), metal, complex pattern, corner, cape, indifference",
+  "negative": "lowres, bad anatomy, bad hands, text,error, missing fngers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg artifacts,signature,watermark, username, blurry, bad feet，blush，helmet",
+  "params": "Steps: 50, Sampler: DDIM, CFG scale: 7"
+ },
+ {
+  "id": 41,
+  "positive": "((masterpiece)),(((best quality))),((ultra-detailed)),((((full body)))),(unhelpless),tear,crying,((((( falling from the sky))))),(( Weathering With You)),(((full body))),(illustration), (1 girl),((falling))，tear,((face towards the sky))，(hair flows upwards)，((illustration)),((disheveled hair)),anime screeshot,((frills)),(1 girl),big top sleeves, floating,beautiful detailed isky,beautiful detailed eyes,overexposure,,expressionless,side blunt bangs,hairs between eyes, ribbons,bowties,buttons,bare shoulders,(((small breast))), detailed  clothes,blank stare",
+  "negative": "((((ugly)))),(((duplicate))),((morbid)),((mutilated)),(((tranny))),(((trans))),(((trannsexual))),(hermaphrodite),(out of frame),extra fingers,mutated hands,((poorly drawn hands)),((poorly drawn face)),(((mutation))),(((deformed))),((ugly)),blurry,((bad anatomy)),(((bad proportions))),((extra limbs)),cloned face,(((disfigured))),(((more than 2 nipples))),out of frame,ugly,extra limbs,(bad anatomy),gross proportions,(malformed limbs),((missing arms)),((missing legs)),(((extra arms))),(((extra legs))),mutated hands,(fused fingers),(too many fingers),(((long neck))),lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,text font ui,malformed hands,long neck,missing limb,bad anatomy disfigured malformed mutated,(mutated hands and fingers 1,5),(long body 1,3),(mutation poorly drawn 1,2),bad anatomy disfigured malformed mutated,multiple breasts,bad feet",
+  "params": ""
+ },
+ {
+  "id": 42,
+  "positive": "lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,text font ui,malformed hands,long neck,missing limb,Sleeveles,bad anatomy disfigured malformed mutated,(mutated hands and fingers 1,5),(long body 1,3),bad anatomy disfigured malformed mutated,multiple breasts,bad feet,futa,yaoi",
+  "negative": "",
+  "params": "PLMS, steps 150, cfg 8"
+ },
+ {
+  "id": 43,
+  "positive": "(((masterpiece))),(((best quality))),((ultra-detailed)),((underwater)),(illustration),(beautiful detailed water),((coral)),open tuck,((extremely delicate and beautiful girls)),dynamic angle,floating,(beautiful detailed eyes),(detailed light),(loli),floating hair,glowing eyes,pointy ears,(splash),underwater),((fishes)),white hair,green right eye,iceblue left eye,leaves dress,feather,nature,(sunlight),(underwater forest),(painting),(bloom),(detailed glow),drenched,seaweed,fish,(((Tyndall effect))),face to face",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms,large breasts",
+  "params": "Steps: 27, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 44,
+  "positive": "(extremely detailed CG unity 8k wallpaper),(((masterpiece))), (((best quality))), ((ultra-detailed)), (best illustration),(best shadow), ((an extremely delicate and beautiful)),dynamic angle,floating, fairyland,dynamic angle,sea of flowers,beautiful detailed garden,wind,classic,spring, (detailed light),feather, nature, (sunlight), river, forest,(((floating palace))),((the best building)),beautiful and delicate water,(painting),(sketch),(bloom),(shine)",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,Missing limbs,three arms, bad feet,text font ui,signature,blurry,text font ui,malformed hands,long neck,limb,Sleeveles,bad anatomy disfigured malformed mutated,(mutated hands and fingers :1.5).(long body :1.3),(mutation ,poorly drawn :1.2), bad anatomy, disfigured, malformed, mutated,multiple breasts,futa,yaoi,three legs",
+  "params": "CFG=6, Euler"
+ },
+ {
+  "id": 45,
+  "positive": "{{{masterpiece}}}, {{the best quality, super fine illustrations, beautiful and delicate water}}, {{very delicate light}}, {{nature, painting}}, {{fine lighting, more transparent stars, high-quality snowflakes, high-quality mountains, very fine 8KCG wallpapers}}, (plateau), (((snow mountain))), sunrise, randomly distributed clouds, (snow field), cliff, ((rotating star sky)), ((lake in mountain stream)), luminous particles",
+  "negative": "Negative prompt: Inverted mountain, low-quality, flowers, grass, distorted mountain, distorted light, low-quality light, low-quality mountain, low-quality illustration, low-quality background",
+  "params": "Steps: 30,  Euler a, CFG7"
+ },
+ {
+  "id": 46,
+  "positive": "extremely detailed CG unity 8k wallpaper,best quality，noon,beautiful detailed  water，long black hair，beautiful detailed girl，serafuku,view straight on,eyeball,hair flower,close up",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet,artist name,more than 2 thighs,nsfw,",
+  "params": "26step, cfg 6"
+ },
+ {
+  "id": 47,
+  "positive": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet,artist name,more than 2 thighs,nsfw",
+  "negative": "",
+  "params": "26step, cfg 6"
+ },
+ {
+  "id": 48,
+  "positive": "{{{{retro artstyle}}}}, {{masterpiece)),best quality,illustration,1 girl,mature female,small breast,beautiful detailed eyes,long sleeves, hoodie,frills, no shadow, simple background, bright skin, 1980s (style)",
+  "negative": "lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet,ugly,duplicate,trannsexual,hermaphrodite,out of frame,extra fingers,mutated hands,poorly drawn hands,poorly drawn face,mutation,deformed,blurry,bad anatomy,bad proportions,extra limbs,cloned face,disfigured,more than 2 nipples,out of frame,ugly,extra limbs,bad anatomy,gross,worst quality,low quality,normal quality,signature,watermark,username,blurry,proportions,malformed limbs,missing arms,missing legs,extra arms,extra legs,mutated hands,fused fingers,too many fingers,long neck",
+  "params": "Steps: 30, Sampler: Euler a, CFG scale: 6.5"
+ },
+ {
+  "id": 49,
+  "positive": "masterpiece, best quality, best quality,Amazing,1girl,finely detail,Depth of field,extremely detailed CG unity 8k wallpaper, masterpiece, full body,(loli),(white hair), red streaked hair, red eyes, (full body),red hair, (((with sword))), angry face，(beautiful detailed eyes), Blood drop,Blood fog, floating hair,light shafts, soft focus, character focus,disheveled hair,long bangs, hairs between eyes, looking at viewer,lowing hair, floating, Splashing blood,Long hair,(Bloodstain)",
+  "negative": "multiple breasts, (mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2) , liquid body,malformed, mutated, text font ui,malformed hands, long neck, lowres, bad anatomy, bad shadow, uncoordinated body, fused ears",
+  "params": "Steps: 25, Sampler: Euler a, CFG scale: 7"
+ },
+ {
+  "id": 50,
+  "positive": "(extremely detailed CG unity 8k wallpaper),(((masterpiece))), (((best quality))), ((ultra-detailed)), (best illustration),(best shadow), ((an extremely delicate and beautiful)),dynamic angle,floating,",
+  "negative": "The detailed castle, (((the best building))),",
+  "params": ""
+ },
+ {
+  "id": 51,
+  "positive": "mist encircles the mountains,fairyland,dynamic angle,classic,(detailed light),feather, nature, (sunlight), river, forest,flowers,beautiful and delicate water,(painting),(sketch),(bloom),(shine)",
+  "negative": "Inverted mountain, low-quality,low-quality illustration, low-quality background, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,Missing limbs,three arms, bad feet,text font ui,signature,blurry,text font ui,malformed hands,long neck,limb,Sleeveles,bad anatomy disfigured malformed mutated,(mutated hands and fingers :1.5).(long body :1.3),(mutation ,poorly drawn :1.2), bad anatomy, disfigured, malformed, mutated,multiple breasts,futa,yaoi,three legs",
+  "params": "CFG=6, Euler"
+ },
+ {
+  "id": 52,
+  "positive": "((masterpiece)),(((best quality))),illustration,1 girl,mature female,small breast,beautiful detailed eyes,long sleeves, hoodie,frills, extremely detailed CG unity 8k wallpaper, Loong, dragon background, loong background, game cg, depth of field, Cape hood",
+  "negative": "lowres,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet,ugly,duplicate,trannsexual,hermaphrodite,out of frame,extra fingers,mutated hands,poorly drawn hands,poorly drawn face,mutation,deformed,blurry,bad anatomy,bad proportions,extra limbs,cloned face,disfigured,more than 2 nipples,out of frame,ugly,extra limbs,bad anatomy,gross,worst quality,low quality,normal quality,signature,watermark,username,blurry,proportions,malformed limbs,missing arms,missing legs,extra arms,extra legs,mutated hands,fused fingers,too many fingers,long neck",
+  "params": "Steps: 40, Sampler: Euler, CFG scale: 7"
+ },
+ {
+  "id": 53,
+  "positive": "{{master piece}},best quality,illustration,1girl,small breast,beatiful detailed eyes,beatiful detailed cyberpunk city,flat_chest,beatiful detailed hair,wavy hair,beatiful detailed steet,mecha clothes,robot girl,cool movement,sliver bodysuit,{filigree},dargon wings,colorful background,a dragon  stands behind the girl,rainy days,{lightning effect},beatiful detailed sliver dragon arnour，（cold face）",
+  "negative": "{{{ugly}}},{{{duplicate}}},{{morbid}},{{mutilated}},{{{tranny}}},mutated hands,{{{poorly drawn hands}}},blurry,{{bad anatomy}},{{{bad proportions}}},extra limbs,cloned face,{{{disfigured}}},{{{more than 2 nipples}}},{{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}},{{{{{too many fingers}}}}},{{{unclear eyes}}},lowers,bad anatomy,bad hands,text,error,missing fingers,",
+  "params": "ddim, steps 23, cfg 4.5"
+ },
+ {
+  "id": 54,
+  "positive": "{{{solo}}},highres,{best quality};{highly detailed},beautiful detailed blue eyes,light blush,expressionless,white hair,hair fluttering in the wind,mechanical arm armor,mechanical body armor,clothes,riding motor,{bodysuit,ruins of city in war,fire,burning cars,burning buildings,air force fleet in the sky,dusk,bird see",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet,lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 5"
+ },
+ {
+  "id": 55,
+  "positive": "((illustration)), ((floating hair)), ((chromatic aberration)), ((caustic)), lens flare, dynamic angle,  ((portrait)),  (1 girl), ((solo)), cute face, ((hidden hands)), asymmetrical bangs, (beautiful detailed eyes), eye shadow, ((huge clocks)),  ((glass strips)), (floating glass fragments), ((colorful refraction)), (beautiful detailed sky), ((dark intense shadows)), ((cinematic lighting)), ((overexposure)), (expressionless),  blank stare, big top sleeves, ((frills)), hair_ornament, ribbons, bowties, buttons, (((small breast))), pleated skirt, ((sharp focus)), ((masterpiece)), (((best quality))), ((extremely detailed)), colorful, hdr",
+  "negative": "nsfw, lowres, bad anatomy, bad hands, text error, missing fingers, extra digits, fewer digits, cropped, worst quality, low quality, standard quality, jpeg artifacts, signature, watermark, username, blurry",
+  "params": "cfg 4.5, euler_a, steps 28"
+ },
+ {
+  "id": 56,
+  "positive": "(((masterpiece))),best quality, illustration,(beautiful detailed girl), a girl ,solo,bare shoulders,flat_chst,diamond and glaring eyes,beautiful detailed cold face,very long blue and sliver hair,floaing black feathers,wavy hair,black and white sleeves,gold and sliver fringes,a (blackhole) behind the girl,a silver triple crown inlaid with obsidian,(sit) on the black ((throne)), (depth) of (field)",
+  "negative": "1,bad feet_hand_finger_leg_eye,missing fingers,worst low normal quality,bad face,blurry:1.1,Asymmetrical eyes,Simple background",
+  "params": "naifu 步骤23 规模4.5 采样ddim"
+ },
+ {
+  "id": 57,
+  "positive": "best quality,Amazing,Beautiful golden eyes,finely detail,Depth of field,extremely detailed CG unity 8k wallpaper, masterpiece,(((Long dark blond hair))),((red mediumhair)),(1 girl),(white stockings ),(((((medium_breasts,))))),(hair ribbon),Exposing cleavage,((Beautiful butterflies in detail)),(((halter dress ))),huge ahoge,particle,(((solo))),(Background of details),standing,(Starry sky in beautiful detail),(((gloom (expression) depressed))),(Hazy fog),(((Very long hair))),{Fluttering hair},{Thick hair},{{{Gelatinous texture}}},{profile},(Ruins of beautiful details),(((Standing on the surface of the sea))),{Close-up of people},{{{Smooth skin}}},(((upper body))),(Smooth and radiant skin),(Smooth and radiant face),Perfect details,Beautifully gorgeous necklace,Authentic skin texture,{Cleavage},{{{Authentic and detailed face}}},(unexposed :1.5)",
+  "negative": "lowres, bad anatomy, bad hands, text,error, missing fngers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg artifacts,signature,watermark, username, blurry, bad feet,nsfw",
+  "params": "Steps: 50, Sampler: Euler, CFG scale: 4"
+ },
+ {
+  "id": 58,
+  "positive": "{best quality}, {{masterpiece}}, {highres}, extremely detailed CG, extremely detailed 8K wallpaper, extremely detailed character, {an extremely delicate and beautiful}, portrait, illustration, solo focus, straight-on, dramatic angle, depthoffield, {{cinematiclighting}}, outdoors, {{{character({{{a girl}}}, solo, loli, {{{{full body}}}}, standing, expressionless, [[[light smile]]], cute, beautiful detailed eyes, blue eyes, [long legs], {very_long_hair}, blonde hair, wavy_hair, [shiny hair], {{Gothic_Lolita}}, blue_white skirt, {{short skirt}}, black_Headdress, bowknot, {{{hair ornament}}}, [hair flower], stocking, [[Garter]], Lace, cross-laced footwear, ribbon-trimmed sleeves)}}}, [background(building architecture, {{gothic architecture}}, starry sky, outdoors, church, {castle}, [[fantasy]])]",
+  "negative": "lowres, polar lowres, bad anatomy, bad face, bad hands, bad body, bad shose, bad feet, bad proportions, {bad leg}, {{more legs}}, worst quality, low quality, normal quality, gross proportions, blurry, poorly drawn asymmetric eyes, text,error, missing fingers, missing arms, missing legs, short legs, extra digit, long skirt, indoors, 2girls, out of frame, only_upper body, only_lower body, {from above}, [petite], low background",
+  "params": "Steps: 70, Sampler: DDIM, CFG scale: 12"
+ },
+ {
+  "id": 59,
+  "positive": "(watercolor_medium), ((ukiyoe style)), ((((masterpiece)))), (((best quality))), (illustration),(1girl:1.5),(solo:1.5), ((an extremely delicate and beautiful)), ((little girl)) , cute, ((hime_cut)), side blunt bangs,(ultramarine hair:1.2), hairs between eyes, ribbons, Bracelet , bare shoulders,((japanese_clothes)), sakura, ((slit pupils)), ((miko)), (off_shoulder), ace, (Kagura Suzu),sword",
+  "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms, long neck, Humpbacked,shadow,nude,Unusual hands,Abnormal fingers,large breasts",
+  "params": "Steps: 28, Sampler: DDIM, CFG scale: 11"
+ },
+ {
+  "id": 60,
+  "positive": "dream,(((extremely detailed CG unity 8k wallpaper))),{painting},(((ink))),amazing,Depth of field,{{best quality}},{{masterpiece}},highres,dynamic angle,(illustration),cinematic lighting,{1girl},((wavy silver hair)),((loli)),((extremely_detailed_eyes_and_face)),(detailed flooding bare feet:1.5),translucent pink skirt,gemological hair,french braid,pointy ears,looking at viewer,{{translucent fluttering skirt}},yellow hairpin,{{white dress with pink lace with yellow decoration}},sleeves past wrists,((sleeves past fingers)),walking_motion,strapless dress,ocean waves,wind,(((glistening light of waves))),{detailed sunset glow},(floating flow),((coral)),(Luminous),coast,{floating colorful bubbles},beautiful detailed sky,{fluorescence},detailed shadow,(conch),beautiful detailed water,drenched,starfish,meteor,rainbow,(seabirds),{glinting stars}, (glowworm),(splash),,detailed cloud,shell,{fireworks}",
+  "negative": "malformed hands,worst quality,low quality,{{{{ugly}}}},{{{duplicate}}},{{{trans}}},{{trannsexual}},{out of frame},extra fingers,mutated hands,{{{more than 2 nipples}}},out of frame,extra limbs,{bad anatomy},grossproportions,{malformed limbs},{{missing arms}},{{missinglegs}},{{{extra arms}}},{{{extra legs}}},mutated hands,{fusedfingers},{{{long neck}}},fingers,extra digit,cropped,bad feet,{{poorly drawnhands}},{{poorly drawn face}},{{{mutation}}},{{deformed}},blurry,{{bad anatomy}},{{{bad proportions}}},{{extra_limbs}},{{{disfigured}}}.bad anatomy disfigured,malformed mutated,missing limb,normal quality,too many fingers,long neck,bad finglegs,cropped，bad feet,bad anatomy disfigured,malformed mutated,{{morbid}},{{mutilated}},{{{tranny}}},missing limb,malformed hands,",
+  "params": "512 768, DDIM, step 45 cfg 10 NAIFU"
+ },
+ {
+  "id": 61,
+  "positive": "(((masterpiece))), (((best quality))), ((ultra-detailed)), (illustration),beautiful detailed sky ,night,stars,(1girl)((an extremely delicate and beautiful girl)),red eyes,dramatic angle,small breasts,(((full body))),hood,cold face and white shirt,(((long white hair))),(red hair),(red plum blossom),((winter)),(((snowflakes))){{{{{{detailed cute anime face}}}}}},cinmatic lighting,((red and white flowers))，hairs between eyes, expressionless, young girl,(((Facing the lens))),(starry sky),((Beautiful face)),((full body)),(sitting),depth_of_field,((colorful)),scenery,hair_flower,lantern,christmas,(starfall)",
+  "negative": "(((ugly))),(((duplicate))),((morbid)),((mutilated)),(((tranny))),mutated hands,(((poorly drawn hands))),blurry,((bad anatomy)),(((bad proportions))),extra limbs,cloned face,(((disfigured))),(((more than 2 nipples))),((((missing arms)))),(((extra legs))),mutated hands,(((((fused fingers))))),(((((too many fingers))))),(((unclear eyes))),lowers,bad anatomy,bad hands,text,error,missing fingers,extra digit,fewer digits,cropped,worst quality,low quality,normal quality,jpeg artifacts,signature,watermark,username,blurry,bad feet，text font ui,malformed hands,long neck,missing limb,(mutated hand and finger: 1.5),(long body: 1.3),(mutation poorly drawn: 1.2),disfigured,malformed mutated,multiple breasts,futa,yaoi",
+  "params": "Steps: 50, Sampler: DDIM, CFG scale: 7"
+ },
+ {
+  "id": 62,
+  "positive": "(((crystals texture Hair)))，{{{{{extremely detailed CG}}}}},{{8k_wallpaper}},{{{{Crystalline purple gemstone gloves}}}},((beautiful detailed Glass hair)),((Glass shaped texture hand)),((Crystallize texture body)),Gem body,Hands as clear as jewels,Crystallization of clothes,((crystals texture skin)),sparkle, lens flare, light leaks, Broken glass，{{{{Detailed Glass shaped clothes}}}}， ((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), ((disheveled hair)), ((frills)), (1 girl), (solo), dynamic angle, big top sleeves, floating, beautiful detailed gemstone sky, gemstone sea, beautiful detailed eyes, overexposure, side blunt bangs, hairs between eyes, ribbons, bowties, buttons, bare shoulders, (((small breast))), pleated skirt, crystals texture flowers， ((Detailed crystallized clothing)),(gemstone of body)，solo focus,{{{{{{{{Iridescence and rainbow hair:2.5}}}}}}},{{{{{{detailed cute anime face}}}}}},{{loli}},{{{{{watercolor_(medium)}}}},(((masterpiece))),(((clock))),(((red))),(((blood))),finely detail,Depth of field,Blood drop,Blood fog",
+  "negative": "lowres,bad anatomy,bad hands,text,error,ugly,duplicate,morbid,boken limb,incorrect limb,fusion finger,lose finger,multiple finger,multiple digit,fusion hand,lose leg,fused leg,multiple leg,bad feet,fewer digits,cropped,worst quality,low quality,normal quality,simple background,jpeg artifacts,signature,watermark,username,blurry,text font ui,malformed hands,long neck,missing limb,(mutated hand and finger: 1.5),(long body: 1.3),(mutation poorly drawn: 1.2),disfigured,malformed mutated,multiple breasts,futa,yaoi,big breasts",
+  "params": "Steps: 30, Sampler: Euler, CFG scale: 7"
+ }
+]

@@ -1,0 +1,172 @@
+[
+ {
+  "positive": "[[white and silver hair: 0.5]::0.7], [red hair:0.7], (luxurious hair ornament), floating hair, [[graceful full dress:0.5]::0.8], top_sleeves, [delicate hands:0.8]",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "可以自行加入glitch, retro art style甚至manga frame等相关tag。",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "Lineart, masterpiece,  cool posing, (lab reaction systems:1.4),  { experiment, lab, {{{chemistry laboratory}}}, delicate background, cool, {with a  laboratory as background}},   best quality, a girl, solo: {papercut, thick outline: 2, short red hair, short wavy hair, floating lab-gown, flat chest, white school uniform, white beret, bowknot over white beret , outline}, masterpiece",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(best quality),masterpiece, (best illuminate, best shadow),(best illustration), dynamic angle, (chibi:1.15), thick outline,//起手式加上chibi风格强调",
+  "negative": "",
+  "params": "(1girl:1.2), detailed eyes, white hair, detailed face, crop top, frilled sleeves, pleated skirt, fishnet thighhighs, cowboy shot,Volumetric Lighting,(outline),//人物细节描写"
+ },
+ {
+  "positive": "(messy cyberpunk room:1.1),window,//内部场景描述 平面化风格上增加景深 colourful, neon trim, cyberpunk city, High saturation, clouds and stars sky, Galaxy,((citylight))//可选项目 例图未添加 窗外风景描述以及风格强调增加景深",
+  "negative": "lowres, bad anatomy, text, bad face, error, extra digit, fewer digits, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, {blurry:1.1}, missing arms, missing legs, more than two legs",
+  "params": "Steps: 50, Sampler: DPM++ 2S a Karras /DDIM, CFG scale: 9, Size: 960x576, Model hash: e6e8e1fc, Eta: 0.667, Clip skip: 2"
+ },
+ {
+  "positive": "(particle texture:1.6), Divisionism,  simple, (thick white outline:1.4), impasto,  (limited palette, yellow), anaglyphy, (relief craft), backlight, silhouette, yellow and black, noline art, monochrome:2 , partially colored, (alternate color):1.4, black shadow, smoke:1.2 ((black) tree) , (yellow deer),white deer, city",
+  "negative": "",
+  "params": "clear lines, detailed and detailed lines, 3d"
+ },
+ {
+  "positive": "steam train, building architecture, (Japanese style architecture), (street:1.2)",
+  "negative": "nsfw, lowes, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, missing arms, from above, furrowed brow raised eyebrows, [naughty face:0.1], [open mouth:0.1]",
+  "params": "Steps: 150, Sampler: DDIM, CFG scale: 5, Size: 1024x640, Model hash: e6e8e1fc, Clip skip: 2"
+ },
+ {
+  "positive": "concept art , a cat cloth emblem ,  electric current , circle shape, cyan color scheme,vector graphics,  hyperrealism, octane render,high quality,illustration",
+  "negative": "nsfw, lowres, bad anatomy, bad hands, text error, missing fingers, extra digits, fewer digits, cropped, worst quality, low quality, standard quality, peg artifacts, signature, watermark, username, blurry",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 12.0, Size: 512x512, Model hash: 925997e9, Model: pruned, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "normal quality,highres,blurry_foreground, text,error,jpeg artifacts,signature,watermark,username",
+  "negative": "",
+  "params": "Steps: 40, Sampler: DDIM, CFG scale: 7, Size: 1024x640, Model hash: 925997e9, Clip skip: 2, Eta: 0.68, ENSD: 31337"
+ },
+ {
+  "positive": ", palace, {{ancient Chinese cityscape}}, {{ancient Chinese palace}}, {east Asian architecture:1.2}",
+  "negative": "{{{ugly}}}, {{{duplicate}}}, {{morbid}}, {{mutilated}}, {{{tranny}}}, mutated hands,{{{poorly drawn hands}}}, blurry, {{bad anatomy}},{{{bad proportions}}}, extra limbs, cloned face,{{{disfigured}}}, {{{more than 2 nipples}}}, {{{{missing arms}}}},{{{extra legs}}},mutated hands,{{{{{fused fingers}}}}}, {{{{{too many fingers}}}}}, {{{unclear eyes}}}, lowers, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality,jpeg artifacts, signature, watermark, username, blurry, bad feet, text font ui,malformed hands, long neck, missing limb,{mutated hand and finger: 1.5},{long body: 1.3},{mutation poorly drawn: 1.2}, disfigured, malformed mutated, multiple breasts, futa, yaoi, {{{{:3}}}}, {{{3d}}}",
+  "params": "施法工具：naifu"
+ },
+ {
+  "positive": "1figure of Buddha,Gatling gun, electron,(many floating firearms:1.2), All kinds of weapons were floating around the statue,",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "View from below,Global Illumination,auspicious cloud and golden cornfield,Nan Wusan,holy light,oppressive,Sharp Focus",
+  "negative": "vague, (simple background), owres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry,missing fingers,bad hands,missing arms",
+  "params": "Steps: 39, Sampler: Euler, CFG scale: 8.5, Model hash: e6e8e1fc,  Size: 宽幅均可"
+ },
+ {
+  "positive": "[(open air operations center:1.3)|(spacecraft interior:1.3)],(cockpit deck:1.2),(big room,huge window on the top,bilateral symmetry),space,Earth in the distance,planet, 1girl(solo,long hair,beautiful hair decoration,floating hair,extremely delicate and beautiful girl,back of head,from bebind,standing,navy uniform)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "((masterpiece)), (((best quality))), ((illustration)),(depth of field:1.2)",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": ",solo,dynamic angle,(1 girl:1.3),bangs,headphones,red eyes,white hair,(disheveled hair),Baseball cap,(jacket|hoodie),jeans,thigh strap,hands in pocket,cowboy shot,",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "masterpiece), (best quality), (illustration),(Autochess:0.9),(symmetric:0.6)//,Auto battler,+dynamic,chibi,moba,game,pvp,++Chequer",
+  "negative": "lowres, bad anatomy, bad legs,bad hands, text,error, missing fngers,extra digt ,fewer digits,cropped, wort quality ,low quality,normal quality, jpeg,artifacts,signature,watermark, username, blurry, bad feet,artist name,bad anatomy,bad hands,bad body,bad proportions，worst quality,low quality",
+  "params": "Steps: 43, Sampler: Euler a, CFG scale: 10, e6e8e1fc"
+ },
+ {
+  "positive": "(masterpiece),(wallpaper), (best quality), (best illuminate, best shadow), (best illustration), dynamic angle, (+++a girl+++) is walking in front of a delicate and beautiful moon-blue sky, solo, from side,",
+  "negative": "",
+  "params": "(Backlight), mid shot, (the beautiful and delicate girl:1.3), beautiful bare back, (detailed face:1.2), (long floating hair:1.2), (beautiful long dress:1.2), floating dress,"
+ },
+ {
+  "positive": "the girl (walking) on surface of the water, Beautiful and delicate violet light water surface, reflective water surface, High saturation blue clouds and (stars sky) in the background, cold color",
+  "negative": "((((ugly)))),lowres, bad anatomy,worst quality, low quality, normal quality, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, jpeg artifacts, signature, watermark, username, blurry, Missing limbs, three arms, bad feet, text font ui, signature, blurry, malformed hands, long neck, mutated hands and fingers :1.5).(long body :1.3),(mutation ,poorly drawn :1.2), disfigured, malformed, mutated, multiple breasts, futa, yaoi, three legs, huge breasts",
+  "params": "Steps: 50, Sampler: Euler a, CFG scale: 7,  Size: 1024x576, Model hash: e6e8e1fc, Clip skip: 2, ENSD: 31337"
+ },
+ {
+  "positive": "在前75%的step渲染背景（蓝色部分），在后75%的step渲染角色（红色部分），其中前25%是单独渲染背景，中间50%同时渲染角色和背景，后25%单独渲染角色，同样适用于任何需要兼顾复杂元素的场合。语法为[a::0.75], [b:0.25]。",
+  "negative": "multiple breasts, (mutated hands and fingers: 1.5), (long body: 1.3), (mutation, poorly drawn: 1.2) , black-white, bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, anatomical nonsense, error, malformed hands, long neck, blurred, lowres, bad anatomy, bad proportions, bad shadow, uncoordinated body, unnatural body, mutated breasts, huge haunch, huge thighs, huge calf, mutated ears, text, ui, error, missing fingers, missing limb, cropped, watermark, username, blurry, JPEG artifacts, signature, 3D, malformed feet, bad gloves, bad cum, bad hairs, big muscles, ugly, bad face, obesity, worst quality, low quality, normal quality, duplicate, morbid, mutilated, fused tentacles, QR code, bar code, censored",
+  "params": "Sampling Steps: 100, Sampling Method: Euler, Size: 1024*640, CFG Scale: 15, Model hash: 925997e9, Clip Skip: 2"
+ },
+ {
+  "positive": "masterpiece), (best quality), (super delicate), (illustration), (extremely delicate and beautiful),//起手式 hyperrealism,(Realistic style:1.2),cel shading,(dynamic angle),//风格强调",
+  "negative": "",
+  "params": "War Photography,(giant monster:1.8),solo,(Missile Bombing:1.3),complex details,metal armor,blood,metal texture,Visual impact,Backlight,(dark intense shadows),//怪物描写"
+ },
+ {
+  "positive": "photographic, realistic, liminal space, backrooms, weirdcore, one line of advertising words",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "liminal space, a candyhouse, dreamcore, clouds",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "room, in the 1980s, there are a lot of clouds outside the window, overexposure",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "photographic, realistic, a big white humanoid doll is standing aside an old bed, a pink and yellow bedroom, liminal space, [(dim light, blood stains):0.8] #防污染 #你可以在这里加vaporwave抽更刺激的",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "video_game_website_pageANDan_email_pageANDwindows_xp_start_menu,#在这里加你的页面 message_boxANDold_school_memes,noise",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "((floating Chinese calligraphy paper with words)),",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "(extremely CG ,best quality),(best illumination,best shadow),8k wallpaper, (2King look at each other),\\(ᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏᒏ\\),",
+  "negative": "",
+  "params": "\\((beautiful and detailed girl) with (beautiful and detailed face) with (blue long hair) with (blue eyes) with (flower necklace) with ([white:0.8|blue|golden] long sleeves lace layered long dress) with (black waistband) with (full body) with (flower:1.2)+(pretty blue ice:1.25)+(blue Ice crystals texture the wings:1.3)\\) inside (floating palace:1.3)),༅༅༅༅༅༅,"
+ },
+ {
+  "positive": "(half decorational vertical border in the middle),(Symmetry split theme and screen:1.4)),",
+  "negative": "",
+  "params": "\\((beautiful and detailed girl) with (beautiful and detailed face) with (red long hair:1.35) with (red eyes) with (flower necklace) with (([red|black|silver:3.0] long sleeves lace layered long dress)) with (black waistband) with (full body) with (flower:1.35)+(pretty red fire:1.32)+(red Wings covered in flame:1.4)\\) inside (floating palace:1.3)),"
+ },
+ {
+  "positive": "(((masterpiece,best quality,an extremely delicate and beautiful,illustration))), (from side,medium long shot),",
+  "negative": "",
+  "params": "((a cute_detailed_girl in spacesuit,beautiful_detailed_face in aerospace_helmet)),(((upper body))),(disheveled hair:0.3),"
+ },
+ {
+  "positive": "(((clouds:0.3),multiple_luna,(floating_fortress technology machinery),night sky background)), (cyberpunk_aerospace_helmet)",
+  "negative": "nsfw,lowres,bad anatomy,cropped,worst quality,low quality,normal quality,missing arms,long neck,humpbacked,nude",
+  "params": "Steps: 30, Sampler: DDIM, CFG scale: 7, Size: 1024x576, Model hash: e6e8e1fc"
+ },
+ {
+  "positive": "extra arms, extra legs, one foot with more than 5 toes, one foot with less than 5 toes, one hand with more than 5 fingers, one hand with less than 5 fingers, fused fingers,fused toes,liquid digit,bad digit,extra digits,fewer digits,extra toes,extra digits, cropped, watermark, username,signature, text font ui, error, fused nipples,bad breasts,heavy breasts,different nipples,bad nipples,extra ears,",
+  "negative": "worst quality, low quality,normal quality,black-white,(mutated hands and fingers:1.5 ), (long body :1.3), (mutation, poorly drawn :1.2), blurry, JPEG artifacts,bad anatomy, liquid body, liquid tongue, disfigured, malformed, mutated, malformed hands, long neck, blurred, lowers, lowres, bad anatomy, bad proportions, bad shadow,obesity",
+  "params": "85step 6.5CFG cilp2 Euler 1024x512"
+ },
+ {
+  "positive": "画面基础:(depth of field), (1girl:1.35), (solo), full body, dynamic,",
+  "negative": "",
+  "params": "人物描述:blue eyes, detailed eyes, peacock wing, [peacock feather gorgeous dress:(peacock feathers):0.65], (disheveled hair), colored tips, colored inner hair, jewelry, intricated filigree, feathers on dress,"
+ },
+ {
+  "positive": "(((masterpiece))),best quality,((illustration)),solo,depth of field,fps,pov,anime coloring, (Cockpit:1.1)(,Console:1.2),(control panel:1.3),science fiction,dashboard,",
+  "negative": "",
+  "params": ""
+ },
+ {
+  "positive": "Piloting a giant mech,(battle against a giant robot:1.4),backlight， clould,black tracing,depth of field,",
+  "negative": "Santa Claus,lowres, bad anatomy, (bad hands), text, error, missimng fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, (bad feet), many hands, duplicate, from back, back view",
+  "params": "Steps: 100+, Sampler: DPM++ 2S a Karras或DDIM, CFG scale: 5.5以上, Size: 横幅皆可, Model hash: 925997e9, Eta: 0.67, Clip skip: 2"
+ }
+]
