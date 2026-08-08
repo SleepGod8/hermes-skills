@@ -98,14 +98,21 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 |---|---|---|
 | Hermes | white hair, short hair, huge breasts, narrowed eyes | nsfw/sexy/lewd + 坏手全套 |
 | Athena | **silver hair, long hair, straight hair**, narrowed eyes, calm, serene, mature, elegant | 加 petite, skinny, thin, flat chest |
-| Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 `smile` 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
+| Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 smile 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
+| Hypnos（2026-08-08 睡神妹）| **messy silver hair, fluffy silver hair, bedhead**, half-closed eyes, drowsy eyes, sleepy expression, yawning, soft smile, loose maid uniform, apron slightly crooked | 加 wide awake, alert, energetic, excited, hyper, running, jumping, dancing（反清醒/反活力）；负向保留 half-closed eyes（正向权重胜出） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
 Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
+Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松微乱浅银色长发（messy silver hair, bedhead）、半眯月牙眼（half-closed eyes, drowsy）、软乎乎微笑、宽松睡衣风女仆装、围裙系歪（apron slightly crooked）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hypnos_new_api.json` + 桌面端 `hypnos_new_ui.json`（7 节点纯净 txt2img，45 步）。负向特色：反「清醒/活力」词族（wide awake, energetic, hyper, running）。实测顶部亮色 69.5%（RGB 234,227,223 银白暖调）✅。
+
 ⚠️ **2026-08-08 按提示词方法论重构了 Iris 主 prompt**（质量词前置、发色整组加权 `((light blue hair, pale blue hair))`、去重、去 highly detailed、显式画师权重）。完整问题诊断+新版模板+落地要点见 `references/animagine-prompt-refactor.md`（该 skill 是 `sd-prompt-methodology` 的实战对照）。
 
+⚠️ **2026-08-08 第二次优化（v11，NAI3 方法论）**：加 `artstyle, year 2024` 前缀、质量词升级 `best quality, amazing quality, very aesthetic, absurdres`、发色长咏唱绑定 `(a gentle maid girl with light blue hair and pale blue hair:1.2)`、负向精简去重 1368→1143 字、KSampler steps 40→35 cfg 7→6.5、FaceDetailer denoise 微调（手 0.55/0.45、整体 0.6）。实测发色 49.9% 淡蓝像素通过。落地细节见 `references/hand-inpaint-and-ui-format.md` §3。
+
 Detailer 二次精修提示词：positive `good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers`；negative 坏手全套。
+
+⚠️ **2026-08-08 第三次优化（v13，高步数修手）**：主人反馈手部细节仍不行。按《元素同典》结论「修手要 80 步起步」大幅提升精修步数：主采样 35→45、手部精修 26-30→**80/80/100**、guide_size 640→768、手部正负向按法典级手指细节强化（正向加 `clean fingernails, delicate fingers, slender fingers, proper thumb position, natural finger joints, visible knuckles, natural palm, ✋`；负向加 `thumb on wrong side, broken fingers, crooked fingers, twisted fingers, no knuckles, flat hands, mitten hands, blob hands, melted fingers`）。实测整图差异 38%（全图细节提升）。**速度折中实测（重要）**：手部 80/80/100 + cycle 2 → 手部 60/60/70 + cycle 1，两版差异仅 **1.27%**（60 步几乎无损），耗时 6→4.1 分钟。**结论：手部精修 60 步是甜点，80-100 步边际收益极小**（同典「边际效应」验证）。落地细节见 `references/hand-inpaint-and-ui-format.md` §3。
 
 ## ⚠️ 手部精修翻车案例与最优参数（athena_maid_detailer）
 
@@ -213,10 +220,16 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 `*_api.json`（`{class_type, inputs}`）只能在 Hermes/命令行里跑，**桌面端画布打不开**。桌面端要的是 LiteGraph UI 格式：顶层 `version/state/last_node_id/last_link_id/nodes/links/groups/config/extra`，节点带 `pos/size/order/mode/widgets_values`、输出带 `links` 数组、连线是 `{id, origin_id, origin_slot, target_id, target_slot, type}`。
 
-转换脚本：`scripts/api_to_ui.py`（本机 `E:\ai1\comfyui_workflow\lewd_maid_workflow.json` 是现成 UI 格式参考）。要点：
+转换脚本：`scripts/api_to_ui_v3.py`（**最终修复版**，含 control_after_generate/tiled_* 顺序；`scripts/api_to_ui.py` 是早期 buggy 版，别用）。本机 `E:\ai1\comfyui_workflow\lewd_maid_workflow.json` 是现成 UI 格式参考。要点：
 - 每个 class_type 的输出端口名/连接型输入名要用硬编码映射表（`OUTPUT_DEFS`/`INPUT_DEFS`），API 引用的 `[node_id, slot]` 才能还原成连线
 - **⚠️ `widgets_values` 必须是有值数组**：转换后凡是无 widget 的节点会得到 `null`，桌面端加载会异常 → 统一改成 `[]`
-- 验证：把 UI 格式按 INPUT_DEFS 重建回 API 格式提交 `POST /prompt`，成功即桌面端可用（不必真的打开 GUI）
+- **⚠️⚠️ LiteGraph 槽位约定（2026-08-08 第二次转换踩坑，第一次转换桌面端连接全乱）**：节点 `inputs` 数组里**连接型输入必须排在开头（0..n-1）**，widget 值独立存 `widgets_values`；links 的 `target_slot` 索引的是「连接型输入数组」的位置，**不是节点定义的绝对输入顺序**。按"全部输入绝对顺序"生成会错位（例：KSampler 的 model/positive/negative/latent_image 连接指向 6-9 但 inputs 数组只有 4 个元素 → 桌面端打开连接全断）。正确做法：`CONN_INPUTS` 映射表只列连接型输入名，按该顺序排序连接、slot 从 0 编号；widget 名用单独的 `WIDGET_NAMES` 映射表按序回填。
+- **⚠️⚠️⚠️ widget 顺序 = 前端实际生成顺序，不是 API JSON 字段顺序（2026-08-08 第三次转换踩坑，桌面端报 47 个错误）**：LiteGraph 生成节点 widgets 数组时会**在 `seed` 后自动插入 `control_after_generate` combo，FaceDetailer 末尾还会追加 `tiled_encode`/`tiled_decode`**。缺失这 3 个会让 widgets_values 整体错位 → 桌面端报「输入超出范围 / 无效输入 / 输入值类型错误」（cycle 超范围、sampler_name 无效、cfg 类型错是典型症状）。权威顺序获取法：浏览器打开运行中的 ComfyUI，console 执行 `LiteGraph.createNode('FaceDetailer')` 读 `node.widgets[i].name`（这是唯一可靠来源，object_info 的 required/optional 顺序≠前端生成顺序）。已确认：
+  - FaceDetailer 真实顺序（29 个）：`guide_size, guide_size_for, max_size, seed, control_after_generate, steps, cfg, sampler_name, scheduler, denoise, feather, noise_mask, force_inpaint, bbox_threshold, bbox_dilation, bbox_crop_factor, sam_detection_hint, sam_dilation, sam_threshold, sam_bbox_expansion, sam_mask_hint_threshold, sam_mask_hint_use_negative, drop_size, wildcard, cycle, inpaint_model, noise_mask_feather, tiled_encode, tiled_decode`
+  - KSampler（7 个）：`seed, control_after_generate, steps, cfg, sampler_name, scheduler, denoise`
+  - `control_after_generate` 填 `'randomize'`；tiled_* 填 `False`；API 重建回时跳过这 3 个
+  - 验证三重奏：① 浏览器 `LiteGraph.createNode` 模拟赋值检查每个 widget 值落位；② 从 UI 重建 API（跳过 control_after_generate/tiled_*）POST /prompt 后端接受；③ 实际出图成功。前端报错排查用浏览器 console 远比读前端 JS 源码快。
+- 验证：把 UI 格式按 INPUT_DEFS 重建回 API 格式提交 `POST /prompt`，成功即桌面端可用（不必真的打开 GUI）；**再加一道「越界检查」**：每个 link 的 `target_slot` 必须 < 目标节点 `inputs` 长度（0 错误才算过），否则桌面端加载必乱。
 
 桌面端使用流程：
 1. 复制到 `ComfyUI\user\default\workflows\` 目录 → Workflow→Open 列表可见；或直接把 .json 拖进画布
