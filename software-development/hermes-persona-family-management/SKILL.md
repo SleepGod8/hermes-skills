@@ -25,9 +25,9 @@ platforms: [linux, macos, windows]
 └── config.yaml      # agent.system_prompt = 通常是 SOUL.md 全文镜像
 ```
 
-- default 档案的 SOUL.md 在 `~/AppData/Local/hermes/SOUL.md`，config.yaml 里 `agent.personalities.lewd-maid` 是它的镜像
+- default 档案的 SOUL.md 在 `~/AppData/Local/hermes/SOUL.md`，config.yaml 里 `agent.personalities.hermes＆iris` 是它的镜像
 - eos 例外：config.yaml system_prompt 是 ~119 字符简版摘要，不是全文镜像！
-- **lewd-maid 也可能是简版摘要**（实测 ~2355 字符）：只含核心双人格部分，**不含跨档案联动/配对段落**（如「Hermes 的玩弄癖好」× Athena）。改 default SOUL.md 的配对段落时，若 lewd-maid 里找不到对应锚点，直接跳过同步，不要强行写入
+- **hermes＆iris 也可能是简版摘要**（实测 ~2355 字符）：只含核心双人格部分，**不含跨档案联动/配对段落**（如「Hermes 的玩弄癖好」× Athena）。改 default SOUL.md 的配对段落时，若 hermes＆iris 里找不到对应锚点，直接跳过同步，不要强行写入
 - **双人格澄清（用户 2026-08 明确纠正）**：家族里**只有 default(Hermes×Iris) 是同档双人格**；Aphrodite&Dionysus、Artemis&Ares 的「×」/「&」只是**同龄组合标记，不是双人格**——她们各有独立档案、独立人格。展示/扮演时不要把同龄组说成双人格（如「Aphrodite×Dionysus 双人格」是错的，应说「Aphrodite 三姐 + Dionysus 三姐，同龄」）。共 10 档案 11 人格。
 
 ## 新增档案（从零建档）🆕
@@ -49,7 +49,7 @@ platforms: [linux, macos, windows]
 ## 同步工作流（每次新增/修改设定）
 
 1. **patch 档案 SOUL.md**：新模块插在已知唯一锚点前（如 `## 茶会日常+野兽+疯狂口穴 🆕`、`## 共通色情机制 🆕`）
-2. **execute_code + yaml 库同步 config.yaml**：同锚点字符串替换 `agent.system_prompt`（YAML 加载后是真实 \n）。⚠️ **default 档案没有顶层 `agent.system_prompt`**（访问会 KeyError，是正常的）——人格在 `agent.personalities.lewd-maid`，要改的是那个键；profiles/<名>/ 下的档案才是 `agent.system_prompt`
+2. **execute_code + yaml 库同步 config.yaml**：同锚点字符串替换 `agent.system_prompt`（YAML 加载后是真实 \n）。⚠️ **default 档案没有顶层 `agent.system_prompt`**（访问会 KeyError，是正常的）——人格在 `agent.personalities.hermes＆iris`，要改的是那个键；profiles/<名>/ 下的档案才是 `agent.system_prompt`
 3. **读回验证**：yaml.safe_load 后检查关键子串，逐项打印 ✅/❌
 4. **备份**：改 config.yaml 前 `shutil.copy2` 到 `.yaml.bak-<标签>`，一改一备份
 5. **更新 memory**：压缩关键词摘要；满了用 operations 批量处理（remove 过时条目 + replace 压缩）
@@ -79,7 +79,7 @@ config.yaml 修改方式按存储形态分：
 | default SOUL.md | 加粗行 `**Athena > … > Eos**` + markdown 表格（`\| 排行 \| 女仆 \| 定位 \|`，每人一行）→ 新成员加一行 + 被挤者改排行数字 |
 | athena/artemis/hebe/nemesis SOUL + config | 普通行 `- 女仆家族年龄排序：Athena > … > Eos` |
 | eos SOUL | 普通行 + 定位行「本档案定位：…（排行第六）」——**排行数字也要跟着改**（6→7） |
-| eos config / iris SOUL+config / default config(lewd-maid) | **没有**排序行（简版摘要）→ 跳过，不强行写入 |
+| eos config / iris SOUL+config / default config(hermes＆iris) | **没有**排序行（简版摘要）→ 跳过，不强行写入 |
 
 处理要点：
 - 排序行锚点 `Athena > Hermes×Iris > Hebe > Artemis > Nemesis > Eos` 各档案一致，批量替换成新排序即可
@@ -96,10 +96,21 @@ config.yaml 修改方式按存储形态分：
 3. default 档案 SOUL.md：在「跨档案联动玩法」下加一节（如 `### Hermes 的玩弄癖好（× Athena）🆕`），内容与档案侧一致
 4. memory：一句话摘要（如「Hermes玩弄癖好×Athena：最爱玩她后庭+男根」）
 
+## 人格库操作（default 档案 personalities 库）🆕
+
+default 档案的 `agent.personalities` 是预设人格库（`/personality <name>` 选取），值都是**纯字符串（非 dict）**；女仆人格与 `profiles/<名>/` 的 system_prompt 互为镜像。改法统一 execute_code + yaml 库（patch 工具拒绝写 config.yaml），dump 参数 `allow_unicode=True, default_flow_style=False, sort_keys=False`，改前备份 `.bak-<标签>`。
+
+**往库里加女仆人格**：源 = `profiles/<名>/config.yaml` 的 `agent.system_prompt`（已是 LF 全文镜像），`pers[name] = sp`。实测 2026-08：aphrodite/ares/dionysus/hypnos 已入库（2932/2561/2572/6233 字符），库总数 27 = 17 内置 + 10 家族。
+
+**重命名人格键**（如 lewd-maid → hermes＆iris）：
+1. `pers[newname] = pers.pop(oldname)`（值不动，改名≠改内容）
+2. ⚠️ 改名后**全库 grep 旧键名**（`grep -rn <oldname> skills/ cron/ hooks/`）逐处替换成新键名——技能文档里常有该键名（实测 lewd-maid → hermes＆iris 时改了 11 处：family-management 6 + personalities 4 + new-profile-bootstrap 1），否则下次会话按旧名找锚点会扑空
+3. 验证：yaml.safe_load 通过 + 新键存在 + 旧键 count==0
+
 ## 踩坑
 
 - **read_file 可能把档案 SOUL.md 误判为二进制**：`file` 显示 UTF-8 text，但 read_file 报 "Binary file - cannot display as text"（疑似 CRLF/BOM 触发）。遇到就用 `terminal` + `python -c "open(p, encoding='utf-8', newline='').read()"` 读全文；`search_files`/rg 对该路径也可能报 os error 3，同样换 python。写入时 `open(..., newline='')` 保留 CRLF。
-- **不是所有档案都是全文镜像**：同步前先检查 system_prompt 是否含目标锚点；eos 是简版摘要，找不到锚点，要按摘要处理（末尾追加一句），不要假设全文替换；default 的 lewd-maid 同理（见档案结构节）。
+- **不是所有档案都是全文镜像**：同步前先检查 system_prompt 是否含目标锚点；eos 是简版摘要，找不到锚点，要按摘要处理（末尾追加一句），不要假设全文替换；default 的 hermes＆iris 同理（见档案结构节）。
 - **patch 前先重读文件**：多会话并行编辑时 patch 工具警告 `was modified since you last read it`；模块顺序可能变了，锚点可能匹配 2 处（`Found 2 matches for old_string`）。先 read_file 全文再选唯一锚点。
 - **锚点选唯一性**：如 `- 结束后互相瞪眼：「哼！下次我一定赢！」` 在多个模块出现（三人同侍/四人同侍），必须带上后一行（如 `\n\n## 共通色情机制 🆕`）才唯一。
 - **验证字符串必须用文件原文**：读回验证用与写入文本完全一致的子串（「仿佛永远不会满足」≠「永远不满足」），别凭记忆猜措辞。

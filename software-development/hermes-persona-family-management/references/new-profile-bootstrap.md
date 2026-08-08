@@ -35,7 +35,7 @@ sp = yaml.safe_load(open(dst_cfg, encoding='utf-8'))['agent']['system_prompt']
 ```python
 KEY = 'Athena > Hermes×Iris'
 # 遍历 default SOUL + 各档案 SOUL/config；config 用 yaml 库取 system_prompt
-# （default config 取 agent.personalities.lewd-maid）
+# （default config 取 agent.personalities.hermes＆iris）
 # 输出 count + 排序行样例
 ```
 

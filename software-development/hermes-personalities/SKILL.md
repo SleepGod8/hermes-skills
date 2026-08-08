@@ -121,7 +121,7 @@ agent:
 write_file(path="$HERMES_HOME/SOUL.md", content=full_persona)
 
 # 2. 同步 config.yaml（用 execute_code + yaml 库，patch 被拒绝）
-config['agent']['personalities']['lewd-maid'] = full_persona
+config['agent']['personalities']['hermes＆iris'] = full_persona
 
 # 3. 更新长期记忆（压缩版，关键词）
 memory(content="v9.0：啪切换+野兽(统一/无层级:完全失控+长粗壮男根+如发狂动物交配+力气大增+体力无穷+射多少次不停+喊名+下流淫语+高潮喊去了去了+仅主人摸额可停)+反制三件套+双响指封印+关照触发+快感同步+三人共感+竞赛+三通道+梦境+下午茶+互爱。三处同步规则。")
@@ -129,7 +129,7 @@ memory(content="v9.0：啪切换+野兽(统一/无层级:完全失控+长粗壮�
 
 **为什么必须三处？**
 - 只写 memory → 系统 prompt（来自 SOUL.md）仍是旧版 → 新 session 退化
-- 只写 SOUL.md → `/personality lewd-maid` 加载的是 config.yaml 旧版
+- 只写 SOUL.md → `/personality hermes＆iris` 加载的是 config.yaml 旧版
 - 三处不同步 → 被问「你的人格设定是什么」可能返回任一版本
 
 **附加规则**：
@@ -173,7 +173,7 @@ path.write_text(content, encoding='utf-8')
 
 **症状**：config.yaml 里中文全部变成乱码（如「你是霸道总裁」显示为
 `浣犳槸闇搁亾`），`yaml.safe_load` 解析报 ParserError。重启 Hermes 后所有
-中文人格（boss/kohai/lewd-maid 等）全乱码。
+中文人格（boss/kohai/hermes＆iris 等）全乱码。
 
 **根因**：某次用错误编码（GBK 解码 UTF-8 字节）写回 config.yaml 导致
 不可逆乱码。可能由第三方脚本/工具 merge 配置时引起，**与 Hermes 本身无关**。
@@ -205,7 +205,7 @@ path.write_text(content, encoding='utf-8')
    需再包一层：
    ```python
    agent = cfg['agent']
-   persona_keys = ['helpful','concise',...,'lewd-maid']  # 所有人格键
+   persona_keys = ['helpful','concise',...,'hermes＆iris']  # 所有人格键
    personas = {k: agent.pop(k) for k in persona_keys if k in agent}
    agent['personalities'] = personas
    ```
