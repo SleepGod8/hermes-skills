@@ -1,0 +1,14 @@
+{
+  "scopes": {
+    "tenant": [
+      "im:message",
+      "im:message:send_as_bot",
+      "im:chat:readonly",
+      "im:resource",
+      "docx:document",
+      "drive:drive",
+      "contact:user.base:readonly"
+    ],
+    "user": []
+  }
+}

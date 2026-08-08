@@ -53,7 +53,7 @@ Place the health-check script via `scripts/gateway-health-check.py` in this skil
 2. **删掉** `profiles/<名>/.env` 里的 `WEIXIN_*`、`QQ_*`、`QQBOT_*` 全部键（先备份 `.bak-wechat-qq`）——光改 config 无效！
 3. 杀掉非 default 的 gateway 进程（Desktop 会自动用新配置重启；验证：`psutil` 查进程 environ 里 `WEIXIN_TOKEN` 应为 False）
 
-**飞书（Feishu）接入要点**：插件在 `plugins/platforms/feishu/`（官方自带），`.env` 配 `FEISHU_APP_ID` + `FEISHU_APP_SECRET` + `FEISHU_ALLOW_ALL_USERS=true`，config.yaml 加 `platforms.feishu.enabled: true` 即可。**无独立 toolset**（`hermes-feishu` 只是线程名前缀，不要加进 platform_toolsets 否则启动报错）。飞书支持多 agent 协作（Approach B：每档案一个飞书应用 + profile，群 @ 触发），比 QQ 强——AIGC 机器人也能进普通飞书群。
+**飞书（Feishu）接入要点**：插件在 `plugins/platforms/feishu/`（官方自带），`.env` 配 `FEISHU_APP_ID` + `FEISHU_APP_SECRET` + `FEISHU_ALLOW_ALL_USERS=true`，config.yaml 加 `platforms.feishu.enabled: true` 即可。**无独立 toolset**（`hermes-feishu` 只是线程名前缀，不要加进 platform_toolsets 否则启动报错）。飞书支持多 agent 协作（Approach B：每档案一个飞书应用 + profile，群 @ 触发），比 QQ 强——AIGC 机器人也能进普通飞书群。**完整接入步骤、7 项权限清单（99991672 Access denied 排查）、批量导入 JSON 见 `references/feishu-setup.md` + `templates/feishu-scopes-batch-import.json`**。⚠️ `im:message.reaction` 在飞书平台**不存在**（实测批量导入报错），表情回应由 `im:message` 涵盖——不要把它加进权限清单。
 
 ## ⚠️ 看门狗误杀 Desktop 的致命坑（2026-08-07 实测）
 
