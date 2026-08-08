@@ -98,10 +98,10 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 |---|---|---|
 | Hermes | white hair, short hair, huge breasts, narrowed eyes | nsfw/sexy/lewd + 坏手全套 |
 | Athena | **silver hair, long hair, straight hair**, narrowed eyes, calm, serene, mature, elegant | 加 petite, skinny, thin, flat chest |
-| Iris（已实测 2026-08-07）| **lavender hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 `smile` 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
+| Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 `smile` 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
-Iris 设计依据（2026-08-07）：彩虹女神意象 → 薰衣草紫长发（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`。
+Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
 Detailer 二次精修提示词：positive `good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers`；negative 坏手全套。
 
@@ -135,10 +135,11 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 2. **PYTHONPATH 污染**：Hermes 会话里直接 `python main.py` 会 import Hermes venv 的 PIL（报 `cannot import name '_imaging'`）。**必须 `PYTHONPATH="" ./ .venv/Scripts/python.exe main.py`**。
 3. **输出目录变化**：命令行启动（无 --output-directory 参数）输出到**默认目录** `ComfyUI\ComfyUI\output\`，不是共享目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`（那是 Desktop 的配置）。找输出图先查默认目录。
 4. Comfy Desktop.exe 可能启动成 "Comfy Desktop Setup" 安装程序（后端不监听）→ 直接命令行启动后端更可控。
+5. **git-bash 杀/启 Desktop**：`taskkill //F //IM` 和 `cmd //c` 在 MSYS 都转义坏；可靠杀法 = PowerShell `Stop-Process -Name 'Comfy Desktop' -Force` 或 python subprocess + DEVNULL；可靠拉起 GUI = PowerShell `explorer.exe 'E:\ComfyUI\Comfy Desktop\Comfy Desktop.exe'`（直接 `./exe &` 秒退、`Start-Process` 实测没起来）。详见 `references/desktop-templates-process-mgmt.md` §3。
 
 ## ⚠️ Iris 角色图的手部误检陷阱（2026-08-07 实测）
 
-薰衣草紫长发飘散 + 白围裙 + 浅背景构图会让 hand_yolov8s/v9c **大量误检**（实测 11 segments vs Athena 的 5），三 pass × cycle 3 导致单张 85 分钟还修不好（误检区域反复重绘）。解法：bbox_threshold 0.25→**0.35**、手部 pass cycle 3→2/1。Iris 角色 prompt 要点：`lavender hair, long hair, gentle smile, medium breasts, arms down, hands at sides`（与 Hermes 白短发巨乳、Athena 银长发区分）。
+淡蓝色长发飘散 + 白围裙 + 浅背景构图会让 hand_yolov8s/v9c **大量误检**（实测 11 segments vs Athena 的 5），三 pass × cycle 3 导致单张 85 分钟还修不好（误检区域反复重绘）。解法：bbox_threshold 0.25→**0.35**、手部 pass cycle 3→2/1。Iris 角色 prompt 要点：`light blue hair, pale blue hair, long hair, gentle smile, medium breasts, arms down, hands at sides`（与 Hermes 白短发巨乳、Athena 银长发区分）。
 
 ### ✅ Iris 手部成功的最终配方（v3 简化构图, 2026-08-07 验证 9/10）
 
@@ -150,7 +151,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
    - 正向头部加：`hands not covered by hair, unobstructed hands, clear hands`
    - 负向头部加：`hair over hands, hair covering hands, hair wrapped around hands, hair in front of hands`
 
-3. **侧身构图是聪明解法**：让一只手自然入镜（轻放裙摆/垂放），另一只手不入镜——避开"双手都画"的难题。最终 seed 2024 = 左手 8/10 + 右手未入镜 + 整体 **9/10**（薰衣草紫发还原度极高、温柔表情、女仆装 9/10）。加速收益：误检减少后单张从 85 分钟降到 3-16 分钟（seed 42 仅 200s）。
+3. **侧身构图是聪明解法**：让一只手自然入镜（轻放裙摆/垂放），另一只手不入镜——避开"双手都画"的难题。最终 seed 2024 = 左手 8/10 + 右手未入镜 + 整体 **9/10**（淡蓝长发还原度极高、温柔表情、女仆装 9/10）。加速收益：误检减少后单张从 85 分钟降到 3-16 分钟（seed 42 仅 200s）。
 完整 Iris 迭代表见 `references/hand-repair-iterations.md`。
 批量兜底脚本：`E:\ai1\comfyui_workflow\run_batch.py <workflow.json> <seed1> <seed2>...`（自动改 seed 提交 + 等待 + 裁剪手部区域）。75% 成功率下跑 4 张至少一张合格的概率 99.6%。
 验证技巧：手部在整图中只占小区域，先用 PIL 按位置裁剪（如 x0~0.55, y0.35~0.72）放大 3 倍再喂视觉模型，避免整图缩放后看不清细节。构图漂移检测：euler_ancestral 比 dpmpp_2m 构图稳定；Hires fix 会引入构图漂移（手跑到画面边缘+幻视物件），不要盲目加。
@@ -184,6 +185,29 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 - `run_workflow.py --output-dir /e/ai1/...`（MSYS 风格路径）会**拼接错误**（报告 `E:\e\ai1\...` 不存在）。实际文件在服务器配置的输出目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`。
 - **命令行启动的后端输出到默认目录** `E:\Comfy-Desktop\ComfyUI-Installs\ComfyUI\ComfyUI\output\`，**不是**共享目录（extra_model_paths.yaml 只映射模型路径，不映射输出）。history 显示 success 但共享目录找不到图时，先 ls 后端默认 output/。交付时用真实路径，别信脚本回显的相对拼接路径。
+
+## ✅ 已出图只修手部：局部重绘 hand_fix 工作流（2026-08-08 实测）
+
+需求：「整体不错但手部有问题，只修手、其他地方一个像素都不动」。FaceDetailer 全链路重跑会连带改动周边；正确做法是**对已出图做局部 inpaint**。
+
+成品：`E:\ai1\comfyui_workflow\hand_fix_api.json`（模板副本：`templates/hand_fix_api.json`）。
+
+节点链：`LoadImage → VAEEncode → ImpactSimpleDetectorSEGS(hand_yolov8s+SAM) → SegsToCombinedMask → SetLatentNoiseMask → KSampler(denoise 0.5) → VAEDecode → SaveImage`
+
+**核心原理**：`SetLatentNoiseMask` 把 mask 套到 latent 上，KSampler **只在 mask 区域内重绘**，mask 外的 latent 原封不动 → 解码出来整体不变，只有手被重画。
+
+实测验证（iris_maid_detailer_00007 → iris_hand_fix_00001）：差异像素仅 1.44%，全部集中在两处手部（8×8 热力网格：中上部 4-6%、左下 21.9%，其余 0.0-0.5% 属 VAE 编码噪声级，肉眼不可见）。**验证技巧**：numpy 算 `abs(before-after).sum(axis=2)`，打 8×8 网格百分比，确认改动只落在检测到的手区域。
+
+参数速调：`denoise` 0.3=微调手型 / 0.5=重画手 / 0.7=大改；`bbox_threshold` 0.35（检测灵敏度）；`bbox_dilation` 20（mask 外扩融合余地）；换 `seed` 多次跑挑最自然的手。
+
+**⚠️ 三大坑（2026-08-08 实测）**：
+1. **VAE 别用 `ae.safetensors`**！共享 vae 目录里的 `ae.safetensors` 是 Flux 的 16 通道 VAE，SDXL（animagine-xl）会报 `expected input to have 4 channels, but got 16 channels`。直接用 CheckpointLoaderSimple 内置 VAE（输出索引 `["3", 2]`），不要 VAELoader 节点。
+2. **命令行启动的后端 LoadImage 只认默认 input 目录** `ComfyUI\ComfyUI\input\`，**不是** `ComfyUI-Shared\input\`。文件放错位置提交报 `Invalid image file: xxx.png`——先 `curl /object_info/LoadImage` 看它实际列出了哪些图，再按列表里出现的文件名填。
+3. **Impact SEGS 节点名**：本机没有 `BBOXDetectorToSEGS`/`SegsToMask`；用 `ImpactSimpleDetectorSEGS`（bbox_detector + sam_model_opt）+ `SegsToCombinedMask`（输出 MASK 直接进 SetLatentNoiseMask）。`SAMDetectorCombined` 存在但需要 SEGS 输入，不适配直接从图像起的链路。
+
+## 模板库太少 / Browse Templates 空的（2026-08 实测）
+
+`system_stats` 里 `installed_templates_version: null` = 核心模板数据包 `comfyui-workflow-templates` 没装（缩略图媒体包装了也没用，两者独立）。修复：`.venv` 装该包 + 重启 Desktop。⚠️ Desktop 重启时会自动更新后端并重装依赖到它锁定的版本（会覆盖你手动装的版本，属正常）。完整诊断/修复/验证 + 杀启进程正确姿势见 `references/desktop-templates-process-mgmt.md`。
 
 ## 验证清单
 

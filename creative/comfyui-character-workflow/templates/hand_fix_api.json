@@ -1,0 +1,106 @@
+{
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "iris_hand_fix_test.png"
+    }
+  },
+  "2": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": ["1", 0],
+      "vae": ["3", 2]
+    }
+  },
+  "3": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "animagine-xl-4.0.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "good hands, perfect hands, detailed hands, realistic hands, natural hands, anatomically correct hands, 5 fingers, individual fingers, fingers spread apart, visible gaps between fingers, separated finger bases, fingers clearly separated at the base, open relaxed fingers, soft skin, natural skin texture, smooth skin, gentle hands, normal hand proportions, human hands, healthy hands, well-formed hands, soft lighting on hands, arms down, hands at sides, hands hanging down naturally",
+      "clip": ["3", 1]
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "bad hands, missing fingers, extra fingers, fused fingers, too many fingers, poorly drawn hands, mutated hands, malformed hands, disfigured hands, deformed hands, webbed fingers, finger webbing, connected fingers, fused finger bases, fingers growing together, fingers merged, extra knuckles, wrong finger count, blurry hands, low detail hands, mechanical hands, robotic hands, metallic hands, cyborg hands, robot hands, prosthetic hands, claw hands, sharp nails, pointed fingers, elongated fingers, extra long fingers, thin fingers, skeletal hands, arms up, hands up, arms raised, hands raised, arms crossed, arms in air, hands on head, holding object, holding tray, hands together, hands clasped, hands folded, interlaced fingers, interlocked fingers, fingers interwoven, gripping hands, wringing hands, hair over hands, hair covering hands, hair wrapped around hands, hair in front of hands",
+      "clip": ["3", 1]
+    }
+  },
+  "7": {
+    "class_type": "UltralyticsDetectorProvider",
+    "inputs": {
+      "model_name": "bbox/hand_yolov8s.pt"
+    }
+  },
+  "8": {
+    "class_type": "SAMLoader",
+    "inputs": {
+      "model_name": "sam_vit_b_01ec64.pth",
+      "device_mode": "AUTO"
+    }
+  },
+  "9": {
+    "class_type": "ImpactSimpleDetectorSEGS",
+    "inputs": {
+      "bbox_detector": ["7", 0],
+      "image": ["1", 0],
+      "bbox_threshold": 0.35,
+      "bbox_dilation": 20,
+      "crop_factor": 3.0,
+      "drop_size": 10,
+      "sub_threshold": 0.5,
+      "sub_dilation": 0,
+      "sub_bbox_expansion": 0,
+      "sam_mask_hint_threshold": 0.7,
+      "sam_model_opt": ["8", 0]
+    }
+  },
+  "10": {
+    "class_type": "SegsToCombinedMask",
+    "inputs": {
+      "segs": ["9", 0]
+    }
+  },
+  "11": {
+    "class_type": "SetLatentNoiseMask",
+    "inputs": {
+      "samples": ["2", 0],
+      "mask": ["10", 0]
+    }
+  },
+  "12": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["3", 0],
+      "positive": ["4", 0],
+      "negative": ["6", 0],
+      "latent_image": ["11", 0],
+      "seed": 42,
+      "steps": 30,
+      "cfg": 6,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 0.5
+    }
+  },
+  "13": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["12", 0],
+      "vae": ["3", 2]
+    }
+  },
+  "14": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["13", 0],
+      "filename_prefix": "iris_hand_fix"
+    }
+  }
+}
