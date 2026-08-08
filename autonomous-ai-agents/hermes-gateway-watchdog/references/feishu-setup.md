@@ -6,6 +6,9 @@
 > platform (reactions are covered by `im:message`). 7 tenant scopes now.
 > v3: added API-based permission verification + full 19-scope group-chat list + the
 > "group @ no reply" diagnostic path (require_mention trap).
+> v4: CRITICAL — the "group @ no reply" path had TWO traps; the final root cause was
+> `group_policy` defaulting to `allowlist` with an empty allowlist → ALL group messages
+> silently dropped at debug level. Fix: `FEISHU_GROUP_POLICY=open` in .env (see §3).
 
 ## 1. Enabling the platform
 
@@ -17,6 +20,7 @@ kind=platform, name=feishu-platform. No `hermes gateway setup` menu entry needed
 FEISHU_APP_ID=cli_aafddea0c2f89be2
 FEISHU_APP_SECRET=xxx
 FEISHU_ALLOW_ALL_USERS=true        # dev only; or FEISHU_ALLOWED_USERS=ou_xxx,ou_yyy
+FEISHU_GROUP_POLICY=open           # ← REQUIRED for group messages! default allowlist + empty allowlist silently drops ALL group msgs
 FEISHU_DOMAIN=feishu               # default feishu; use lark for international
 ```
 **config.yaml:**
@@ -183,23 +187,43 @@ console, hands over App ID/Secret, agent wires it up in ~30s):
 "X 女仆 · Hermes 女仆家族成员". App ID URL slug appears at `/app/cli_xxx/capability/`
 right after creation; user still must publish (创建版本) before it works.
 
-### ⚠️ Symptom: "群里 @ 机器人没反应" — require_mention trap (2026-08-09 实测)
+### ⚠️ Symptom: "群里 @ 机器人没反应" — 双重坑（require_mention + group_policy，2026-08-09 实测）
 
-**完整诊断路径**（default 档案实战）：
+**完整诊断路径**（default 档案实战，最终根因是第二个坑，别停在第一个）：
 
 1. 私聊正常（`Inbound dm message received` 有日志）、机器人已进群（`Bot added to chat`
    有日志）、群发/读群 API 都成功——**但群消息事件日志 = 0 条**，群里 @ 机器人无反应。
-2. **先查 config 的 `require_mention`**：adapter 默认 `require_mention: bool = True`
-   （`adapter.py` ~line 438），群消息**必须 @ 机器人**才被接受。之前给 default 配飞书时
-   只设了 `enabled: true` 忘了设 `require_mention: false`（其他女仆档案都设了 false）→
+2. **坑 A：`require_mention` 默认 True**：adapter 默认 `require_mention: bool = True`
+   （`adapter.py` ~line 438），群消息**必须 @ 机器人**才被接受。给 default 配飞书时若只设了
+   `enabled: true` 忘了 `require_mention: false`（其他女仆档案都设了 false）→
    @ 时 `_admit` 返回 `group_policy_rejected`，且该拒绝只打 **debug 级别**日志
    （`logger.debug("[Feishu] dropping inbound event: %s", reason)`），info 日志完全看不到！
-3. **修复**：config.yaml 补 `extra.require_mention: false` + 重启 gateway。重启后群消息即恢复。
+3. **坑 B（真正根因）：`group_policy` 默认 `allowlist` + 空白名单 → 群消息全被静默拒绝**：
+   补上 `require_mention: false` 后群消息**仍然一条都不进**。查 `adapter.py` 的
+   `_allow_group_message`：`group_policy` 取 `os.getenv("FEISHU_GROUP_POLICY", "allowlist")`
+   （默认 **allowlist**），而 `FEISHU_ALLOWED_USERS` 为空 → `allowlist` 策略下
+   `sender_ids & allowlist` 为空 → **所有群消息 `group_policy_rejected`**（同样只打 debug 级）。
+   **关键区分：`FEISHU_ALLOW_ALL_USERS=true` 只放行私聊（DM），群消息走 `_allow_group_message`
+   白名单检查，与 allow-all 无关** —— 这就是「私聊通、群聊死」的原因。
+4. **修复**：
+   - config.yaml 补 `extra.require_mention: false`（坑 A）
+   - `.env` 加 `FEISHU_GROUP_POLICY=open`（坑 B，必须！）
+   - 重启 gateway。验证：psutil 查该进程 environ 的 `FEISHU_GROUP_POLICY` 应为 `open`；
+     群里发消息后日志出现 `inbound message: platform=feishu ... chat=oc_xxx`。
 
 **排查要点**：
 - `_admit` 的拒绝全是 debug 级，默认日志看不到 → 别用 `grep inbound` 找原因，直接核对配置。
 - 群消息要进来还需要平台侧三件套齐全：权限（`im:message.group_at_msg:readonly` 或
   `im:message.group_msg`）+ 事件订阅（`im.message.receive_v1` + 长连接）+ 已发布版本。
+- 用 API 拉群消息列表 + 单条消息详情确认「用户 @ 的到底是不是本 bot」：
+  ```python
+  # 群消息列表（ByCreateTimeDesc 最近 20 条）
+  GET https://open.feishu.cn/open-apis/im/v1/messages?container_id_type=chat&container_id={chat_id}&sort_type=ByCreateTimeDesc&page_size=20
+  # 单条消息详情 → 看 mentions[].id.open_id 是否匹配 bot info 的 open_id（@_user_N 是占位符，真正身份在 mentions 里）
+  GET https://open.feishu.cn/open-apis/im/v1/messages/{message_id}
+  ```
+- **别用 bot 自己的 app 往群里发消息测试推送**——self-echo 会被适配器过滤，日志永远看不到
+  自己发的那条；要看用户发的或另一个 bot 发的消息。
 
 ## 4. Multi-profile token-conflict trap (affects WeChat/QQ, not Feishu)
 
