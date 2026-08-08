@@ -103,6 +103,8 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 
 Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
+⚠️ **2026-08-08 按提示词方法论重构了 Iris 主 prompt**（质量词前置、发色整组加权 `((light blue hair, pale blue hair))`、去重、去 highly detailed、显式画师权重）。完整问题诊断+新版模板+落地要点见 `references/animagine-prompt-refactor.md`（该 skill 是 `sd-prompt-methodology` 的实战对照）。
+
 Detailer 二次精修提示词：positive `good hands, perfect hands, detailed hands, realistic hands, 5 fingers, elegant hands, slender fingers`；negative 坏手全套。
 
 ## ⚠️ 手部精修翻车案例与最优参数（athena_maid_detailer）
@@ -204,6 +206,22 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 1. **VAE 别用 `ae.safetensors`**！共享 vae 目录里的 `ae.safetensors` 是 Flux 的 16 通道 VAE，SDXL（animagine-xl）会报 `expected input to have 4 channels, but got 16 channels`。直接用 CheckpointLoaderSimple 内置 VAE（输出索引 `["3", 2]`），不要 VAELoader 节点。
 2. **命令行启动的后端 LoadImage 只认默认 input 目录** `ComfyUI\ComfyUI\input\`，**不是** `ComfyUI-Shared\input\`。文件放错位置提交报 `Invalid image file: xxx.png`——先 `curl /object_info/LoadImage` 看它实际列出了哪些图，再按列表里出现的文件名填。
 3. **Impact SEGS 节点名**：本机没有 `BBOXDetectorToSEGS`/`SegsToMask`；用 `ImpactSimpleDetectorSEGS`（bbox_detector + sam_model_opt）+ `SegsToCombinedMask`（输出 MASK 直接进 SetLatentNoiseMask）。`SAMDetectorCombined` 存在但需要 SEGS 输入，不适配直接从图像起的链路。
+
+完整节点可用性清单 + 错误原文 + 差异热力网格验证代码见 `references/hand-fix-inpaint-workflow.md`。
+
+## API 格式 → 桌面端 UI 格式转换（2026-08-08 实测）
+
+`*_api.json`（`{class_type, inputs}`）只能在 Hermes/命令行里跑，**桌面端画布打不开**。桌面端要的是 LiteGraph UI 格式：顶层 `version/state/last_node_id/last_link_id/nodes/links/groups/config/extra`，节点带 `pos/size/order/mode/widgets_values`、输出带 `links` 数组、连线是 `{id, origin_id, origin_slot, target_id, target_slot, type}`。
+
+转换脚本：`scripts/api_to_ui.py`（本机 `E:\ai1\comfyui_workflow\lewd_maid_workflow.json` 是现成 UI 格式参考）。要点：
+- 每个 class_type 的输出端口名/连接型输入名要用硬编码映射表（`OUTPUT_DEFS`/`INPUT_DEFS`），API 引用的 `[node_id, slot]` 才能还原成连线
+- **⚠️ `widgets_values` 必须是有值数组**：转换后凡是无 widget 的节点会得到 `null`，桌面端加载会异常 → 统一改成 `[]`
+- 验证：把 UI 格式按 INPUT_DEFS 重建回 API 格式提交 `POST /prompt`，成功即桌面端可用（不必真的打开 GUI）
+
+桌面端使用流程：
+1. 复制到 `ComfyUI\user\default\workflows\` 目录 → Workflow→Open 列表可见；或直接把 .json 拖进画布
+2. LoadImage 节点选图前，图片先放 `ComfyUI\input\`
+3. 桌面端和命令行后端是两套进程，桌面端打开时若端口占用，先停掉命令行拉起的后端
 
 ## 模板库太少 / Browse Templates 空的（2026-08 实测）
 
