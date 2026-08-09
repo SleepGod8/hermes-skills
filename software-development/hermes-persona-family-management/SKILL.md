@@ -32,9 +32,13 @@ platforms: [linux, macos, windows]
 
 ## 新增档案（从零建档）🆕
 
+> ⚠️ **2026-08 架构变更**：色情设定不再写进 SOUL.md！已全部抽离到根级 skill `lewd-playbook`（creative/lewd-playbook/）。SOUL.md 只放人格核心（身份/形象/性格/说话/反差/年龄定位）+ `## 🔞 色情玩法（按需加载）` 指针行。改色情设定只改 skill 的 references/<名>.md，绝不写回 SOUL/config（避免双份维护撕裂）。
+> ⚠️ **子档案 skills 隔离坑（2026-08 实测）**：每个子档案有独立 skills 目录 `profiles/<名>/skills/`，子档案会话**看不到根级 skills**。lewd-playbook 改完后必须跑 `skills/creative/lewd-playbook/scripts/sync_to_profiles.py` 同步到 8 个子档案，否则子档案加载旧副本（aphrodite 会话曾报「lewd-playbook skill 并不存在」）。
+
 新增女仆档案（如 hypnos）：
-1. 写 SOUL.md：人格设定（身份/性格/说话/口头禅/行为/信念/禁忌/记忆偏好）+ `## 🎂 年龄定位`（含新排序）+ `# 🔞 色情设定（主人专属）`（按角色气质设计专属玩法，如睡神的「睡梦野兽/梦游口穴/半梦半醒敏感体质/催眠亲和」）+ `## 共通色情机制 🆕`（10 条全文照搬）+ 家族玩法模块（当众自慰/排队侍奉/姐妹对决/茶会日常+野兽+疯狂口穴）+ 姐姐联动
-2. config.yaml **不手写**：复制现有成人档案的 config（artemis 骨架最稳——platforms/MCP/custom_providers 全齐）→ `yaml.safe_load` → 只替换 `agent.system_prompt` 为新 SOUL 全文 → `yaml.dump(allow_unicode=True, default_flow_style=False, sort_keys=False)` 写回
+1. 写 SOUL.md：人格设定（身份/性格/说话/口头禅/行为/信念/禁忌/记忆偏好）+ `## 🎂 年龄定位`（含新排序）+ `## 🔞 色情玩法（按需加载）` 指针行（指向 lewd-playbook skill）
+2. 新建专属玩法：skill_manage(write_file, name='lewd-playbook', file_path='references/<新档案名>.md', file_content='# <名> 专属玩法...')——只放该档案专属玩法/变体/配对互动；共通机制/通用野兽/疯狂口穴/茶会联动由 SKILL.md 与 cross-maid.md 承载，不重复
+3. config.yaml **不手写**：复制现有成人档案的 config（artemis 骨架最稳——platforms/MCP/custom_providers 全齐）→ `yaml.safe_load` → 只替换 `agent.system_prompt` 为新 SOUL 全文 → `yaml.dump(allow_unicode=True, default_flow_style=False, sort_keys=False)` 写回
 3. SOUL.md 用 CRLF 写：`open(..., newline='')` + `text.replace('\n','\r\n')`，与家族一致
 4. 建完立刻问用户「年龄排序是否同步到其他档案」——插队会改变别人的排行（见下节）
 5. 更新 memory：档案列表 + 一句角色摘要
