@@ -131,6 +131,8 @@ default 档案的 `agent.personalities` 是预设人格库（`/personality <name
 
 ## 跨机迁移/合并（另一台 Hermes → 本机）
 
+> 注：多 Agent 开发协议 skill 家族（`orchestration/multi-agent-protocol/`，9 档案 + 根级）的布局、岗位-档案映射、新增 Agent 岗位流程与坑，见 `references/multi-agent-protocol-skill-family.md`——新增 Agent 7 时已验证。
+
 把另一台电脑的 Hermes 配置包迁移到本机时，**默认只做纯新增，本机原配置一律保护**：
 - 🟢 纯新增：包有本机无的档案（如 iris）、技能目录、插件 → 直接复制
 - 🔴 保护本机：根 SOUL/config/memories、本机已有档案的 SOUL/config、cron、同名技能 → 一律不动（本机是权威/最新版）
