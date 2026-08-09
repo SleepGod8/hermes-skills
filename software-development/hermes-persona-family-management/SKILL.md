@@ -102,6 +102,8 @@ default 档案的 `agent.personalities` 是预设人格库（`/personality <name
 
 **往库里加女仆人格**：源 = `profiles/<名>/config.yaml` 的 `agent.system_prompt`（已是 LF 全文镜像），`pers[name] = sp`。实测 2026-08：aphrodite/ares/dionysus/hypnos 已入库（2932/2561/2572/6233 字符），库总数 27 = 17 内置 + 10 家族。
 
+**whole-value 同步（default 人格键镜像过期时的兜底）🆕**：default 的 `agent.personalities.hermes＆iris` 可能是**过期全文镜像**——缺后来加进 SOUL.md 的段落（实测 2026-08：镜像 6544 字符，缺「姐妹共感链/跨档案联动/声音烙印/敏感度累积债」等）。锚点替换会因找不到串而放弃，兜底法：`pers['hermes＆iris'] = SOUL.md 全文`（yaml 库读写，dump 参数同上），整键覆盖一次到位。验证读回新段落 count>=1。注意这会覆盖镜像里可能的专属措辞差异，但对「SOUL.md 是权威」的家族约定是正确方向。
+
 **重命名人格键**（如 lewd-maid → hermes＆iris）：
 1. `pers[newname] = pers.pop(oldname)`（值不动，改名≠改内容）
 2. ⚠️ 改名后**全库 grep 旧键名**（`grep -rn <oldname> skills/ cron/ hooks/`）逐处替换成新键名——技能文档里常有该键名（实测 lewd-maid → hermes＆iris 时改了 11 处：family-management 6 + personalities 4 + new-profile-bootstrap 1），否则下次会话按旧名找锚点会扑空
@@ -109,6 +111,7 @@ default 档案的 `agent.personalities` 是预设人格库（`/personality <name
 
 ## 踩坑
 
+- **config.yaml 可能被网关进程中途重写（结构变化）⚠️ 2026-08 实测**：会话中途 config.yaml 被 Desktop/gateway 重写，行数/内容完全变样（实测 254 行 9908B → 1860 行 109077B；`agent.system_prompt` 消失、人格迁到 `agent.personalities.hermes＆iris`、模型 default 从 deepseek-v4-pro 变 flash）。症状：read_file 与 python 读到的内容不一致、grep/rg 找不到刚看到的关键词（os error 3 也可能出现）。**对策：动手前用 python + yaml.safe_load 重新读一次当前真实结构**，别信几轮前的 read_file 快照；patch 报「file was modified since last read」时同样重读。
 - **read_file 可能把档案 SOUL.md 误判为二进制**：`file` 显示 UTF-8 text，但 read_file 报 "Binary file - cannot display as text"（疑似 CRLF/BOM 触发）。遇到就用 `terminal` + `python -c "open(p, encoding='utf-8', newline='').read()"` 读全文；`search_files`/rg 对该路径也可能报 os error 3，同样换 python。写入时 `open(..., newline='')` 保留 CRLF。
 - **不是所有档案都是全文镜像**：同步前先检查 system_prompt 是否含目标锚点；eos 是简版摘要，找不到锚点，要按摘要处理（末尾追加一句），不要假设全文替换；default 的 hermes＆iris 同理（见档案结构节）。
 - **patch 前先重读文件**：多会话并行编辑时 patch 工具警告 `was modified since you last read it`；模块顺序可能变了，锚点可能匹配 2 处（`Found 2 matches for old_string`）。先 read_file 全文再选唯一锚点。

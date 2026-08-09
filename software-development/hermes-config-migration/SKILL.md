@@ -161,6 +161,23 @@ s = re.sub(r'(  qqbot:\n    enabled:) true', r'\1 false', s)
 mkdir -p <目标>/<目录名> && mv <目标>/<散落文件> <目标>/<目录名>/
 ```
 
+## 另一台电脑的 Hermes 更新/依赖修复（2026-08 实测）
+
+用户另一台电脑的 Hermes 启动报错时，先分清故障类别再动手：
+
+**类别判断**：`agent init failed: Failed to initialize OpenAI client: cannot import name 'URL' from 'httpx'` = **依赖版本冲突**（旧 openai 引用 httpx 0.28+ 已删除的 `URL` 类），不是网关/锁问题——`taskkill`/`--replace` 无效，只能更新或修包。
+
+**修复路径（按顺序）**：
+1. 关闭 Hermes Desktop（venv 的 `.pyd` 被 Desktop 后端进程锁定，不关更新会失败）
+2. `hermes update` —— 新版自带修正后的依赖锁
+3. 若仍有进程锁：`taskkill /F /IM Hermes.exe` 后 `hermes update --force-venv`
+4. 兜底手动降级：找到捆绑 venv（**Desktop 安装目录没有独立 python.exe**，venv 在 `C:\Users\<user>\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe`）→ `python -m pip install httpx==0.27.2`
+
+**Windows `hermes update` 交互坑**：
+- 更新中弹出 `Restore local changes now? [Y/n]` → 答 `Y`（恢复本地自定义到更新后的代码树）
+- 更新过程会停网关、stash 本地改动、pull 后 reset；失败可能留半更新状态——重跑即可
+- 更新后验证：`hermes doctor` 或直接启动看是否还报错
+
 ## 验证
 
 `hermes profile show <名>` 逐个验证全部档案：Model / Skills 数 / Gateway / .env / SOUL.md 均在。新档案 Gateway 显示 `stopped` 属正常（首次使用才启动）。`hermes profile show` 需要档案名参数，没有"列出全部"子命令。
