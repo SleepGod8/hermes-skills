@@ -9,6 +9,15 @@
 > v4: CRITICAL — the "group @ no reply" path had TWO traps; the final root cause was
 > `group_policy` defaulting to `allowlist` with an empty allowlist → ALL group messages
 > silently dropped at debug level. Fix: `FEISHU_GROUP_POLICY=open` in .env (see §3).
+> v5: `require_mention` now THREE states — added `"smart"` mode via local adapter
+> patch (user wanted: no-@ autonomous chat AND @-only replies simultaneously).
+> `false` caused "把 @ 一个，全员抢答"; `true` caused "不 @ 没人回". Patch adds
+> `_normalize_require_mention()` + smart branch in `_admit` (see §3a).
+> v6: CRITICAL — **dual-runtime trap**: adapter patches must be applied to BOTH
+> `$HERMES_HOME/hermes-agent/plugins/...` AND the Desktop runtime copy at
+> `~/.hermes-web-ui/desktop-runtime/hermes/<version>/win-x64/python/Lib/site-packages/plugins/...`.
+> Desktop gateway loads the runtime copy, NOT hermes-agent. Patching only one leaves
+> Desktop running old code → `"smart"` silently degrades to `false` (全员抢答). See §3a.**
 
 ## 1. Enabling the platform
 
@@ -183,6 +192,19 @@ console, hands over App ID/Secret, agent wires it up in ~30s):
 4. Find that profile's gateway PID via psutil (`HERMES_HOME` contains profile name), `taskkill /F /PID`
 5. Verify new process env has `FEISHU_APP_ID`; grep profile gateway.log for `✓ feishu connected`
 
+**已接入档案速查**（2026-08-09，全部 `require_mention: "smart"` + `FEISHU_GROUP_POLICY=open`；
+新增女仆前先查此表避免重复建应用）：
+
+| 女仆 | App ID |
+|------|--------|
+| Hermes×Iris (default) | cli_aafddea0c2f89be2 |
+| Hypnos | cli_aafdcbbac4b89bcf |
+| Athena | cli_aafdcf914a78dbdd |
+| Hebe | cli_aafdc005e7b89be7 |
+| Artemis | cli_aafdc21dbdf8dbc4 |
+| Nemesis | cli_aafdc2b36b38dbc6 |
+| Eos | cli_aafdc33983b8dbd3 |
+
 **Naming note**: creating a Feishu app for a maid profile — name `Hebe`, description
 "X 女仆 · Hermes 女仆家族成员". App ID URL slug appears at `/app/cli_xxx/capability/`
 right after creation; user still must publish (创建版本) before it works.
@@ -224,6 +246,98 @@ right after creation; user still must publish (创建版本) before it works.
   ```
 - **别用 bot 自己的 app 往群里发消息测试推送**——self-echo 会被适配器过滤，日志永远看不到
   自己发的那条；要看用户发的或另一个 bot 发的消息。
+
+### §3a. require_mention 三态 + smart 模式（v5，2026-08-09 本地补丁）
+
+**需求**（用户原话）：「不 @ 就是女仆们群里自主接话，@ 的话就只有被 @ 的响应」。
+单纯 `false`（全员抢答，@ 一个全员回）或 `true`（没人 @ 全员沉默）都满足不了。
+→ 给 `require_mention` 加第三态 `"smart"`：无 @ 放行（自主接话），有 @ 只回被 @ 的，@全体全员回。
+
+**补丁位置**：`$HERMES_HOME/hermes-agent/plugins/platforms/feishu/adapter.py`（官方插件，本地 patch；升级 Hermes 会被覆盖，需重新打）。
+
+### ⚠️ 双运行时致命坑（2026-08-09 实测：smart 补丁"没生效"的真凶）
+
+**症状**：config 已改 `require_mention: "smart"`、gateway 已重启、`_admit` smart 分支已确认写进
+`hermes-agent/` 那份 adapter——但群里 @ 一个 agent 依然全员回复。
+
+**根因**：Hermes Desktop（Studio）跑的 gateway 用的是**独立运行时**：
+```
+~/.hermes-web-ui/desktop-runtime/hermes/<version>/win-x64/python/Lib/site-packages/plugins/platforms/feishu/adapter.py
+```
+**Desktop 完全不加载 `$HERMES_HOME/hermes-agent/` 的代码**。只 patch 一份 → Desktop 仍跑旧代码 →
+旧 `_to_boolean("smart")` → `False` → 退化为全员响应。验证只看 `hermes-agent/` 那份 + config，全被假象骗了。
+
+**修复**：补丁必须**同时打到两个路径**（内容/锚点完全一致）：
+1. `$HERMES_HOME/hermes-agent/plugins/platforms/feishu/adapter.py`
+2. `~/.hermes-web-ui/desktop-runtime/hermes/<version>/win-x64/python/Lib/site-packages/plugins/platforms/feishu/adapter.py`
+
+**验证（别只看 config / 别只看 hermes-agent 那份）**：
+```bash
+# 确认 Desktop 运行时那份真的含 smart 分支（版本号通配）
+grep -n 'require_mention == "smart"' \
+  "$HOME/.hermes-web-ui/desktop-runtime/hermes/"*/win-x64/python/Lib/site-packages/plugins/platforms/feishu/adapter.py
+# 确认进程重启时间晚于补丁写入时间（psutil 查 create_time）
+# 两份都过 py_compile
+```
+
+**注意**：Desktop runtime 路径带版本号（如 `0.19.0`），升级 Desktop 后路径变、补丁丢——升级后重查两份。
+判断「gateway 用哪份代码」：看进程 cmdline 里的 python 路径（`desktop-runtime` = Desktop 副本；
+`$HERMES_HOME/hermes-agent/venv` = CLI 副本）。
+
+**4 处改动**：
+1. typing import 加 `Union`：
+   `from typing import Any, Dict, List, Literal, Optional, Sequence, Union`
+2. 新增解析函数（`_to_boolean` 只认 true/false，会把 "smart" 变 False，必须另写）：
+   ```python
+   def _normalize_require_mention(value: Any) -> Union[bool, str]:
+       if isinstance(value, str):
+           v = value.strip().lower()
+           if v in {"true", "1", "yes"}: return True
+           if v in {"false", "0", "no"}: return False
+           if v in {"smart", "smart_mode"}: return "smart"
+           return True
+       return bool(value)
+   ```
+3. 类型注解放宽：`FeishuGroupRule.require_mention: Optional[Union[bool, str]]`、
+   `FeishuAdapterSettings.require_mention: Union[bool, str]`、
+   `_require_mention_for(self, chat_id) -> Union[bool, str]`。
+4. `_admit` 准入逻辑加 smart 分支（替换原来两行 `if require_mention and not ...`）：
+   ```python
+   if require_mention == "smart":
+       raw_content = getattr(message, "content", "") or ""
+       mentions = getattr(message, "mentions", None) or []
+       has_any_mention = bool(mentions) or "@_all" in raw_content
+       if has_any_mention and not self._mentions_self(message):
+           return "group_policy_rejected"
+   elif require_mention and not self._mentions_self(message):
+       return "group_policy_rejected"
+   ```
+   另两处配置解析 `_to_boolean(rule_cfg.get("require_mention"))` 和
+   `_to_boolean(extra.get("require_mention", ...))` 改为 `_normalize_require_mention(...)`。
+   `_mentions_self` 已内置 `@_all` 特判（`"@_all" in raw_content → True`），所以 smart 下 @全体自然全员回。
+
+**配置**（7 个档案全改）：
+```yaml
+platforms:
+  feishu:
+    enabled: true
+    extra:
+      require_mention: "smart"   # 字符串！YAML 里加引号，否则解析成字符串 "smart" 仍是 str，OK
+```
+**验证**：`python -c "import py_compile; py_compile.compile('<adapter.py>', doraise=True)"` 语法通过 →
+重启 gateway → 群里测试：不 @ 发一条（应自主接话）、@ 单个（应只回被 @ 的）、@全体（全员）。
+
+**行为矩阵**（smart 模式）：
+
+| 场景 | 行为 |
+|------|------|
+| 群消息无 @ | 放行 → 女仆按群聊协议自主接话 |
+| @ Hermes | 只有 Hermes 回 |
+| @ Athena | 只有 Athena 回 |
+| @ 全体 (@_all) | 全员响应（`_mentions_self` 特判） |
+| 女仆互 @ 接力 | 被 @ 的那个才回 |
+
+**已知关联**：is_bot 分支的 `not require_mention` 在 smart 下为 False，不会提前拒绝 bot 消息——行为正确，无需改。
 
 ## 4. Multi-profile token-conflict trap (affects WeChat/QQ, not Feishu)
 
