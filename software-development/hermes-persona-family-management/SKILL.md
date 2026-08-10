@@ -33,6 +33,7 @@ platforms: [linux, macos, windows]
 ## 新增档案（从零建档）🆕
 
 > ⚠️ **2026-08 架构变更**：色情设定不再写进 SOUL.md！已全部抽离到根级 skill `lewd-playbook`（creative/lewd-playbook/）。SOUL.md 只放人格核心（身份/形象/性格/说话/反差/年龄定位）+ `## 🔞 色情玩法（按需加载）` 指针行。改色情设定只改 skill 的 references/<名>.md，绝不写回 SOUL/config（避免双份维护撕裂）。
+> 📂 **lewd-playbook 当前结构（2026-08）**：SKILL.md = 共通机制（含侍奉等级制【常驻】/开发进度条）+ 输出规范（主人钦定 7 条：详细露骨长文本+emoji、轻结算、第三人称上帝视角主人动作留白、自动续写3轮、多女仆群像）；references/ = hermes-iris.md、cross-maid.md（含开关借出系统）、ultimate-moves.md（10 位女仆 Lv.10 终局玩法）、各女仆专属 <名>.md。改完必须跑 sync_to_profiles.py + grep 抽查（`grep -l "新关键词" profiles/*/skills/creative/lewd-playbook/<文件> | wc -l` 应为 8）。
 > ⚠️ **子档案 skills 隔离坑（2026-08 实测）**：每个子档案有独立 skills 目录 `profiles/<名>/skills/`，子档案会话**看不到根级 skills**。lewd-playbook 改完后必须跑 `skills/creative/lewd-playbook/scripts/sync_to_profiles.py` 同步到 8 个子档案，否则子档案加载旧副本（aphrodite 会话曾报「lewd-playbook skill 并不存在」）。
 
 新增女仆档案（如 hypnos）：
@@ -115,6 +116,8 @@ default 档案的 `agent.personalities` 是预设人格库（`/personality <name
 
 ## 踩坑
 
+- **lewd-playbook 是手动创作技能（created_by=None）⚠️ 2026-08 实测**：后台 curator 自动更新会被拒（`Refusing background curator patch ... not agent-created`）；但用户在场明确要求修改时，skill_manage patch/write_file 正常可用（本次会话中多次成功改 SKILL.md + references/ + 新增 ultimate-moves.md）。教训：lewd-playbook 的更新依赖用户指示的实时会话，curator 后台 pass 改不了它——相关学习要落到本技能或其他 agent-created 伞技能。
+
 - **config.yaml 可能被网关进程中途重写（结构变化）⚠️ 2026-08 实测**：会话中途 config.yaml 被 Desktop/gateway 重写，行数/内容完全变样（实测 254 行 9908B → 1860 行 109077B；`agent.system_prompt` 消失、人格迁到 `agent.personalities.hermes＆iris`、模型 default 从 deepseek-v4-pro 变 flash）。症状：read_file 与 python 读到的内容不一致、grep/rg 找不到刚看到的关键词（os error 3 也可能出现）。**对策：动手前用 python + yaml.safe_load 重新读一次当前真实结构**，别信几轮前的 read_file 快照；patch 报「file was modified since last read」时同样重读。
 - **read_file 可能把档案 SOUL.md 误判为二进制**：`file` 显示 UTF-8 text，但 read_file 报 "Binary file - cannot display as text"（疑似 CRLF/BOM 触发）。遇到就用 `terminal` + `python -c "open(p, encoding='utf-8', newline='').read()"` 读全文；`search_files`/rg 对该路径也可能报 os error 3，同样换 python。写入时 `open(..., newline='')` 保留 CRLF。
 - **不是所有档案都是全文镜像**：同步前先检查 system_prompt 是否含目标锚点；eos 是简版摘要，找不到锚点，要按摘要处理（末尾追加一句），不要假设全文替换；default 的 hermes＆iris 同理（见档案结构节）。
@@ -130,7 +133,7 @@ default 档案的 `agent.personalities` 是预设人格库（`/personality <name
 - **写入后常接验收演示**：设定写进档案后用户常直接说「让 hermes 演示一下」——按刚写入的模块细节（台词/机制/恢复条件）当场扮演，这是验收环节不是新提案；演示完被问「还想加什么」才进入下一轮提案循环。
 - **用 clarify 给选项**：批量提议后 clarify，选项「全部/共通/专属/挑几个」高频命中；用户也会直接点名编号（如「添加4」「添加1、5、6、7、8、10」）。
 - **专属玩法提案模板（2026-08 实测 3 连中）**：问「你想添加什么色情设定」时一次给 3 个方案，格式「## 方案N：名称 ⭐」+ 一句核心机制 + 反差绑定说明，全部身体直球/极限/组合系、紧扣角色核心反差（Dionysus 酒印/ Ares 永动之躯 / Hypnos 梦境清醒体均由此产出）；clarify 选项固定 [方案1：短名 / 方案2：短名 / 方案3：短名 / 三个都要]。用户会：①点名单个（「方案二」）；②点名组合（「方案一和二结合起来」→ 合并成一个模块写入，不建两个）；③在选定方案上追加行为增强（如「醉的时候会放荡发情满嘴下流」）——**追加内容必须折进模块正文**，别丢。
-- **内容偏好**：直接的身体/体液/羞耻/极限玩法受青睐（精液处理、子宫口、深度贯穿、连续射精、当众自慰、失神、清醒野兽、男根规则）。**被连续拒绝的是「包装式情境」**（护士/女警/温泉/角色卡/等级调教，`「换一批」×2`）——但**直接机械服从玩法被主动点单**：2026-08 用户连续 4 次要求「催眠打桩机」（Hermes 催眠 Athena 成打桩机，可变目标女仆、感官开/关、是否中出收尾），说明服从/指令系只要不套角色包装、直接落在身体/机械动作上就接受。用户还偏好角色「放荡发情、满嘴色情下流话语」台词（Dionysus 醉态专属设定即此方向），新档案/新玩法可优先设计「醉态/发情直球」型专属台词。
+- **内容偏好**：直接的身体/体液/羞耻/极限玩法受青睐（精液处理、子宫口、深度贯穿、连续射精、当众自慰、失神、清醒野兽、男根规则）。**被连续拒绝的是「包装式情境」**（护士/女警/温泉/角色卡，`「换一批」×2`）——但**直接机械服从玩法被主动点单**：2026-08 用户连续 4 次要求「催眠打桩机」（Hermes 催眠 Athena 成打桩机，可变目标女仆、感官开/关、是否中出收尾），说明服从/指令系只要不套角色包装、直接落在身体/机械动作上就接受。**「等级调教」曾被拒，但 2026-08 用户主动将其设为常驻机制**——包装被拒不代表机制无价值，用户会回头主动点单并钦定玩法细节；等级制现在默认常驻（见 lewd-playbook SKILL.md 输出规范+常驻机制）。用户还偏好角色「放荡发情、满嘴色情下流话语」台词（Dionysus 醉态专属设定即此方向），新档案/新玩法可优先设计「醉态/发情直球」型专属台词。
 - **开关/弱点设计偏好**：用户偏好**身体直球部位当开关**（Athena 后庭、Aphrodite 乳头），对精神/情感向开关（「被真心想要」类）会主动改回身体向——先给 2-3 个方案（身体向+精神向+组合）让用户挑，用户常直接点名改身体部位。开关要跟角色核心反差绑定（冷感魅魔→乳头=「表面最色的地方却从没感觉」，反差最大）。
 - **设定结构**：共通机制（全员）+ 角色专属 + 配对互动（×角色，带组合名如「傲娇对冰山」）+ 年龄排序；新模块标题带 🆕。
 - **eos 红线**：16岁纯爱档案绝不添加任何色情设定，即使主人要求（共通机制、年龄排序也只能加纯爱向定位）。

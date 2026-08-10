@@ -101,13 +101,16 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 | Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 smile 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
 | Hypnos（2026-08-08 睡神妹）| **messy silver hair, fluffy silver hair, bedhead**, half-closed eyes, drowsy eyes, sleepy expression, yawning, soft smile, loose maid uniform, apron slightly crooked | 加 wide awake, alert, energetic, excited, hyper, running, jumping, dancing（反清醒/反活力）；负向保留 half-closed eyes（正向权重胜出） |
 | Hebe（2026-08-11 辣妹四姐）| **golden blonde twin tails, pink hair highlights, high twintails, long twintails**, cheerful smile, bright smile, sparkling eyes, energetic, lively, short maid dress, mini maid dress, shortened maid dress, devil horn hair accessory, heart accessories, platform shoes, fair skin | 加 tan skin, tanned skin, dark skin（防 gyaru 被画成小麦/深肤色，破坏女仆家族白肤统一）、sleepy, drowsy, tired, gloomy, sad, angry, frown（反安静低沉）；负向保留 long eyelashes 系（精细偏好） |
+| Artemis（2026-08-11 傲娇不良女仆）| **dark purple hair, purple hair highlights, purple eyes, violet eyes**, band-aid on cheek, lollipop in mouth, tsundere expression, pouting, slight frown, side glance, slight blush, arms crossed, arms folded, short maid dress, leather jacket draped over shoulders, platform shoes, motorcycle in background | ⚠️ 负向必须删 arms crossed / arms folded（姿势就是抱臂，留会压制）、删 frown（傲娇撇嘴是特征）；加 cheerful, overly happy, huge smile, wide grin（反元气）；保留 tan skin 反制 + long eyelashes 系（精细偏好） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
 Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
 Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松微乱浅银色长发（messy silver hair, bedhead）、半眯月牙眼（half-closed eyes, drowsy）、软乎乎微笑、宽松睡衣风女仆装、围裙系歪（apron slightly crooked）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hypnos_new_api.json` + 桌面端 `hypnos_new_ui.json`（7 节点纯净 txt2img，45 步）。负向特色：反「清醒/活力」词族（wide awake, energetic, hyper, running）。实测顶部亮色 69.5%（RGB 234,227,223 银白暖调）✅。
 
-Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。
+Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。姿势变体 5 连（比心/捧脸/回眸/挥手/比耶）已存入 `output\hebe\`，全部 qwen 验证通过零废图。
+
+Artemis 设计（2026-08-11 傲娇不良女仆）：五姐傲娇+主人新加的街头不良属性（创可贴/机车/棒棒糖/不良口头禅）。形象：深紫长发+紫色挑染（dark purple hair, purple hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝、Hebe 金双马尾、Hypnos 浅银区分）、紫瞳、傲娇表情（pouting, side glance, slight blush）、脸颊创可贴（band-aid on cheek）、叼粉色棒棒糖（lollipop in mouth）、短裙女仆装+皮夹克披肩（leather jacket draped over shoulders）+厚底靴、机车背景（motorcycle in background）。纯跑图 workflow：`E:\ai1\comfyui_workflow\artemis_badgirl_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即 qwen-vl-plus 验证全过（深紫发+紫挑染/傲娇侧眼+脸红/创可贴/棒棒糖/皮夹克/抱臂手部正常/摩托背景 ✅）。⚠️ **姿势相关负向必须联动修剪**：抱臂姿势→负向删 arms crossed, arms folded；frown 是傲娇特征→负向删；反元气词族加 cheerful, huge smile, wide grin。
 
 ⚠️ **2026-08-08 按提示词方法论重构了 Iris 主 prompt**（质量词前置、发色整组加权 `((light blue hair, pale blue hair))`、去重、去 highly detailed、显式画师权重）。完整问题诊断+新版模板+落地要点见 `references/animagine-prompt-refactor.md`（该 skill 是 `sd-prompt-methodology` 的实战对照）。
 
@@ -148,6 +151,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 3. **输出目录变化**：命令行启动（无 --output-directory 参数）输出到**默认目录** `ComfyUI\ComfyUI\output\`，不是共享目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`（那是 Desktop 的配置）。找输出图先查默认目录。
 4. Comfy Desktop.exe 可能启动成 "Comfy Desktop Setup" 安装程序（后端不监听）→ 直接命令行启动后端更可控。
 5. **git-bash 杀/启 Desktop**：`taskkill //F //IM` 和 `cmd //c` 在 MSYS 都转义坏；可靠杀法 = PowerShell `Stop-Process -Name 'Comfy Desktop' -Force` 或 python subprocess + DEVNULL；可靠拉起 GUI = PowerShell `explorer.exe 'E:\ComfyUI\Comfy Desktop\Comfy Desktop.exe'`（直接 `./exe &` 秒退、`Start-Process` 实测没起来）。详见 `references/desktop-templates-process-mgmt.md` §3。
+6. **⚠️ 双后端同时跑 = access violation 崩溃（2026-08-11 实测）**：上次会话命令行拉起的后端进程没杀，又启动第二个（或 Comfy Desktop 也在跑），两个进程抢 GPU/端口 → 加载 SDXL CLIP 时报 `Windows fatal exception: access violation`，进程 exit 139（SIGSEGV），之后 8188 全部连接拒绝。**启动前必查残留**：`wmic process where "name='python.exe'" get ProcessId,CommandLine | grep -i main.py`（注意过滤 Hermes gateway/bridge/MCP 自己的 python.exe），有残留先杀干净再启。崩后同样先清残留再重启，别盲目重试。症状：日志尾部 `model_patcher.py → sd.py encode_from_tokens → access violation`。
 
 ## ⚠️ Iris 角色图的手部误检陷阱（2026-08-07 实测）
 
@@ -187,6 +191,8 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 - 手改 API JSON 时别丢 KSampler 的 `latent_image` 连接（validation 会报，但少一轮往返）
 - 批量等 20+ 分钟：`execute_code` 只有 5 分钟上限，用 `terminal(background=true)` + notify_on_complete 轮询 `/history/{pid}` 的 `status.completed`
 - 批量提交 = 每个 seed 深拷贝 workflow 改 seed 字段，一次全提交排队，再统一轮询
+- **姿势变体批 + 负向联动修剪（2026-08-11 实测，5 张零废图）**：同一角色多姿势（比心/捧脸/回眸/挥手/比耶）批量跑时，每姿势 = 核心 prompt + 姿势专属正向段（如 `finger heart, one hand making finger heart in front of chest`），且**负向必须按姿势联动删除冲突词**——挥手/比耶→删 `arms up, hands up, arms raised`；回眸→删 `looking back`；抱臂→删 `arms crossed, arms folded`。否则负向会压制目标姿势（模型不画你指定的动作）。每姿势先 1 seed 探路，视觉验证通过后再补 seed。
+- **提交与等待拆开**：5 张串行渲染约 10 分钟，`execute_code` 300s 上限必超——脚本只做「全部提交 + 立刻返回」，轮询 /history 单独用短脚本分多次查（或 terminal background + notify_on_complete）。超时后先查 `/queue` + `/history` 确认是否已出图，别直接重跑。
 
 ### 手部视觉验证
 先整图定位手（构图会漂移，旧裁剪框会失效），裁剪后转 **~800px 宽 JPEG**（原图/3x 放大 PNG 触发 400 too-large）；辅助 vision 偶尔 404（glm-4.6v-flash）→ 重试即可。
