@@ -17,6 +17,10 @@ platforms: [windows]
 - 需要手部精修（FaceDetailer + hand_yolov8s）
 - 遇到 ComfyUI Desktop 环境问题（torch、自定义节点、输出路径）
 
+## ⭐ 主人偏好（2026-08 反复确认）：新角色图用纯 txt2img，不要精修链
+
+女仆家族**新画像/新姿势一律用 7 节点纯净 txt2img 模板**（CheckpointLoader→CLIP×2→EmptyLatent→KSampler→VAEDecode→SaveImage；animagine-xl-4.0，1024×1536，steps 45，cfg 6.5，euler_ancestral），**不主动上 detailer 精修链**。首张 seed 42 探路 + qwen-vl-plus 视觉验证，通过即交付；只有手部明显崩了才考虑 hand_fix 局部重绘。参考现成模板：`hebe_new_api.json`、`artemis_badgirl_api.json`（E:\ai1\comfyui_workflow\）。
+
 ## 本机环境速查
 
 | 项 | 路径/值 |
@@ -101,7 +105,7 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 | Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 smile 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
 | Hypnos（2026-08-08 睡神妹）| **messy silver hair, fluffy silver hair, bedhead**, half-closed eyes, drowsy eyes, sleepy expression, yawning, soft smile, loose maid uniform, apron slightly crooked | 加 wide awake, alert, energetic, excited, hyper, running, jumping, dancing（反清醒/反活力）；负向保留 half-closed eyes（正向权重胜出） |
 | Hebe（2026-08-11 辣妹四姐）| **golden blonde twin tails, pink hair highlights, high twintails, long twintails**, cheerful smile, bright smile, sparkling eyes, energetic, lively, short maid dress, mini maid dress, shortened maid dress, devil horn hair accessory, heart accessories, platform shoes, fair skin | 加 tan skin, tanned skin, dark skin（防 gyaru 被画成小麦/深肤色，破坏女仆家族白肤统一）、sleepy, drowsy, tired, gloomy, sad, angry, frown（反安静低沉）；负向保留 long eyelashes 系（精细偏好） |
-| Artemis（2026-08-11 傲娇不良女仆）| **dark purple hair, purple hair highlights, purple eyes, violet eyes**, band-aid on cheek, lollipop in mouth, tsundere expression, pouting, slight frown, side glance, slight blush, arms crossed, arms folded, short maid dress, leather jacket draped over shoulders, platform shoes, motorcycle in background | ⚠️ 负向必须删 arms crossed / arms folded（姿势就是抱臂，留会压制）、删 frown（傲娇撇嘴是特征）；加 cheerful, overly happy, huge smile, wide grin（反元气）；保留 tan skin 反制 + long eyelashes 系（精细偏好） |
+| Artemis（2026-08-11 傲娇不良女仆；2026-08-11 主人改短发定稿）| **short hair, short bob hair, bob cut, dark purple hair, purple hair highlights, purple eyes, violet eyes**, band-aid on cheek, lollipop in mouth, tsundere expression, pouting, slight frown, side glance, slight blush, arms crossed, arms folded, short maid dress, leather jacket draped over shoulders, platform shoes, motorcycle in background | ⚠️ 负向必须删 arms crossed / arms folded（姿势就是抱臂，留会压制）、删 frown（傲娇撇嘴是特征）；加 cheerful, overly happy, huge smile, wide grin（反元气）；保留 tan skin 反制 + long eyelashes 系（精细偏好）；发型是**短发 bob**（不要 long hair，主人定稿） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
 Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
@@ -110,7 +114,7 @@ Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松
 
 Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。姿势变体 5 连（比心/捧脸/回眸/挥手/比耶）已存入 `output\hebe\`，全部 qwen 验证通过零废图。
 
-Artemis 设计（2026-08-11 傲娇不良女仆）：五姐傲娇+主人新加的街头不良属性（创可贴/机车/棒棒糖/不良口头禅）。形象：深紫长发+紫色挑染（dark purple hair, purple hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝、Hebe 金双马尾、Hypnos 浅银区分）、紫瞳、傲娇表情（pouting, side glance, slight blush）、脸颊创可贴（band-aid on cheek）、叼粉色棒棒糖（lollipop in mouth）、短裙女仆装+皮夹克披肩（leather jacket draped over shoulders）+厚底靴、机车背景（motorcycle in background）。纯跑图 workflow：`E:\ai1\comfyui_workflow\artemis_badgirl_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即 qwen-vl-plus 验证全过（深紫发+紫挑染/傲娇侧眼+脸红/创可贴/棒棒糖/皮夹克/抱臂手部正常/摩托背景 ✅）。⚠️ **姿势相关负向必须联动修剪**：抱臂姿势→负向删 arms crossed, arms folded；frown 是傲娇特征→负向删；反元气词族加 cheerful, huge smile, wide grin。
+Artemis 设计（2026-08-11 傲娇不良女仆）：五姐傲娇+主人新加的街头不良属性（创可贴/机车/棒棒糖/不良口头禅）。形象：**深紫短发 bob + 紫色渐变挑染（short hair, short bob hair, bob cut, dark purple hair, purple hair highlights）**、紫瞳、傲娇表情（pouting, side glance, slight blush）、脸颊创可贴（band-aid on cheek）、叼粉色棒棒糖（lollipop in mouth）、短裙女仆装+皮夹克披肩（leather jacket draped over shoulders）+厚底靴、机车背景（motorcycle in background）。**2026-08-11 首版是长发，主人要求改短发并同步写入 SOUL.md v1.2「外貌形象」段**——角色形象变更时：工作流 prompt（去掉 long dark hair 换 short hair, short bob hair, bob cut）+ SOUL.md 外貌段 + config.yaml 镜像 + 记忆，四处必须一起改，画像才和档案一致。纯跑图 workflow：`E:\ai1\comfyui_workflow\artemis_badgirl_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即 qwen-vl-plus 验证全过（深紫发+紫挑染/傲娇侧眼+脸红/创可贴/棒棒糖/皮夹克/抱臂手部正常/摩托背景 ✅）。⚠️ **姿势相关负向必须联动修剪**：抱臂姿势→负向删 arms crossed, arms folded；frown 是傲娇特征→负向删；反元气词族加 cheerful, huge smile, wide grin。
 
 ⚠️ **2026-08-08 按提示词方法论重构了 Iris 主 prompt**（质量词前置、发色整组加权 `((light blue hair, pale blue hair))`、去重、去 highly detailed、显式画师权重）。完整问题诊断+新版模板+落地要点见 `references/animagine-prompt-refactor.md`（该 skill 是 `sd-prompt-methodology` 的实战对照）。
 
@@ -196,6 +200,8 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 ### 手部视觉验证
 先整图定位手（构图会漂移，旧裁剪框会失效），裁剪后转 **~800px 宽 JPEG**（原图/3x 放大 PNG 触发 400 too-large）；辅助 vision 偶尔 404（glm-4.6v-flash）→ 重试即可。
+
+**✅ 主力视觉验证 = DashScope qwen-vl-plus**（本机免翻墙、有免费额度，2026-08-11 四轮验证全过）：key 在 Hermes 根 `.env` 的 `DASHSCOPE_API_KEY`；POST `dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`，图片 base64 → `image_url: data:image/png;base64,...`。完整可复用代码（含全角色/姿势批量检查提示词模板）见 `references/qwen-vl-verification.md`。检查点：发色/发型、表情、脸部细节（创可贴/棒棒糖等道具）、服装元素、**手部**（手指数/畸形/抱臂自然度）；姿势图重点查手，通过才交付。
 
 工具：`scripts/batch_hand_screening.py`（提交→轮询→裁剪一键）；完整迭代参数表见 `references/hand-repair-iterations.md`。
 
