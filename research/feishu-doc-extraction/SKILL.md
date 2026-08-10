@@ -195,8 +195,11 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 ### 应用云空间可见性（大坑）
 - 应用身份创建的文档落在**应用云空间**（`GET /open-apis/drive/v1/files` 可见），**用户个人空间看不到**
 - 修复：`PATCH /open-apis/drive/v1/permissions/{token}/public?type=docx` body `{"link_share_entity":"tenant_editable","link_perm":"edit"}` → 组织内可编辑，用户搜索标题即可见/编辑
-- 文档链接域名 = 应用租户域名，API 常拿不到 → 让用户从任意飞书文档 URL 取域名，或直接搜索标题
+- 文档链接域名 = 应用租户域名。**不要放弃**：`POST /open-apis/drive/v1/metas/batch_query` body `{"request_docs":[{"doc_token":"<docx_token>","doc_type":"docx"}],"with_url":true}` 返回 `data.metas[].url`（实测拿到 `https://fcn501hdf8xr.feishu.cn/docx/...`）→ 域名 + 各文档 token 拼成全部可点击链接，生成 `文档链接清单.md` 给用户
 - 移入知识空间：应用必须是目标空间**成员**（即使有 wiki:wiki，`wiki/v2/spaces` 仍为空）→ 让用户在空间设置→成员管理里添加应用机器人；然后 `wiki.v2.spaceNode.moveDocsToWiki`
+- **space_id 是数字**：用户给的知识空间链接 `xxx.feishu.cn/wiki/<token>` 里的 token 是 **wiki_token（首页节点）** 不是 space_id → 用 `GET /open-apis/wiki/v2/spaces/get_node?token=<wiki_token>&obj_type=wiki` 反查 `data.node.space_id`（数字）
+- **move_docs_to_wiki 一次一篇**：body `{"parent_wiki_token":"<首页wiki_token>","obj_type":"docx","obj_token":"<docx_token>"}` —— 字段是 `obj_token` 单数；写 `obj_tokens` 数组会报 `99992402 obj_token is required`
+- ⚠️ **应用几乎无法加入知识空间成员（2026-08 实测死路）**：「添加管理员」弹窗搜索只支持「用户、群组、部门或用户组」，**没有应用/机器人入口**；`spaceMember.create` 添加应用自己需要已有空间权限（鸡生蛋，报 `131006 permission denied: wiki space permission denied`）。API 移动（move_docs_to_wiki）报 `131006 no destination parent node permission` 即此原因 → **兜底方案：文档设 tenant_editable 后让用户手动移动**（打开链接 → 右上角「···」→「移动到」→ 选知识空间），提供 `文档链接清单.md` 批量操作指引
 
 ### API 路径速查（实测）
 | 操作 | 路径 |
@@ -211,6 +214,8 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 | 列知识空间 | `GET /open-apis/wiki/v2/spaces` |
 
 ⚠️ 公开/删除接口缺 `?type=docx` 参数 → `99992402 field validation failed`。完整脚本模板见 `templates/import_feishu.py`；API/权限/错误码全表见 `references/feishu-import-api.md`。
+
+**查真实 API 路径的可靠方法**：别猜路径（实测 `/documents/convert`、`/documents/{id}/convert` 都 404）。`pip install lark-oapi` 后直接 grep SDK 源码：`grep -rn "uri = " <site-packages>/lark_oapi/api/docx/v1/model/*.py`，每个 request 模型里都有 `self.xxx.uri = "/open-apis/..."` + `http_method` + `token_types`（TENANT/USER）—— 比翻文档快得多。字段名同样以 SDK 的 request_body 模型为准（如 convert 是 `content_type` 不是 `type`）。
 
 ### 批量导入要点
 - 前台 600s 会超时（42 篇约 8 分钟）→ 用 `terminal(background=true, notify_on_complete=true)`
