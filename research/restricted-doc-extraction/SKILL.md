@@ -9,11 +9,12 @@ platforms: [windows, macos, linux]
 
 # 受限文档正文提取（Canvas 渲染 / JS 生成内容）
 
-当网页文档正文在 Canvas 里渲染（DOM 读不到文本、body.innerText 只有大纲/批注/工具栏）时，用本技能。2026-08 实测：腾讯文档（docs.qq.com）8 卷长文档全部成功提取（30K-90K 字符/卷）。
+当网页文档正文在 Canvas 里渲染（DOM 读不到文本、body.innerText 只有大纲/批注/工具栏）时，用本技能。2026-08 实测：腾讯文档（docs.qq.com）8 卷长文档全部成功提取（30K-90K 字符/卷）；飞书知识库（feishu.cn/wiki）43+ 篇批量提取成功（方法见 `references/feishu-wiki-extraction.md`）。
 
 ## 触发条件
 
 - 腾讯文档链接（docs.qq.com/doc/...），需要完整正文
+- 飞书知识库/文档链接（xxx.feishu.cn/wiki/...），密码保护或需批量抓取 → 先看 `references/feishu-wiki-extraction.md`（机制不同：虚拟列表 DOM 滚动收集，不走 textPool）
 - 任何"正文在 Canvas 里"的文档：`document.body.innerText` 拿不到正文
 - `browser_snapshot` 只见大纲/批注/标题，正文区为空
 - 需要从在线文档批量提取结构化配方/条目（如提示词配方、教程正文）
@@ -102,5 +103,6 @@ def is_prompt_line(s):    # 正向：>25 字符 + (逗号|花括号|masterpiece|
 
 ## 参考
 
+- **飞书知识库/文档提取**（密码解锁、目录树 API、虚拟列表滚动收集、长文档分段、代码块清洗、批量并行）：`references/feishu-wiki-extraction.md`
 - 完整实战（八卷提取 + 配方整理）：见 `novelai-element-codex` / `nai3-deconstruction-codex` skills
 - 文档内容加工为教程：`technical-tutorial-authoring`（受保护，无法修改，但流程可参考）
