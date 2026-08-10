@@ -167,9 +167,64 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 16. **part 合并别覆盖已含早期 part 的主文件**：把 part1-2 合并进主文件后，再用 `glob('*_part*.json')` 合并其余 part 会**覆盖主文件**（只剩 part3-8，part1-2 丢失）。教训：合并前先备份主文件，或先读主文件已有 blocks 再 append 其余 part 后整体写回；真丢了可从已生成的 `markdown/` 中间产物恢复开头文本（build 脚本曾输出 200 块版 md，其结尾与后续 part 开头无缝衔接时可直接拼接 md，再在清洗脚本 SKIP 集合跳过该文件防覆盖）
 17. **子 agent 改共享脚本的 SKIP 陷阱**：并行子 agent 批量抓取时，可能给清洗脚本加 `SKIP = {'<文档名>'}`「防止覆盖手动拼接产物」，结果后续重新生成时该文档被静默跳过、md 不更新。批量结束后 `grep -n "SKIP" build_markdown.py` 检查并清空；同理验证 `raw/` 下没有残留 `_part*.json`（子 agent 合并失败会留半成品）。
 
-## 正式导入知识库（进阶）
+## 导入飞书（Plan B：无需 convert 权限，2026-08 实测 40 篇）
 
-抓取只是「读」侧。要写回/导入自己的知识库，用飞书官方 MCP `@larksuiteoapi/lark-mcp`（支持 wiki/docx/bitable 读写），详见 `references/lark-openapi-mcp.md`。
+抓取只是「读」侧。导入自己的飞书云空间/知识库**不依赖 lark-mcp**（`references/lark-openapi-mcp.md` 里的 MCP 方案可选但非必需）。直接用 REST API + tenant_access_token 即可。
+
+### 权限矩阵（实测，2026-08）
+| 操作 | 所需 scope | 实测 |
+|---|---|---|
+| 建文档 / 写块 | `docx:document` | ✅ 常见已有 |
+| 列知识空间 | `wiki:wiki:readonly` | ✅ |
+| 知识空间写入/移动 | `wiki:wiki` | 用户到开放平台补 |
+| Markdown→块（convert） | `docx:document.block:convert` | ❌ **常缺 → 用 Plan B** |
+| 通讯录查 open_id | `contact:...` | ❌ 常缺 |
+| 租户域名 | `tenant:tenant:readonly` | ❌ 常缺 |
+
+- token：`POST /open-apis/auth/v3/tenant_access_token/internal`，body `{app_id, app_secret}`（.env `FEISHU_APP_ID/SECRET`）
+- 权限错误 `99991672`：错误信息自带开放平台申请链接，直接转给用户点
+
+### Plan B 导入流程（不用 convert）
+1. raw `[cls,text]` → docx Block：
+   - heading2 → `block_type 4` + `{"heading2": {"elements": [...]}}`；heading3→5、heading4→6；bullet→12；code→14（内容先正则 `代码块\s*(.*?)复制\s*(.*)$` 去「代码块XXX复制」UI 噪音）；text→2
+   - 内联 `**bold**` / `` `code` `` 拆成多个 `text_run`（`text_element_style: {bold:true}` / `{inline_code:true}`）
+2. `POST /open-apis/docx/v1/documents` `{title}` → `document_id`
+3. `GET /open-apis/docx/v1/documents/{id}/blocks?page_size=500` → 根块（`block_type 1` page）
+4. `POST /open-apis/docx/v1/documents/{id}/blocks/{root}/children` `{children:[...]}` 分批（40 块/批 + 0.2s 间隔，长文档每篇 5-10 秒）
+
+### 应用云空间可见性（大坑）
+- 应用身份创建的文档落在**应用云空间**（`GET /open-apis/drive/v1/files` 可见），**用户个人空间看不到**
+- 修复：`PATCH /open-apis/drive/v1/permissions/{token}/public?type=docx` body `{"link_share_entity":"tenant_editable","link_perm":"edit"}` → 组织内可编辑，用户搜索标题即可见/编辑
+- 文档链接域名 = 应用租户域名，API 常拿不到 → 让用户从任意飞书文档 URL 取域名，或直接搜索标题
+- 移入知识空间：应用必须是目标空间**成员**（即使有 wiki:wiki，`wiki/v2/spaces` 仍为空）→ 让用户在空间设置→成员管理里添加应用机器人；然后 `wiki.v2.spaceNode.moveDocsToWiki`
+
+### API 路径速查（实测）
+| 操作 | 路径 |
+|---|---|
+| 建文档 | `POST /open-apis/docx/v1/documents` |
+| 列表块 | `GET /open-apis/docx/v1/documents/{id}/blocks` |
+| 写子块 | `POST /open-apis/docx/v1/documents/{id}/blocks/{root}/children` |
+| Markdown转块 | `POST /open-apis/docx/v1/documents/blocks/convert`（**不是** `/{id}/convert`，404） |
+| 设公开权限 | `PATCH /open-apis/drive/v1/permissions/{token}/public?type=docx` |
+| 删文档 | `DELETE /open-apis/drive/v1/files/{token}?type=docx` |
+| 列空间文件 | `GET /open-apis/drive/v1/files?page_size=100` |
+| 列知识空间 | `GET /open-apis/wiki/v2/spaces` |
+
+⚠️ 公开/删除接口缺 `?type=docx` 参数 → `99992402 field validation failed`。完整脚本模板见 `templates/import_feishu.py`；API/权限/错误码全表见 `references/feishu-import-api.md`。
+
+### 批量导入要点
+- 前台 600s 会超时（42 篇约 8 分钟）→ 用 `terminal(background=true, notify_on_complete=true)`
+- 重复检测：导入后列应用空间，`Counter(name)` 找重名文档（实测 Redis 出现 2 次）→ `DELETE ...?type=docx` 清理
+
+## 支持文件
+
+- `scripts/collect_blocks.js` — 浏览器 console 标准收集脚本（guard 150 + atBottom 校验）
+- `scripts/clean_feishu_blocks.py` — raw JSON → Markdown 清洗
+- `scripts/merge_feishu_parts.py` — 分段 JSON 合并 + 块数校验
+- `references/batch-two-step-recipe.md` — 大文档两步法取回细节
+- `references/lark-openapi-mcp.md` — 官方 MCP 方案（可选）
+- `references/feishu-import-api.md` — **导入 API 路径 / 权限 scope / 错误码全表**
+- `templates/import_feishu.py` — **Plan B 导入脚本模板（无 convert 权限版）**
 
 ## 相关
 
