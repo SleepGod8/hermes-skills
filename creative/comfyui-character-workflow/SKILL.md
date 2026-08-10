@@ -100,11 +100,14 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 | Athena | **silver hair, long hair, straight hair**, narrowed eyes, calm, serene, mature, elegant | 加 petite, skinny, thin, flat chest |
 | Iris（2026-08-08 主人改淡蓝长发）| **light blue hair, pale blue hair, long hair, straight hair**, gentle smile, warm smile, kind eyes, medium breasts, shy, delicate | 加 huge breasts, massive breasts, exaggerated figure；负向保留裸 smile 实测 OK（正向 gentle smile 权重胜出，成品"表情非常温柔、若有若无浅笑"），不用二选一 |
 | Hypnos（2026-08-08 睡神妹）| **messy silver hair, fluffy silver hair, bedhead**, half-closed eyes, drowsy eyes, sleepy expression, yawning, soft smile, loose maid uniform, apron slightly crooked | 加 wide awake, alert, energetic, excited, hyper, running, jumping, dancing（反清醒/反活力）；负向保留 half-closed eyes（正向权重胜出） |
+| Hebe（2026-08-11 辣妹四姐）| **golden blonde twin tails, pink hair highlights, high twintails, long twintails**, cheerful smile, bright smile, sparkling eyes, energetic, lively, short maid dress, mini maid dress, shortened maid dress, devil horn hair accessory, heart accessories, platform shoes, fair skin | 加 tan skin, tanned skin, dark skin（防 gyaru 被画成小麦/深肤色，破坏女仆家族白肤统一）、sleepy, drowsy, tired, gloomy, sad, angry, frown（反安静低沉）；负向保留 long eyelashes 系（精细偏好） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
 Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
 Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松微乱浅银色长发（messy silver hair, bedhead）、半眯月牙眼（half-closed eyes, drowsy）、软乎乎微笑、宽松睡衣风女仆装、围裙系歪（apron slightly crooked）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hypnos_new_api.json` + 桌面端 `hypnos_new_ui.json`（7 节点纯净 txt2img，45 步）。负向特色：反「清醒/活力」词族（wide awake, energetic, hyper, running）。实测顶部亮色 69.5%（RGB 234,227,223 银白暖调）✅。
+
+Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。
 
 ⚠️ **2026-08-08 按提示词方法论重构了 Iris 主 prompt**（质量词前置、发色整组加权 `((light blue hair, pale blue hair))`、去重、去 highly detailed、显式画师权重）。完整问题诊断+新版模板+落地要点见 `references/animagine-prompt-refactor.md`（该 skill 是 `sd-prompt-methodology` 的实战对照）。
 
