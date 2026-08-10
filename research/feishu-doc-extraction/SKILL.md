@@ -60,6 +60,12 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 })()
 ```
 
+### Step 2.5 嵌套文件夹递归（知识库可能是多层树）
+
+`get_info` 默认只返回**一层** child_map。知识库有文件夹嵌套（实测 4 层：根→优秀项目参考→金融→产品立项书→4篇AI投顾）时，必须 BFS/DFS 递归：对每个 `has_child=true` 的节点再调一次 `get_info`（wiki_token 换为该节点 token），把 `child_map[token]` 并入全树。实测全库 57 个节点。
+
+⚠️ **`get_info` 的行为随当前页面变化**：在子文档页面调用可能返回空 child_map。先 `browser_navigate` 回知识库首页（根节点 URL），再跑递归脚本。`get_node` 只返回节点自身，不含子节点列表。
+
 ### Step 3 单篇文档 → 懒加载滚动 + 块级收集
 
 飞书 docx 正文是**虚拟列表**，只渲染视口附近；正文 REST 接口走内部 websocket，resource entries 里找不到 → **直接 DOM 提取**：
@@ -126,6 +132,16 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 - heading2/3 → `##`/`###`；bullet → `- `；image → 跳过
 - 输出带来源注释的 Markdown 文件
 
+## 批量抓取：并行子 agent（≥5 篇时用 delegate_task）
+
+单篇两步法在 3 篇内自己抓；文档多（>5 篇）用并行子 agent：
+
+- 把**收集脚本全文 + 密码 + 落盘绝对路径 + 文件名清单**全部塞进 `delegate_task` 的 context（子 agent 无会话记忆，必须自带完整说明）
+- 每个子 agent 抓 5-8 篇，返回只给状态行（`文件名 | 块数 | 字符数 | 状态 ok/空/分段`），**不要把正文带进主上下文**
+- 最多 3 并发（delegation.max_concurrent_children），多组分批；第二批要等第一批完成
+- 子 agent 常撞工具调用上限（max_iterations）留下 part 文件/半成品 → **完成后必须扫 `raw/` 目录核对**：缺失的、被登录墙挡的用 docx 直链补抓
+- 子 agent 会**擅改共享脚本**（实测给 build_markdown.py 加了 `SKIP = {'<名>'}` 导致后续重新生成被静默跳过）→ 批量结束后 `grep -n "SKIP" build_markdown.py` 检查，把 SKIP 清空
+
 ## 坑（Pitfalls）
 
 1. browser_console 的 ref 过期：交互前重新 snapshot
@@ -149,6 +165,7 @@ https://<tenant>.feishu.cn/space/api/wiki/v2/tree/get_info/?space_id=<SPACE_ID>&
 14. **browser_console 多行脚本报 `SyntaxError: Unexpected end of input`**：browser_console 对带换行的多行 IIFE 解析不稳定；遇到该报错把整个表达式压缩成单行（分号连接、不用 `?.` 可选链改显式判断）再执行。收集/取回脚本建议直接以单行形式粘贴执行
 15. **两次不完整收集可以并集合并，别只认 atBottom**：个别超长文档（scrollHeight 4.8 万 px 级）即使多遍重跑，单遍仍可能只收到 1225 块 vs 期望 1539（但该遍有头有尾、含「最终结论」，说明覆盖全文只是中间表格块渲染波动漏掉）。此时保留两批收集：先收集（覆盖开头到中间）+ 后收集（可能覆盖到结尾），Python 按 `(cls,text)` 去重做并集（先收集在前、后收集中新块按序追加），**内容优先于顺序**；表格类 text 块重复率高，去重效果好。合并后块数 > 任一单遍即说明补回了缺口。若已知 part 文件已含 1-x 章、新收集含完整结尾（含「最终结论」等收尾标志），用「旧 part 全量 + 新收集新块追加」即可
 16. **part 合并别覆盖已含早期 part 的主文件**：把 part1-2 合并进主文件后，再用 `glob('*_part*.json')` 合并其余 part 会**覆盖主文件**（只剩 part3-8，part1-2 丢失）。教训：合并前先备份主文件，或先读主文件已有 blocks 再 append 其余 part 后整体写回；真丢了可从已生成的 `markdown/` 中间产物恢复开头文本（build 脚本曾输出 200 块版 md，其结尾与后续 part 开头无缝衔接时可直接拼接 md，再在清洗脚本 SKIP 集合跳过该文件防覆盖）
+17. **子 agent 改共享脚本的 SKIP 陷阱**：并行子 agent 批量抓取时，可能给清洗脚本加 `SKIP = {'<文档名>'}`「防止覆盖手动拼接产物」，结果后续重新生成时该文档被静默跳过、md 不更新。批量结束后 `grep -n "SKIP" build_markdown.py` 检查并清空；同理验证 `raw/` 下没有残留 `_part*.json`（子 agent 合并失败会留半成品）。
 
 ## 正式导入知识库（进阶）
 
