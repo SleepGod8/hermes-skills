@@ -81,6 +81,27 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
 
+## Docker 相关工具中文界面（官方大多无中文）
+
+**Docker Desktop 官方界面只有英文**，设置里没有语言切换（2026-08 实测 4.83.0）；社区汉化包（`raccoon666666/DockerDesktopChinese`）只适配 4.9.1、作者弃坑、新版替换 app.asar 会白屏 → 不要汉化。
+
+⚠️ **Portainer 官方也无中文**（2.39.5 实测 + GitHub 确认：translations/ 仅 en，中文 PR #12700 未合并）——「Settings 里切中文」是错误说法，别再这么推荐。要中文：Web 工具用浏览器右键翻译；原生中文选 1Panel（国产面板）。各工具语言支持速查与验证方法见 `references/docker-gui-tools-chinese.md`。
+
+## Portainer 部署（Web 容器管理面板）
+
+```bash
+docker volume create portainer_data
+docker run -d -p 9000:9000 --name portainer --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data portainer/portainer-ce:latest
+```
+浏览器访问 `http://localhost:9000`。
+
+坑：
+1. **Setup token（2.39+ 新机制）**：首次初始化管理员必须填 Setup token（不填 Create user 按钮禁用）。token 打印在启动日志：`docker logs portainer | grep setup_token`。**一次性**（创建管理员后失效）；泄露可被抢先初始化劫持；`--no-setup-token` 启动参数可禁用。
+2. **docker run 客户端超时 ≠ 失败**：拉镜像 + run 连写超时被 kill 后，daemon 端可能已创建容器。再跑报 `Conflict. The container name ... is already in use` → 先 `docker ps -a --filter name=portainer` 确认，已 Up 就不用重复 run（镜像此时其实已拉全，只需单独 docker run）。
+3. **9000 端口**：bind 前按下一节「Windows 保留端口范围」重新查保留段（2026-08-10 实测 9000 可用）。
+
 ## docker 命令报 invalid reference format（隐藏 Unicode 字符）
 
 症状：命令肉眼完全正常，如 `docker run -d --name my-redis -p 6379:6379 redis:latest`，却报：
@@ -112,6 +133,8 @@ netsh interface ipv4 show excludedportrange protocol=tcp
 ```
 实测（2026-08 本机）：8749-8848、8849-8948、8949-9048 **三连段被保留**（覆盖 8749-9048），8900/8901 都中招；9100/9091/19530 不受影响。**避开保留段选端口**（本例 attu 改 9500）。改 compose 的 ports 后 `docker compose up -d <service>` 单独重建即可。
 
+⚠️ **保留段是动态的，部署前必须重新查，不要复用旧结论**：2026-08-10（重启后）实测保留段已整体变化——当前为 2869、13817-13916、14124-14223、14224-14323、14324-14423、14424-14523、14524-14623、14624-14723、14828-14927、50000-50059，原先被卡的 **9000 已可正常绑定**（Portainer 部署成功）。每次 bind 端口前跑 `netsh interface ipv4 show excludedportrange protocol=tcp` + `netstat -ano | grep :<port>` 双确认。
+
 ## 验证清单
 
 - [ ] `docker --version` + `docker info`（Server 在跑）
@@ -123,3 +146,4 @@ netsh interface ipv4 show excludedportrange protocol=tcp
 
 - Dify 迁移部署细节：见 `references/dify-deployment-2026-08.md`
 - Milvus 迁移包还原部署细节（含端口保留段实测、镜像拉取时间线、Docker Desktop 启动方式）：见 `references/milvus-migration-deploy-2026-08.md`
+- Docker 相关 GUI 工具中文支持现状与验证方法（Docker Desktop / Redis Insight / Portainer / ARDM / 1Panel）：见 `references/docker-gui-tools-chinese.md`
