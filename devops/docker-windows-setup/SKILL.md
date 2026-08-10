@@ -81,6 +81,27 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
 
+## docker 命令报 invalid reference format（隐藏 Unicode 字符）
+
+症状：命令肉眼完全正常，如 `docker run -d --name my-redis -p 6379:6379 redis:latest`，却报：
+```
+docker: invalid reference format
+Run 'docker run --help' for more information
+```
+（exit 125）。**最常见原因：从网页/微信/聊天记录复制命令时带入了零宽空格（U+200B，UTF-8 字节 `e2 80 8b`）**，Docker 解析镜像引用时遇到非法字符即报此错。已实测复现（Docker 29.6.2，2026-08）。
+
+排查与验证：
+```bash
+# 1. 十六进制转储看命令末尾是否有 e2 80 8b
+printf 'docker run -d --name my-redis -p 6379:6379 redis:latest\xe2\x80\x8b' | xxd | tail -2
+# 2. PowerShell 检查字符串长度（redis:latest 正常为 12，大于 12 即藏了字符）
+('redis:latest').Length
+# 3. 列出所有非 ASCII 字符
+('redis:latest').ToCharArray() | ForEach-Object { if ([int]$_ -gt 127) { "隐藏字符: U+{0:X4}" -f [int]$_ } }
+```
+
+修复：**手动重新敲一遍命令，不要复制粘贴**。通用规律：任何「肉眼正确但 CLI 报格式/参数错误」的复制命令，先怀疑隐藏 Unicode 字符（不只 docker，pip/git/curl 都可能中招）。
+
 ## Windows 保留端口范围导致端口绑定失败
 
 症状：容器能创建但报 `Error response from daemon: ports are not available: exposing port TCP 0.0.0.0:8900 -> ... bind: An attempt was made to access a socket in a way forbidden by its access permissions`。**不是端口被占用**，是 Hyper-V/WinNAT 保留端口段。
