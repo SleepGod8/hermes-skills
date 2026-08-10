@@ -147,3 +147,4 @@ netsh interface ipv4 show excludedportrange protocol=tcp
 - Dify 迁移部署细节：见 `references/dify-deployment-2026-08.md`
 - Milvus 迁移包还原部署细节（含端口保留段实测、镜像拉取时间线、Docker Desktop 启动方式）：见 `references/milvus-migration-deploy-2026-08.md`
 - Docker 相关 GUI 工具中文支持现状与验证方法（Docker Desktop / Redis Insight / Portainer / ARDM / 1Panel）：见 `references/docker-gui-tools-chinese.md`
+- 团队项目 Docker 封装（Dockerfile 缓存顺序 / compose 端口冲突 / 本机端口地图）：见 `references/team-project-compose.md`
