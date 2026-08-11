@@ -69,7 +69,22 @@ ssh -T -o StrictHostKeyChecking=accept-new git@gitee.com   # 期望输出: Hi �
 
 - **git clone 拒绝非空目录**（`destination path ... already exists and is not an empty directory`）。处理：先把已有文件 mv 到 /tmp，clone 后再移回
 - **用户可能已手动 clone 过** → 出现嵌套（项目目录里套着仓库目录）：把 `.git` 及内容 mv 到项目根，rmdir 空壳
-- Windows `rmdir` 报 `Device or resource busy` = 有终端/资源管理器停在该目录。文件移出后空壳不影响使用，提示用户关掉占用窗口后再删；命令链里 rmdir 失败会中断后续 `&&` 命令，注意补跑
+- **Windows `rmdir`/`mv` 报 `Device or resource busy` 的常见根因是 Hermes 自己的持久 bash 会话**：只要本会话曾经 `cd` 进过该目录，Hermes 维护的持久 shell 池里就有进程 cwd 停在里面，kill 进程没用（进程池会自动补），`rm -rf` 也删不掉。**解法：先 `cd /e/项目/smart-wealth`（把持久 cwd 移出），再用 psutil 确认无锁后删除**：
+  ```bash
+  python - <<'EOF'
+  import psutil
+  for p in psutil.process_iter(['pid','name','cwd']):
+      if (p.info.get('cwd') or '').lower().startswith(r"E:\项目\xxx".lower()):
+          print(p.info['pid'], p.info['name'])
+  EOF
+  ```
+  wmic 查 CommandLine 常返回空不可靠；psutil 的 cwd 最准。
+- **中文目录改名/删除用 Python，不要用 bash mv 或 cmd ren**（2026-08-11 实测）：`mv` 可能 Permission denied；`cmd //c 'ren "E:\项目\X" Y'` 因 UTF-8→GBK 编码问题**返回 0 但实际没执行**（echo "成功" 会误导）。可靠解法：
+  ```bash
+  python -c "import os; os.rename(r'E:\项目\旧名', r'E:\项目\新名')"
+  python -c "import os; os.rmdir(r'E:\项目\空目录')"   # 删空目录
+  ```
+  文件移出后空壳不影响使用；命令链里 rmdir 失败会中断后续 `&&` 命令，注意补跑
 - 仓库分支可能是 `master`（Gitee 默认）而团队文档写 `main`——以仓库实际为准，提醒用户与组长确认统一叫法
 
 ## 5. 分支规范（团队 7 人项目）
@@ -80,6 +95,30 @@ git checkout -b develop origin/develop   # 远程有 develop 时切开发分支
 git checkout -b feature/xxx develop      # 每个任务拉功能分支
 # 永不直接 push 主干；每天开工 git pull origin <主干>
 ```
+
+## 6. pull 被本地文件挡住（日常高频坑，2026-08-11 实测）
+
+队友推了远程新文件（本会话实例：`.obsidian/appearance.json` 等 Obsidian 配置），本地同名文件是**未跟踪**状态 → `git pull` 报：
+
+```
+error: The following untracked working tree files would be overwritten by merge:
+    .obsidian/appearance.json
+Please move or remove them before you merge.
+```
+
+处理：这类文件（Obsidian UI 配置、编辑器缓存）没有保留价值——**备份到 /tmp 后让远程版本接管**：
+
+```bash
+mkdir -p /tmp/obsidian-backup
+mv .obsidian/appearance.json .obsidian/core-plugins.json /tmp/obsidian-backup/
+git checkout -- .obsidian/app.json        # 本地有修改的 tracked 文件，丢弃改动用远程版
+git pull origin develop
+```
+
+要点：
+- 未跟踪文件挡住 → 移走/删除（`git clean -fd` 慎用，会删全部未跟踪）
+- 已跟踪但本地有修改 → `git checkout -- <文件>` 丢弃（先备份）
+- **pull 前先 `git status`**，本地有修改就 `git stash` 或提交，养成习惯
 
 ## 验证清单
 

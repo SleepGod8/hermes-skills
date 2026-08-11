@@ -81,6 +81,17 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
 - **Milvus standalone 启动命令**：compose 里 `command: ["standalone"]` 会秒崩（日志 `[FATAL tini] exec standalone failed: No such file or directory`）——`standalone` 不是可执行文件。正确：`command: ["milvus", "run", "standalone"]`（v2.3.4 实测）。启动后日志出现 `find no available datacoord` 告警属正常初始化过程，等 30-60s 即可。
+- **Milvus standalone 第二层 bug：必须配 MinIO 地址（2026-08-11 实测）**——只修 command 后容器仍会 panic 退出（`Exited 134`，日志 `panic: Get "http://localhost:9000/a-bucket/..." connection refused`）：standalone 默认连**自己容器内**的 `localhost:9000` 建 bucket，但那里没有 MinIO。必须给 milvus 服务加：
+  ```yaml
+  depends_on: [minio]        # 否则可能在 minio 起来前抢跑
+  environment:
+    ETCD_USE_EMBED: "true"
+    MINIO_ADDRESS: minio:9000      # 指向 compose 里的 minio 服务
+    MINIO_ACCESS_KEY: minioadmin
+    MINIO_SECRET_KEY: minioadmin
+    MINIO_USE_SSL: "false"
+  ```
+  连上 MinIO 的验证日志：`init AwsChunkManager with parameter[endpoint: 'minio:9000', ...]` + `remote chunk manager init success. bucketname=a-bucket`。注意 grep `panic|fatal` 会误报（配置日志行本身含 `log level:fatal`），以容器 `Up` 稳定 + bucket 初始化成功为准。改完 `docker compose up -d <service>` 单独重建即可。
 - **Hermes terminal 工具会把 `docker compose up -d` 误判为长驻进程**（即使 -d 分离模式）并拒绝前台执行 → 用 `terminal(background=true, notify_on_complete=true)` 跑，完成后 `process(wait)` 拿结果。
 - 全链容器中后端 `/api/health` 返回 `{code:200, data:{dependencies:{mysql:true, redis:true}}}` 即验证通过；登录测试 `POST /api/auth/login` 用 README 预置测试账号。
 
