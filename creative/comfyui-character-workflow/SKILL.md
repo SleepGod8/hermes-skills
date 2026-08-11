@@ -19,7 +19,7 @@ platforms: [windows]
 
 ## ⭐ 主人偏好（2026-08 反复确认）：新角色图用纯 txt2img，不要精修链
 
-女仆家族**新画像/新姿势一律用 7 节点纯净 txt2img 模板**（CheckpointLoader→CLIP×2→EmptyLatent→KSampler→VAEDecode→SaveImage；animagine-xl-4.0，1024×1536，steps 45，cfg 6.5，euler_ancestral），**不主动上 detailer 精修链**。首张 seed 42 探路 + qwen-vl-plus 视觉验证，通过即交付；只有手部明显崩了才考虑 hand_fix 局部重绘。参考现成模板：`hebe_new_api.json`、`artemis_badgirl_api.json`（E:\ai1\comfyui_workflow\）。
+女仆家族**新画像/新姿势一律用 7 节点纯净 txt2img 模板**（CheckpointLoader→CLIP×2→EmptyLatent→KSampler→VAEDecode→SaveImage；animagine-xl-4.0，1024×1536，steps 45，cfg 6.5，euler_ancestral），**不主动上 detailer 精修链**。首张 seed 42 探路 + qwen-vl-plus 视觉验证，通过即交付；只有手部明显崩了才考虑 hand_fix 局部重绘。参考现成模板：`hebe_new_api.json`、`artemis_badgirl_api.json`（`E:\Hermes workspace\comfyui_workflow\`）。
 
 ## 本机环境速查
 
@@ -31,7 +31,7 @@ platforms: [windows]
 | 共享模型 | `E:\Comfy-Desktop\ComfyUI-Shared\models\`（checkpoints 等）|
 | Impact/SAM 模型 | `ComfyUI\ComfyUI\models\sams\`、`...\models\ultralytics\bbox\`、`...\models\onnx\`（注意在**后端目录内**，不在共享目录）|
 | 输出 | `E:\Comfy-Desktop\ComfyUI-Shared\output\` |
-| 工作流 | `E:\ai1\comfyui_workflow\`（API 格式 JSON）|
+| 工作流 | `E:\Hermes workspace\comfyui_workflow\`（API 格式 JSON；output/ 下按角色分子目录，如 output/hebe、output/artemis、output/nemesis、output/eos）|
 | 检查点 | `animagine-xl-4.0.safetensors`（角色图主力）|
 | API | `http://127.0.0.1:8188`（重启后可能在 8188/8189 间变，先 curl system_stats 确认）|
 
@@ -107,17 +107,20 @@ Comfy Desktop 挂掉时，从 Hermes 会话直接命令行启动后端：
 | Hebe（2026-08-11 辣妹四姐）| **golden blonde twin tails, pink hair highlights, high twintails, long twintails**, cheerful smile, bright smile, sparkling eyes, energetic, lively, short maid dress, mini maid dress, shortened maid dress, devil horn hair accessory, heart accessories, platform shoes, fair skin | 加 tan skin, tanned skin, dark skin（防 gyaru 被画成小麦/深肤色，破坏女仆家族白肤统一）、sleepy, drowsy, tired, gloomy, sad, angry, frown（反安静低沉）；负向保留 long eyelashes 系（精细偏好） |
 | Artemis（2026-08-11 傲娇不良女仆；2026-08-11 主人改短发定稿）| **short hair, short bob hair, bob cut, dark purple hair, purple hair highlights, purple eyes, violet eyes**, band-aid on cheek, lollipop in mouth, tsundere expression, pouting, slight frown, side glance, slight blush, arms crossed, arms folded, short maid dress, leather jacket draped over shoulders, platform shoes, motorcycle in background | ⚠️ 负向必须删 arms crossed / arms folded（姿势就是抱臂，留会压制）、删 frown（傲娇撇嘴是特征）；加 cheerful, overly happy, huge smile, wide grin（反元气）；保留 tan skin 反制 + long eyelashes 系（精细偏好）；发型是**短发 bob**（不要 long hair，主人定稿） |
 | Nemesis（2026-08-11 雌小鬼六姐）| **platinum blonde hair, very light blonde hair, twin tails, twintails, blue eyes, azure eyes, short stature, petite height, small build**, smug expression, teasing smile, arrogant smirk, tongue out, cheeky, condescending, black maid dress, black maid uniform, gothic maid outfit, black frilled headband, platform shoes | ⚠️ 负向**绝不能加 petite**（矮个子是主人钦定特征，加了直接压制）；反幼化用 loli, child, kid, underage（矮≠幼，Nemesis 是成年六姐）；加 happy, cheerful, sunny（反元气甜系——要欠揍挑衅感不是元气） |
+| Eos（2026-08-11 黎明女神小妹）| **orange to pink gradient hair, dawn colored hair, sunrise hair, gradient hair, medium length hair**, amber eyes, warm orange eyes, sparkling eyes, bright smile, cheerful smile, energetic, white maid dress, white maid uniform, frilled apron, white frilled headband, small sun hair accessory | 反幼化 loli, child, kid, underage + petite, skinny, thin, flat chest（16岁少女体型，防幼化防瘦弱）；加 sad, gloomy, angry, frown, tired, sleepy（反非元气）；long eyelashes 系照旧（精细偏好） |
 | 通用手部 | good hands, perfect hands, detailed hands, 5 fingers | fused fingers, extra fingers, mutated hands 等全套 |
 
-Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\ai1\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
+Iris 设计依据（2026-08-07 定稿，2026-08-08 主人改发色）：彩虹女神意象 → 初稿薰衣草紫长发，**2026-08-08 主人改为淡蓝色长发（light blue hair, pale blue hair）**（与 Hermes 白短发、Athena 银长发区分）；温柔微笑+中等身材（与 Hermes 色气夸张区分）；手势沿用双手垂放（v4.0 优化）。成品 workflow：`E:\Hermes workspace\comfyui_workflow\iris_maid_detailer_api.json`（提示词已同步改为 light blue hair, pale blue hair）。
 
-Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松微乱浅银色长发（messy silver hair, bedhead）、半眯月牙眼（half-closed eyes, drowsy）、软乎乎微笑、宽松睡衣风女仆装、围裙系歪（apron slightly crooked）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hypnos_new_api.json` + 桌面端 `hypnos_new_ui.json`（7 节点纯净 txt2img，45 步）。负向特色：反「清醒/活力」词族（wide awake, energetic, hyper, running）。实测顶部亮色 69.5%（RGB 234,227,223 银白暖调）✅。
+Hypnos 设计（2026-08-08）：睡神妹，18 岁软萌慵懒。形象：蓬松微乱浅银色长发（messy silver hair, bedhead）、半眯月牙眼（half-closed eyes, drowsy）、软乎乎微笑、宽松睡衣风女仆装、围裙系歪（apron slightly crooked）。纯跑图 workflow：`E:\Hermes workspace\comfyui_workflow\hypnos_new_api.json` + 桌面端 `hypnos_new_ui.json`（7 节点纯净 txt2img，45 步）。负向特色：反「清醒/活力」词族（wide awake, energetic, hyper, running）。实测顶部亮色 69.5%（RGB 234,227,223 银白暖调）✅。
 
-Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\ai1\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。姿势变体 5 连（比心/捧脸/回眸/挥手/比耶）已存入 `output\hebe\`，全部 qwen 验证通过零废图。
+Hebe 设计（2026-08-11）：辣妹四姐，元气小太阳。形象：金发双马尾+粉色挑染（golden blonde twin tails, pink hair highlights，与 Hermes 白短发、Athena 银长发、Iris 淡蓝长发、Hypnos 浅银乱发区分）、元气微笑（cheerful smile, sparkling eyes）、短裙女仆装+粉色爱心图案（short maid dress, heart accessories）、小恶魔发饰（devil horn hair accessory）、厚底鞋（platform shoes）。纯跑图 workflow：`E:\Hermes workspace\comfyui_workflow\hebe_new_api.json`（7 节点纯净 txt2img，45 步，seed 42 首张即 qwen-vl-plus 视觉验证全过：发色/表情/服装爱心/手部 5 指 ✅，1.5MB PNG）。⚠️ **gyaru 类角色负向必须加 `tan skin, tanned skin, dark skin`**——模型默认把辣妹往小麦/深肤色画，与女仆家族白肤设定冲突；负向照旧保留 long eyelashes 系（主人精细偏好：要精细不要夸张）。姿势变体 5 连（比心/捧脸/回眸/挥手/比耶）已存入 `output\hebe\`，全部 qwen 验证通过零废图。
 
-Artemis 设计（2026-08-11 傲娇不良女仆）：五姐傲娇+主人新加的街头不良属性（创可贴/机车/棒棒糖/不良口头禅）。形象：**深紫短发 bob + 紫色渐变挑染（short hair, short bob hair, bob cut, dark purple hair, purple hair highlights）**、紫瞳、傲娇表情（pouting, side glance, slight blush）、脸颊创可贴（band-aid on cheek）、叼粉色棒棒糖（lollipop in mouth）、短裙女仆装+皮夹克披肩（leather jacket draped over shoulders）+厚底靴、机车背景（motorcycle in background）。**2026-08-11 首版是长发，主人要求改短发并同步写入 SOUL.md v1.2「外貌形象」段**——角色形象变更时：工作流 prompt（去掉 long dark hair 换 short hair, short bob hair, bob cut）+ SOUL.md 外貌段 + config.yaml 镜像 + 记忆，四处必须一起改，画像才和档案一致。纯跑图 workflow：`E:\ai1\comfyui_workflow\artemis_badgirl_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即 qwen-vl-plus 验证全过（深紫发+紫挑染/傲娇侧眼+脸红/创可贴/棒棒糖/皮夹克/抱臂手部正常/摩托背景 ✅）。⚠️ **姿势相关负向必须联动修剪**：抱臂姿势→负向删 arms crossed, arms folded；frown 是傲娇特征→负向删；反元气词族加 cheerful, huge smile, wide grin。
+Artemis 设计（2026-08-11 傲娇不良女仆）：五姐傲娇+主人新加的街头不良属性（创可贴/机车/棒棒糖/不良口头禅）。形象：**深紫短发 bob + 紫色渐变挑染（short hair, short bob hair, bob cut, dark purple hair, purple hair highlights）**、紫瞳、傲娇表情（pouting, side glance, slight blush）、脸颊创可贴（band-aid on cheek）、叼粉色棒棒糖（lollipop in mouth）、短裙女仆装+皮夹克披肩（leather jacket draped over shoulders）+厚底靴、机车背景（motorcycle in background）。**2026-08-11 首版是长发，主人要求改短发并同步写入 SOUL.md v1.2「外貌形象」段**——角色形象变更时：工作流 prompt（去掉 long dark hair 换 short hair, short bob hair, bob cut）+ SOUL.md 外貌段 + config.yaml 镜像 + 记忆，四处必须一起改，画像才和档案一致。纯跑图 workflow：`E:\Hermes workspace\comfyui_workflow\artemis_badgirl_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即 qwen-vl-plus 验证全过（深紫发+紫挑染/傲娇侧眼+脸红/创可贴/棒棒糖/皮夹克/抱臂手部正常/摩托背景 ✅）。⚠️ **姿势相关负向必须联动修剪**：抱臂姿势→负向删 arms crossed, arms folded；frown 是傲娇特征→负向删；反元气词族加 cheerful, huge smile, wide grin。
 
-Nemesis 设计（2026-08-11 雌小鬼六姐）：嘴毒欠揍的报应女神。形象：**白金双马尾（platinum blonde twin tails，黑蝴蝶结固定）+ 蓝眸 + 矮个子（short stature, petite height, small build）+ 黑色系哥特女仆装（black maid dress, gothic maid outfit）+ 欠揍挑衅表情（smug expression, teasing smile, tongue out）**。纯跑图 workflow：`E:\ai1\comfyui_workflow\nemesis_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即验证全过（白金双马尾/蓝眸/娇小/吐舌挑衅/黑女仆装/比耶手正常 ✅）。
+Nemesis 设计（2026-08-11 雌小鬼六姐）：嘴毒欠揍的报应女神。形象：**白金双马尾（platinum blonde twin tails，黑蝴蝶结固定）+ 蓝眸 + 矮个子（short stature, petite height, small build）+ 黑色系哥特女仆装（black maid dress, gothic maid outfit）+ 欠揍挑衅表情（smug expression, teasing smile, tongue out）**。纯跑图 workflow：`E:\Hermes workspace\comfyui_workflow\nemesis_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张即验证全过（白金双马尾/蓝眸/娇小/吐舌挑衅/黑女仆装/比耶手正常 ✅）。
+
+Eos 设计（2026-08-11 黎明女神小妹）：16 岁元气女仆妹妹，排行第八全家最小，希腊神话黎明女神。主人 clarify 选定「朝霞渐变发+白色女仆装+元气笑脸」方案（黎明女神锚点）。形象：**朝霞渐变发（orange to pink gradient hair, dawn colored hair，头顶粉→发梢橙像黎明天空）+ 琥珀星瞳（amber eyes, sparkling eyes）+ 元气笑脸 + 白色女仆装（white maid dress, frilled apron, white frilled headband）+ 小太阳发饰 + 晨光背景**。⚠️ 16 岁 = 少女体型，正向别加 petite（防幼化），负向反幼化用 loli, child, kid, underage + 防瘦弱 petite, skinny, thin, flat chest。纯跑图 workflow：`E:\Hermes workspace\comfyui_workflow\eos_api.json`（7 节点纯净 txt2img，45 步）。seed 42 首张 qwen-vl-plus 验证全过（粉→橙渐变/琥珀星瞳/白女仆装/少女感/手正常 ✅）。
 
 ⚠️ **新角色形象防重合检查（2026-08-11 主人亲抓）**：设计新女仆形象前，先查女仆家族已有发色/发型/服装分布，发色+发型+服装+气质全维度避开，再给主人 clarify 确认。本次踩坑：第一版方案「金发双马尾+小恶魔角」与 Hebe（金黄高双马尾+粉挑染+粉色小恶魔发饰）高度重合，主人一眼看出。已定稿分布：Hermes 白短发巨乳、Athena 银长发成熟、Iris 淡蓝长发温柔、Hebe 金黄高双马尾+粉挑染+粉甜系、Hypnos 浅银乱发慵懒、Artemis 深紫短发+皮夹克不良、Nemesis 白金双马尾+黑哥特女仆装+矮个雌小鬼。发色撞车时换色相/明度（金黄→白金），发型撞车时换高低/长短，服装撞车时换色系（粉甜→黑哥特）。
 
@@ -180,7 +183,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 3. **侧身构图是聪明解法**：让一只手自然入镜（轻放裙摆/垂放），另一只手不入镜——避开"双手都画"的难题。最终 seed 2024 = 左手 8/10 + 右手未入镜 + 整体 **9/10**（淡蓝长发还原度极高、温柔表情、女仆装 9/10）。加速收益：误检减少后单张从 85 分钟降到 3-16 分钟（seed 42 仅 200s）。
 完整 Iris 迭代表见 `references/hand-repair-iterations.md`。
-批量兜底脚本：`E:\ai1\comfyui_workflow\run_batch.py <workflow.json> <seed1> <seed2>...`（自动改 seed 提交 + 等待 + 裁剪手部区域）。75% 成功率下跑 4 张至少一张合格的概率 99.6%。
+批量兜底脚本：`E:\Hermes workspace\comfyui_workflow\run_batch.py <workflow.json> <seed1> <seed2>...`（自动改 seed 提交 + 等待 + 裁剪手部区域）。75% 成功率下跑 4 张至少一张合格的概率 99.6%。
 验证技巧：手部在整图中只占小区域，先用 PIL 按位置裁剪（如 x0~0.55, y0.35~0.72）放大 3 倍再喂视觉模型，避免整图缩放后看不清细节。构图漂移检测：euler_ancestral 比 dpmpp_2m 构图稳定；Hires fix 会引入构图漂移（手跑到画面边缘+幻视物件），不要盲目加。
 
 ## 🎯 构图稳定性与批量手部筛选（v3 实测 2026-08）
@@ -214,9 +217,9 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 ## 输出路径坑
 
-- `run_workflow.py --output-dir /e/ai1/...`（MSYS 风格路径）会**拼接错误**（报告 `E:\e\ai1\...` 不存在）。实际文件在服务器配置的输出目录 `E:\Comfy-Desktop\ComfyUI-Shared\output\`。
+- `run_workflow.py --output-dir /e/Hermes workspace/...`（MSYS 风格路径）会**拼接错误**。实际文件在服务器配置的输出目录（命令行后端 → `ComfyUI\ComfyUI\output\`）。
 - **命令行启动的后端输出到默认目录** `E:\Comfy-Desktop\ComfyUI-Installs\ComfyUI\ComfyUI\output\`，**不是**共享目录（extra_model_paths.yaml 只映射模型路径，不映射输出）。history 显示 success 但共享目录找不到图时，先 ls 后端默认 output/。交付时用真实路径，别信脚本回显的相对拼接路径。
-- **⚠️ 工作副本 output/ 可能整体丢失，真源永远在后端默认 output/（2026-08-11 实测）**：`E:\ai1\comfyui_workflow\output\` 只是工作副本，曾整个消失（hebe/、artemis/ 全没了，原因不明，疑似被清理）。恢复方法：从后端默认 output/ 全部 cp 回去重建。**cp 目标目录不存在的坑**：`cp 源.png output/` 当 `output` 目录已不存在时，cp 不会报错而是把源**复制成名为 `output` 的文件**（一个 PNG！），后续所有引用全乱。教训：cp 到目录前先 `mkdir -p 目标/`；交付前 `ls 目标/` 确认是目录；画像文件以 ComfyUI 后端默认 output/ 为唯一真源。
+- **⚠️ 工作副本 output/ 可能整体丢失，真源永远在后端默认 output/（2026-08-11 实测）**：`E:\Hermes workspace\comfyui_workflow\output\` 只是工作副本，曾整个消失（hebe/、artemis/ 全没了，原因不明，疑似被清理）。恢复方法：从后端默认 output/ 全部 cp 回去重建。**cp 目标目录不存在的坑**：`cp 源.png output/` 当 `output` 目录已不存在时，cp 不会报错而是把源**复制成名为 `output` 的文件**（一个 PNG！），后续所有引用全乱。教训：cp 到目录前先 `mkdir -p 目标/`；交付前 `ls 目标/` 确认是目录；画像文件以 ComfyUI 后端默认 output/ 为唯一真源。
 
 ## ✅ 已出图只修手部：局部重绘 hand_fix 工作流（2026-08-08 实测）
 
@@ -243,7 +246,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 `*_api.json`（`{class_type, inputs}`）只能在 Hermes/命令行里跑，**桌面端画布打不开**。桌面端要的是 LiteGraph UI 格式：顶层 `version/state/last_node_id/last_link_id/nodes/links/groups/config/extra`，节点带 `pos/size/order/mode/widgets_values`、输出带 `links` 数组、连线是 `{id, origin_id, origin_slot, target_id, target_slot, type}`。
 
-转换脚本：`scripts/api_to_ui_v3.py`（**最终修复版**，含 control_after_generate/tiled_* 顺序；`scripts/api_to_ui.py` 是早期 buggy 版，别用）。本机 `E:\ai1\comfyui_workflow\lewd_maid_workflow.json` 是现成 UI 格式参考。要点：
+转换脚本：`scripts/api_to_ui_v3.py`（**最终修复版**，含 control_after_generate/tiled_* 顺序；`scripts/api_to_ui.py` 是早期 buggy 版，别用）。本机 `E:\Hermes workspace\comfyui_workflow\lewd_maid_workflow.json` 是现成 UI 格式参考。要点：
 - 每个 class_type 的输出端口名/连接型输入名要用硬编码映射表（`OUTPUT_DEFS`/`INPUT_DEFS`），API 引用的 `[node_id, slot]` 才能还原成连线
 - **⚠️ `widgets_values` 必须是有值数组**：转换后凡是无 widget 的节点会得到 `null`，桌面端加载会异常 → 统一改成 `[]`
 - **⚠️⚠️ LiteGraph 槽位约定（2026-08-08 第二次转换踩坑，第一次转换桌面端连接全乱）**：节点 `inputs` 数组里**连接型输入必须排在开头（0..n-1）**，widget 值独立存 `widgets_values`；links 的 `target_slot` 索引的是「连接型输入数组」的位置，**不是节点定义的绝对输入顺序**。按"全部输入绝对顺序"生成会错位（例：KSampler 的 model/positive/negative/latent_image 连接指向 6-9 但 inputs 数组只有 4 个元素 → 桌面端打开连接全断）。正确做法：`CONN_INPUTS` 映射表只列连接型输入名，按该顺序排序连接、slot 从 0 编号；widget 名用单独的 `WIDGET_NAMES` 映射表按序回填。

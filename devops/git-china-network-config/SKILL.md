@@ -67,6 +67,24 @@ ssh -T -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 git@gitee.com
 - 处理：先把目录内容 mv 到 /tmp，clone 成功后再移回；或 clone 到子目录再整理
 - 整理后 `rmdir` 报 `Device or resource busy`：有终端/资源管理器停在该目录，关掉占用窗口后再删，或忽略（不影响使用）
 
+## 坑 4.5：中文/占用目录改名卡住（mv Permission denied）
+
+- `mv "中文目录" newname` 报 `Permission denied`：目录被资源管理器/索引服务/某进程句柄锁住（psutil 遍历 cwd 可能查不到占用——锁可能是系统级瞬时锁）
+- `cmd //c 'ren "中文路径" new'` 在 git-bash 里会因中文编码乱码**静默失败但返回 0**——`&&` 会误判"成功"，**必须事后验证目标目录是否真的存在**
+- **最稳解法：Python `os.rename`**（对 Unicode 路径最可靠，成功即返回）：
+
+```python
+import os
+src = r"E:\项目\智能财富管家系统"
+dst = r"E:\项目\smart-wealth"
+if not os.path.exists(dst):
+    os.rename(src, dst)      # 成功即返回，无需退出码判断
+```
+
+- 改名后验证仓库完整：`git status` + `git remote get-url origin`（.git 跟着目录走，remote/分支/历史不变）
+- 旧目录被锁删不掉时：先用 `tar -C src --exclude='.venv' --exclude='.git' -cf - . | tar -C <归档目录> -xf -` 归档复制，原目录让用户关掉占用窗口后手动删
+- 已存在的历史旧副本目录（如 `smart-wealth-agent` 与 `smart-wealth-agent(1)`）可能早在用户给路径前就存在——归档前先 `ls -la --time-style=full-iso` 看创建时间，别误判成自己操作产生的
+
 ## 坑 4：git 身份默认值是工具生成的
 
 新机器上 `git config --global user.name` 可能是 "Hermes"、email 是 `xxx@hermes.local`——多人协作前必须改成真实姓名 + 真实邮箱（建议与 Gitee 绑定的邮箱一致），否则同事看不到是谁提交的。占位符（如"你Gitee绑定的邮箱"）被复制进去要立刻发现并修正。

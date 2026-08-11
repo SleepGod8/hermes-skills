@@ -81,6 +81,34 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
 
+## Docker Desktop 引擎未运行（compose 连不上 daemon）
+
+症状：`docker compose up` 立即报 `failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine ... The system cannot find the file specified`。注意此时 `docker ps` 可能返回空**但不报错**，容易误判为"没有容器"而非"引擎没起"。
+
+修复（2026-08 实测）：
+```bash
+# 用 PowerShell 启动（不要用 cmd //c start：中文路径/引号会被吞，进程起不来）
+powershell -Command "Start-Process -FilePath 'E:\Docker\Docker Desktop.exe'"
+# 轮询引擎就绪（WSL2 后端通常 10-60s）
+for i in $(seq 1 24); do docker info >/dev/null 2>&1 && break; sleep 10; done
+docker info 2>/dev/null | grep "Server Version"
+```
+启动后确认进程：`python -c "import psutil; print([p.info['name'] for p in psutil.process_iter(['name']) if 'docker' in (p.info.get('name') or '').lower()])"`。
+
+## compose 端口冲突用 override 文件（不动仓库主文件）
+
+本机已有服务占端口（如 Windows MySQL80 服务占 3306，容器 MySQL 也想绑 3306）时，**不要改仓库的 docker-compose.yml**（会污染团队文件、pull 冲突）。新建 `docker-compose.override.yml` 只覆盖冲突端口：
+
+```yaml
+# docker-compose.override.yml（compose 自动与主文件合并；建议 gitignore）
+services:
+  mysql:
+    ports:
+      - "3307:3306"   # 宿主 3307，容器内仍 3306，backend 连 mysql:3306 不受影响
+```
+`docker compose up -d --build` 会自动应用 override。容器间通信不受影响，只改宿主端口映射。本机 MySQL 实际版本以 `SELECT VERSION()` 实测为准（目录可能是 9.7、服务名 MySQL80、实跑 8.0.42——三处不一致时信连接实测）。
+
+
 ## Docker 相关工具中文界面（官方大多无中文）
 
 **Docker Desktop 官方界面只有英文**，设置里没有语言切换（2026-08 实测 4.83.0）；社区汉化包（`raccoon666666/DockerDesktopChinese`）只适配 4.9.1、作者弃坑、新版替换 app.asar 会白屏 → 不要汉化。
