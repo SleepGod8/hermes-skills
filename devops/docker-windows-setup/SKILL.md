@@ -80,6 +80,9 @@ Win10 家庭版没有 Hyper-V，Docker Desktop 必须用 WSL2 后端。三件套
 - **镜像 tag 不存在**：`docker compose up` 卡在拉取重试。查 Docker Hub 可用 tag（代理访问 `https://hub.docker.com/v2/repositories/<org>/<repo>/tags`），把 compose 的 image 改成存在的 tag。实例：`langgenius/dify-plugin-daemon:0.6.3-local` 不存在，改 `0.6.10-local` 可用。
 - **tar 迁移包 symlink 解压失败**（Windows tar 不支持 Linux symlink）：配置文件目录变空目录 → 容器报 `cp: -r not specified; omitting directory '...'` 循环重启。修复：从上游 GitHub raw 按版本下载补全（走代理），如 Dify 1.16 的 `docker/nginx/`、`docker/ssrf_proxy/` 下 5+2 个文件。检查：`ls -la` 看到空目录即中招。
 - compose 默认启动的服务看 `docker compose config --services`；可选服务（certbot/oracle/vastbase）挂载缺失不影响。
+- **Milvus standalone 启动命令**：compose 里 `command: ["standalone"]` 会秒崩（日志 `[FATAL tini] exec standalone failed: No such file or directory`）——`standalone` 不是可执行文件。正确：`command: ["milvus", "run", "standalone"]`（v2.3.4 实测）。启动后日志出现 `find no available datacoord` 告警属正常初始化过程，等 30-60s 即可。
+- **Hermes terminal 工具会把 `docker compose up -d` 误判为长驻进程**（即使 -d 分离模式）并拒绝前台执行 → 用 `terminal(background=true, notify_on_complete=true)` 跑，完成后 `process(wait)` 拿结果。
+- 全链容器中后端 `/api/health` 返回 `{code:200, data:{dependencies:{mysql:true, redis:true}}}` 即验证通过；登录测试 `POST /api/auth/login` 用 README 预置测试账号。
 
 ## Docker Desktop 引擎未运行（compose 连不上 daemon）
 
@@ -95,19 +98,23 @@ docker info 2>/dev/null | grep "Server Version"
 ```
 启动后确认进程：`python -c "import psutil; print([p.info['name'] for p in psutil.process_iter(['name']) if 'docker' in (p.info.get('name') or '').lower()])"`。
 
-## compose 端口冲突用 override 文件（不动仓库主文件）
+## compose 端口冲突：override 对 ports 是追加不是覆盖（实测修正 2026-08-11）
 
-本机已有服务占端口（如 Windows MySQL80 服务占 3306，容器 MySQL 也想绑 3306）时，**不要改仓库的 docker-compose.yml**（会污染团队文件、pull 冲突）。新建 `docker-compose.override.yml` 只覆盖冲突端口：
+本机已有服务占端口（如 Windows MySQL80 服务占 3306，容器 MySQL 也想绑 3306）时，直觉是建 `docker-compose.override.yml` 覆盖冲突端口。**实测陷阱：docker compose 对 override 的列表字段（ports/volumes/environment 列表）是「追加合并」不是「覆盖」**——override 里写 `ports: ["3307:3306"]` 后，主文件的 `ports: ["3306:3306"]` 依然保留，最终容器绑两个映射 `[3306:3306, 3307:3306]`，冲突的 3306 照样报 `ports are not available ... bind: Only one usage of each socket address`，服务起不来。
 
-```yaml
-# docker-compose.override.yml（compose 自动与主文件合并；建议 gitignore）
-services:
-  mysql:
-    ports:
-      - "3307:3306"   # 宿主 3307，容器内仍 3306，backend 连 mysql:3306 不受影响
-```
-`docker compose up -d --build` 会自动应用 override。容器间通信不受影响，只改宿主端口映射。本机 MySQL 实际版本以 `SELECT VERSION()` 实测为准（目录可能是 9.7、服务名 MySQL80、实跑 8.0.42——三处不一致时信连接实测）。
+验证：`docker compose config | grep -E "published|target"` 看到两个 published 即 append 了。
 
+**正确做法（实测有效）**：
+1. **改主文件 docker-compose.yml 的 ports 行 + 注释**（本机适配），如：
+   ```yaml
+   # 宿主端口 3307（避免与本机已装 MySQL 服务 3306 冲突；容器间仍用 mysql:3306）
+   ports: ["3307:3306"]
+   ```
+   一行改动、注释说明；容器间通信不受影响（backend 仍连 `mysql:3306`）。团队其他机器若 3306 空闲可自行改回。
+2. override 只能用于**新增服务/新增字段**，不能靠它替换已有列表。
+3. 改完 `docker compose up -d <service>` 单独重建冲突服务即可，其他 Running 容器不动。
+
+本机 MySQL 实际版本以 `SELECT VERSION()` 实测为准（目录可能是 9.7、服务名 MySQL80、实跑 8.0.42——三处不一致时信连接实测）。
 
 ## Docker 相关工具中文界面（官方大多无中文）
 
