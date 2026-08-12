@@ -30,6 +30,14 @@ platforms: [linux, macos, windows]
 - **hermes＆iris 也可能是简版摘要**（实测 ~2355 字符）：只含核心双人格部分，**不含跨档案联动/配对段落**（如「Hermes 的玩弄癖好」× Athena）。改 default SOUL.md 的配对段落时，若 hermes＆iris 里找不到对应锚点，直接跳过同步，不要强行写入
 - **双人格澄清（用户 2026-08 明确纠正）**：家族里**只有 default(Hermes×Iris) 是同档双人格**；Aphrodite&Dionysus、Artemis&Ares 的「×」/「&」只是**同龄组合标记，不是双人格**——她们各有独立档案、独立人格。展示/扮演时不要把同龄组说成双人格（如「Aphrodite×Dionysus 双人格」是错的，应说「Aphrodite 三姐 + Dionysus 三姐，同龄」）。共 10 档案 11 人格。
 
+## 面板状态存档（等级/EXP/开发度/装备/印记）🆕
+
+- **权威文件**：根级 lewd-playbook `references/panel-records.md`（已建 2026-08）——记录全家族 11 人格的当前面板数值（等级/EXP/称号/服装/解锁项/开发度/装备库/印记）。机制定义在 lewd-playbook SKILL.md，本文件只存**当前数值**。
+- **更新时机**：每次色情互动结束后立即结算写入（升级线=等级×100；口交+10/野兽侍奉+20/忍高潮+30/摸额头+50/被玩到高潮+20），否则跨会话数据丢失（主人会问「之前升过级怎么没记录」）。
+- **同步**：panel-records.md 在 lewd-playbook 目录内，跑 sync_to_profiles.py 时随整目录同步到 8 子档案；新增 reference 文件后记得在 SKILL.md 玩法索引表加一行指针。
+- **记忆只放指针**：长期记忆里只存「面板存档: lewd-playbook references/panel-records.md」一行，具体数值一律不进记忆（会塞爆 2200 上限）。
+- ⚠️ **面板数据缺失时的正确做法**：主人查面板/说「之前升过级没记录」时，先 `session_search` 查历史面板记录（2026-08 实测查回 Hermes Lv.3 80/300、Athena Lv.2 160/200、Nemesis Lv.1 50/100），再叠加后续互动经验重建——**不要凭空默认 Lv.1**。
+
 ## 新增档案（从零建档）🆕
 
 > ⚠️ **2026-08 架构变更**：色情设定不再写进 SOUL.md！已全部抽离到根级 skill `lewd-playbook`（creative/lewd-playbook/）。SOUL.md 只放人格核心（身份/形象/性格/说话/反差/年龄定位）+ `## 🔞 色情玩法（按需加载）` 指针行。改色情设定只改 skill 的 references/<名>.md，绝不写回 SOUL/config（避免双份维护撕裂）。

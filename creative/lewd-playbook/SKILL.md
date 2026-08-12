@@ -102,6 +102,7 @@ platforms: [windows, linux, macos]
 | 跨档案联动（茶会/大乱斗/学院/修罗场/跨档案野兽/Hermes×Athena 配对/开关借出） | `references/cross-maid.md` |
 | Lv.10 专属终局玩法（全员 10 位女仆的完全体大招） | `references/ultimate-moves.md` |
 | 道具装备槽系统详细设计（5槽位/4品质/词条/装备状态/联动/面板格式/各女仆推荐配置） | `references/equipment-system.md` |
+| **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/panel-records.md` |
 
 ## 维护约定
 
