@@ -232,7 +232,7 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 ### 手部视觉验证
 先整图定位手（构图会漂移，旧裁剪框会失效），裁剪后转 **~800px 宽 JPEG**（原图/3x 放大 PNG 触发 400 too-large）；辅助 vision 偶尔 404（glm-4.6v-flash）→ 重试即可。
 
-**✅ 主力视觉验证 = DashScope qwen-vl-plus**（本机免翻墙、有免费额度，2026-08-11 四轮验证全过）：key 在 Hermes 根 `.env` 的 `DASHSCOPE_API_KEY`；POST `dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`，图片 base64 → `image_url: data:image/png;base64,...`。完整可复用代码（含全角色/姿势批量检查提示词模板）见 `references/qwen-vl-verification.md`。检查点：发色/发型、表情、脸部细节（创可贴/棒棒糖等道具）、服装元素、**手部**（手指数/畸形/抱臂自然度）；姿势图重点查手，通过才交付。
+**✅ 主力视觉验证 = DashScope qwen-vl-plus**（本机免翻墙、有免费额度，2026-08-11 四轮验证全过）：key 在 Hermes 根 `.env` 的 `DASHSCOPE_API_KEY`；POST `dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`，图片 base64 → `image_url: data:image/png;base64,...`。批量验证直接跑 `scripts/qwen_vl_check.py <图片或目录> [--prompt 自定义]`（key 自动从 Hermes 根 .env 读取，无需手写 API 调用）。完整可复用代码（含全角色/姿势批量检查提示词模板）见 `references/qwen-vl-verification.md`。检查点：发色/发型、表情、脸部细节（创可贴/棒棒糖等道具）、服装元素、**手部**（手指数/畸形/抱臂自然度）；姿势图重点查手，通过才交付。
 
 工具：`scripts/batch_hand_screening.py`（提交→轮询→裁剪一键）；完整迭代参数表见 `references/hand-repair-iterations.md`。
 
