@@ -76,3 +76,4 @@ platforms: [windows, linux, macos]
 - ⚠️ **patch 匹配多女仆时**：女仆详细面板结构高度相似（如「- 🍆 男根槽：—（空）」出现 8 次），patch 必须带女仆名/开发度等上下文锚点，或对全相同段落用 replace_all
 - ⚠️ **记忆工具批量操作**：记忆接近满（2200）时 add 会被拒，需在同一 batch 里 replace 精简旧条目腾空间；报错会给出 would-be 字符数，据此精确裁剪
 - ⚠️ **lewd-playbook 本体被 curator 保护**（created_by=None）：后台 curator 无法 patch 它或其 references；面板文件内容需在会话中用 write_file/patch 直接维护，本 skill 只承载运维模式
+- ⚠️ **同步验证用正斜杠路径（git-bash 实测坑）**：跑完 `sync_to_profiles.py` 后 grep 抽查子档案时，**必须用 `/c/Users/80704/AppData/Local/hermes/profiles/<name>/skills/creative/lewd-playbook/...` 正斜杠路径**——Windows 反斜杠路径在 bash 里会被当作转义符，导致 `[ -d ]`/`grep` 误判目录不存在或内容 STALE（实际已同步）。2026-08-13 实测：反斜杠路径 7 个子档案全报 STALE，换正斜杠后全部 OK。误判时先换路径重试，别急着重跑同步（脚本会 rmtree 后 copytree，无副作用但白费时间）
