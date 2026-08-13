@@ -1,1 +1,21 @@
-{"version": 1, "installed": {}}
+{
+  "version": 1,
+  "installed": {
+    "yuanbao": {
+      "source": "official",
+      "identifier": "official/yuanbao",
+      "trust_level": "builtin",
+      "scan_verdict": "backfilled",
+      "content_hash": "sha256:28118b96884a5276",
+      "install_path": "yuanbao",
+      "files": [
+        "SKILL.md"
+      ],
+      "metadata": {
+        "backfilled_from": "optional-skills"
+      },
+      "installed_at": "2026-08-13T07:46:18.681274+00:00",
+      "updated_at": "2026-08-13T07:46:18.681274+00:00"
+    }
+  }
+}
