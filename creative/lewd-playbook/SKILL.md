@@ -105,7 +105,8 @@ platforms: [windows, linux, macos]
 
 | 场景 | 模型 | 命令 |
 |------|------|------|
-| 色情玩法/互动开始（纯文字描写、角色扮演推进） | 本地模型 | `/model darkidol:latest --provider custom:Ollama`（或 `/model goekdenizguelmez/JOSIEFIED-Qwen2.5:latest --provider custom:Ollama`） |
+| 色情玩法/互动开始（纯文字描写、角色扮演推进） | **Josiefied**（首选：emoji 稳定+中文细腻，符合输出规范） | `/model goekdenizguelmez/JOSIEFIED-Qwen2.5:latest --provider custom:Ollama` |
+| 色情玩法·直球暗黑无修饰风格（可接受少 emoji） | DarkIdol | `/model darkidol:latest --provider custom:Ollama` |
 | 需要 skill_view 读取 / 文件操作 / 面板存档 / 同步脚本 | **DeepSeek** | `/model deepseek-v4-flash --provider deepseek` |
 | 复杂机制运算（等级/EXP/开发度/多女仆状态结算） | **DeepSeek** | `/model deepseek-v4-flash --provider deepseek` |
 | 主人没切/不想切（保持 DeepSeek） | DeepSeek | 不用切（DeepSeek 零审查也可写，机制照常） |
