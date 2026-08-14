@@ -1,0 +1,27 @@
+{
+  "spec": "chara_card_v2",
+  "spec_version": "2.0",
+  "data": {
+    "name": "角色名（可用特殊字符，如 Hermes×Iris）",
+    "description": "角色设定正文。{{char}} 占位符会被 ST 自动替换为角色名。多段用 \\n\\n 分隔：\n- 身份/性格\n- 说话风格\n- 与主人的关系\n- 特殊机制（如双人格切换、技能）",
+    "personality": "性格标签，逗号分隔",
+    "scenario": "场景设定：默认发生在哪里、什么氛围",
+    "first_mes": "（动作描写）\\n\\n「第一句台词」\\n\\n（等待用户选择的开放式结尾）",
+    "mes_example": "<START>\n{{user}}：用户示例输入\n{{char}}：（角色反应动作）\n「角色台词」\n\n<START>\n{{user}}：另一段示例\n{{char}}：对应反应",
+    "creator_notes": "备注：设定来源、推荐模型、注意事项",
+    "system_prompt": "注入式系统提示词：行为规则、禁忌、语言要求",
+    "post_history_instructions": "",
+    "alternate_greetings": [
+      "（备选开场白 1：不同的初见场景）"
+    ],
+    "tags": [
+      "标签1",
+      "标签2"
+    ],
+    "creator": "",
+    "character_version": "1.0",
+    "extensions": {
+      "talkativeness": "0.7"
+    }
+  }
+}

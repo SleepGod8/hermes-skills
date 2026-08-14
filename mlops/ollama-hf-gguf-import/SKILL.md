@@ -85,6 +85,14 @@ TEMPLATE """{{ if .System }}<|im_start|>system
 - **DarkIdol-Llama-3.1-8B Q4_K_M**：hf.co 直拉后只输出 `safe`，Capabilities 仅 completion → 用 Llama 3.1 模板重建 `darkidol` 短名后恢复正常
 - **Josiefied-Qwen2.5-7B（Ollama 官方库）**：无此问题，官方库模型自带正确模板
 
+## 另一个坑：Llama 3.1 系 API 中文乱码（字节级 BPE 解码 bug）
+
+- 现象：`darkidol` 通过 Ollama **API 端点**（/api/chat、/api/generate、/v1/chat/completions）输入中文 prompt，输出为乱码（含大量 U+FFFD 替换符）；**英文 prompt 正常**；`ollama run darkidol` CLI 中文**正常**。
+- 根因：Llama 3.1 的 byte-level BPE tokenizer 对中文处理，在 Ollama API 层解码出错；CLI 与 API 走不同解码路径。
+- 影响：SillyTavern 等走 API 的前端用 DarkIdol 写中文会乱码 → **中文 RP 用 Josiefied（Qwen tokenizer 正常），DarkIdol 只适合 CLI 或英文场景**。
+- 判断方法：`curl http://127.0.0.1:11434/api/generate -d '{"model":"xxx","prompt":"你是谁？","stream":false}'` 看输出是否正常。
+- 排查注意：Windows git-bash 管道到 python 有编码干扰，写文件再读（用 Windows 绝对路径，勿用 /tmp）。
+
 ## 其他经验
 
 - **国内下载速度**：不要盲目开代理。实测 HF 官方 CDN 直连可达 6.8 MB/s（Cloudflare 边缘节点），代理绕路反而慢（6.1 MB/s）。Ollama 多线程下载更快（实测 29 MB/s）。
