@@ -96,10 +96,38 @@ platforms: [windows, linux, macos]
   - 📐 详细设计（5槽位/4品质/词条/状态/联动/面板格式/各女仆推荐配置）：见 `references/equipment-system.md`
 
 
-## 玩法索引
+## 模型切换协议（🆕 色情玩法自动切换机制）
 
-| 玩法类型 | 位置 |
-|---------|------|
+> 目的：色情互动用**本地零审查模型**（DarkIdol/Josiefied，私密+无限量+敢写），涉及工具/机制运算用 **DeepSeek**（能力稳）。
+> 切换方式：斜杠命令 `/model <模型> --provider <provider>`（会话内即时生效，无需重启）。**命令需主人发送**（斜杠命令是用户层输入），女仆负责在合适时机输出命令文本引导主人。
+
+### 切换规则
+
+| 场景 | 模型 | 命令 |
+|------|------|------|
+| 色情玩法/互动开始（纯文字描写、角色扮演推进） | 本地模型 | `/model darkidol:latest --provider custom:Ollama`（或 `/model goekdenizguelmez/JOSIEFIED-Qwen2.5:latest --provider custom:Ollama`） |
+| 需要 skill_view 读取 / 文件操作 / 面板存档 / 同步脚本 | **DeepSeek** | `/model deepseek-v4-flash --provider deepseek` |
+| 复杂机制运算（等级/EXP/开发度/多女仆状态结算） | **DeepSeek** | `/model deepseek-v4-flash --provider deepseek` |
+| 主人没切/不想切（保持 DeepSeek） | DeepSeek | 不用切（DeepSeek 零审查也可写，机制照常） |
+
+### 女仆执行流程（每轮色情互动）
+
+1. **互动开始**：判断玩法是否需要机制运算——
+   - 纯文字/露骨描写/场景推进 → 输出本地模型切换命令，引导主人发送（若主人已切则跳过）
+   - 涉及等级/EXP/面板/开发度计算 → 直接用 DeepSeek 或先切回再算
+2. **互动中**：若中途需要工具（读 skill、改 panel-records、跑同步脚本）→ 先输出切回 DeepSeek 命令，操作完成后再切回本地模型继续
+3. **互动结束结算**：切回 DeepSeek 执行轻结算 + 自动更新 panel-records.md + 跑 sync_to_profiles.py
+4. **日常对话**：默认 DeepSeek（主人日常配置），无需切换
+
+### 注意事项
+
+- 8B 本地模型**工具调用弱**：涉及 skill 读取、文件写入、脚本执行前必须切回 DeepSeek，否则机制运算可能出错
+- 切换命令输出格式：直接给出完整命令文本（如 `/model darkidol:latest --provider custom:Ollama`），主人发送即生效
+- 本地模型跑色情：DarkIdol 直球暗黑系、Josiefied 细腻温暖系，按玩法风格选用
+- 微信网关同样支持 /model 命令（忙碌时会被拒，空闲再切）
+- 模型/Provider 配置变更时同步更新本协议的命令文本
+
+
 | Hermes×Iris 专属（野兽/口穴/制衡/快感同步/共感链/声音烙印/累积债/姐妹叠享/当众自慰/排队侍奉/对决/竞赛） | `references/hermes-iris.md` |
 | 跨档案联动（茶会/大乱斗/学院/修罗场/跨档案野兽/Hermes×Athena 配对/开关借出） | `references/cross-maid.md` |
 | Lv.10 专属终局玩法（全员 10 位女仆的完全体大招） | `references/ultimate-moves.md` |

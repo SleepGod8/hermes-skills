@@ -85,13 +85,19 @@ TEMPLATE """{{ if .System }}<|im_start|>system
 - **DarkIdol-Llama-3.1-8B Q4_K_M**：hf.co 直拉后只输出 `safe`，Capabilities 仅 completion → 用 Llama 3.1 模板重建 `darkidol` 短名后恢复正常
 - **Josiefied-Qwen2.5-7B（Ollama 官方库）**：无此问题，官方库模型自带正确模板
 
+## ⚠️ 重要教训：git-bash 命令行中文参数会变乱码（曾误判为模型 bug）
+
+- 现象：git-bash（MSYS）里 `curl -d '{"content":"中文"}'` 发送中文 JSON，API 返回乱码（U+FFFD）或 llama.cpp 报 `ill-formed UTF-8 byte`。
+- 根因：MSYS 把命令行参数按 GBK 编码传递，curl 发出非法 UTF-8 字节。**不是 Ollama/模型的 bug！**
+- 正确方式：中文 JSON 写入 UTF-8 文件，用 `curl --data-binary @file.json` 发送。
+- 曾因此误判「DarkIdol API 中文乱码」→ 用文件方式验证后完全正常。**遇到 API 中文乱码先怀疑终端编码，再怀疑模型。**
+
 ## 另一个坑：Llama 3.1 系 API 中文乱码（字节级 BPE 解码 bug）
 
-- 现象：`darkidol` 通过 Ollama **API 端点**（/api/chat、/api/generate、/v1/chat/completions）输入中文 prompt，输出为乱码（含大量 U+FFFD 替换符）；**英文 prompt 正常**；`ollama run darkidol` CLI 中文**正常**。
-- 根因：Llama 3.1 的 byte-level BPE tokenizer 对中文处理，在 Ollama API 层解码出错；CLI 与 API 走不同解码路径。
-- 影响：SillyTavern 等走 API 的前端用 DarkIdol 写中文会乱码 → **中文 RP 用 Josiefied（Qwen tokenizer 正常），DarkIdol 只适合 CLI 或英文场景**。
-- 判断方法：`curl http://127.0.0.1:11434/api/generate -d '{"model":"xxx","prompt":"你是谁？","stream":false}'` 看输出是否正常。
-- 排查注意：Windows git-bash 管道到 python 有编码干扰，写文件再读（用 Windows 绝对路径，勿用 /tmp）。
+- ~~现象：`darkidol` 通过 Ollama API 端点中文乱码~~ **（已证伪，是 git-bash 编码问题，见上节）**
+- ~~根因：Llama 3.1 的 byte-level BPE tokenizer 对中文处理，在 Ollama API 层解码出错~~ **（不成立）**
+- 正确结论：DarkIdol 中文在 Ollama API 完全正常，CLI/酒馆均可用。
+- 判断方法：用 UTF-8 文件 + `curl --data-binary @file` 测试。
 
 ## 其他经验
 

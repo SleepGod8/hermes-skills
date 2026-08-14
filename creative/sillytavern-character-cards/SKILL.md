@@ -37,7 +37,8 @@ description: Use when 部署/配置 SillyTavern 或制作角色卡（JSON→PNG 
 4. Ollama URL：`http://127.0.0.1:11434`
 5. 点「**连接**」→ 模型下拉自动加载（darkidol/josiefied/bge-m3 等），默认选第一个
 
-⚠️ 连接配置存浏览器 localStorage——服务重启后自动化浏览器会话会丢，需重配；用户自己的浏览器一般保留。
+✅ 连接配置**固化在服务端** `data/default-user/settings.json`（`main_api`、`textgenerationwebui_settings.type`、`server_urls.ollama`、`textgenerationwebui_settings.ollama_model`），所有浏览器打开自动加载，服务重启不丢。「连接」动作本身是前端会话级状态——每次打开页面点一次「连接」即可，配置不用重配。
+✅ 改默认模型：直接编辑 `data/default-user/settings.json` 的 `textgenerationwebui_settings.ollama_model`（例：`darkidol:latest` ↔ `goekdenizguelmez/JOSIEFIED-Qwen2.5:latest`），改完刷新页面生效。
 ⚠️ ST 后端 API 有 CSRF/会话保护：curl 直调 `/api/characters/*` 返回 403，验证角色列表必须在浏览器里做。
 
 ## 角色卡制作（核心坑）
@@ -65,6 +66,23 @@ Chara Card V2 规范：PNG tEXt chunk，keyword=`chara`，value = **JSON 的 bas
 - JSON 字符串内避免英文双引号（用「」中文引号），否则 write_file 的 JSON 校验直接报错
 - `mes_example` 用 `<START>` 分隔多个示例对话
 - 双人格/多形态角色把切换机制写进 description + system_prompt + first_mes（参考 Hermes×Iris 卡：打响指「啪」切换）
+
+## 头像替换与缩略图缓存
+
+```bash
+# 用新立绘重新打包角色卡（第三参数 = 头像图片路径）
+python make_char_card.py data/default-user/characters/MyChar.json data/default-user/characters/MyChar.png <新图片路径>
+# 关键：清缩略图缓存，否则角色列表仍显示旧占位图
+rm -f data/default-user/thumbnails/avatar/MyChar.png
+```
+
+验证缩略图确实是新立绘（不是纯色占位）：
+```bash
+curl -s "http://127.0.0.1:8001/thumbnail?type=avatar&file=MyChar.png" -o /tmp/t.png
+python -c "from PIL import Image; img=Image.open(r'C:\...\t.png').convert('RGB'); c=img.getcolors(maxcolors=100000); print('颜色数:', len(c) if c else '>100000')"
+# 占位纯色图只有 1-2 色；真实立绘数百上千色
+```
+- 换头像不丢角色数据（chara 块与图片一起重打包）
 
 ## Pitfalls
 
