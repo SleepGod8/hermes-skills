@@ -234,6 +234,13 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 
 **✅ 主力视觉验证 = DashScope qwen-vl-plus**（本机免翻墙、有免费额度，2026-08-11 四轮验证全过）：key 在 Hermes 根 `.env` 的 `DASHSCOPE_API_KEY`；POST `dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`，图片 base64 → `image_url: data:image/png;base64,...`。批量验证直接跑 `scripts/qwen_vl_check.py <图片或目录> [--prompt 自定义]`（key 自动从 Hermes 根 .env 读取，无需手写 API 调用）。完整可复用代码（含全角色/姿势批量检查提示词模板）见 `references/qwen-vl-verification.md`。检查点：发色/发型、表情、脸部细节（创可贴/棒棒糖等道具）、服装元素、**手部**（手指数/畸形/抱臂自然度）；姿势图重点查手，通过才交付。
 
+**⚠️ qwen-vl 有盲区（2026-08-13 实测，代价极大）**：默认**不检查头部数量**——曾把「2 个头 2 张脸」的图（animagine 强推衣冠不整时崩出来的）误报「通过」当定稿，主人肉眼一眼看出，返工浪费大量时间。教训：
+- 验证 prompt 第一项必须显式问「**头部/脸有几个？是否双头/畸形？**」
+- 手部细节整图判断不可靠（会漏 6 指），把手部区域 crop 成小块放大再问
+- **最终以主人肉眼为准**：主人说「手部还有问题」就别拿 qwen-vl 的「通过」反驳，直接跑 hand_fix 多版本（不同 denoise/seed）供挑选
+- **PIL 坏图检测兜底**：渲染报 success 也可能出纯色/雾气/抽象图（强推模型不支持的 prompt 时高频出现），`convert('L').resize((64,96))` 算灰度 std，std<20 直接判定坏图重跑，别浪费 qwen-vl 调用
+- **img2img 精修前先确认底图健康**：基于坏图（双头/抽象/模糊）做 img2img 会越修越花、颜色越糊——坏底图直接重跑 txt2img，别在坏图基础上精修
+
 工具：`scripts/batch_hand_screening.py`（提交→轮询→裁剪一键）；完整迭代参数表见 `references/hand-repair-iterations.md`。
 
 ## 输出路径坑
@@ -301,3 +308,5 @@ Detailer 二次精修提示词：positive `good hands, perfect hands, detailed h
 - [ ] `.venv` torch CUDA 可用
 - [ ] `UltralyticsDetectorProvider` object_info 非空（Subpack 已加载）
 - [ ] 输出图在 ComfyUI-Shared/output/，交付前用真实路径
+- [ ] **qwen-vl 验证必须问「头部/脸有几个？是否双头/畸形？」**（防双头漏检，见 qwen-vl 盲区）
+- [ ] **PIL 灰度 std 检查 >25**（防渲染报成功却出纯色/雾气/抽象坏图；`Image.open(f).convert('L').resize((64,96))` 统计，std<20 即坏图，曾遇 std 2.7/7.7 的坏图被误当成功）
