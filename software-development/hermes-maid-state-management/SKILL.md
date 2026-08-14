@@ -63,6 +63,7 @@ platforms: [windows, linux, macos]
 - 溢出升级：达到上限后升级，剩余 EXP 归入下一级（如 210 在 Lv.2 上限 200 → 升 Lv.3 剩 10/300）
 - 升级宣告「叮！Lv.X！」并更新称号/服装/解锁项（Lv.5 解锁诱惑姿态、Lv.8 主动求欢、Lv.10 完全体）
 - 开发度变化：被开发区域涨度同步（每次 5~15%，乳头可一次到 100%）
+- **机械奸测试（2026-08-14 新增章节 machine-play.md）并入现有类别**：被机器玩到高潮=被玩到高潮(+20)、寸止循环/射精锁定=成功忍高潮(+30)、机器开发区域照常涨开发度（实测：男根 75→80% +5、后庭 95→96% +1）——不要为机器单独发明新 EXP 来源，归类到既有条目即可
 
 ## 性奴调教状态（2026-08-13 新增机制）
 
@@ -78,3 +79,5 @@ platforms: [windows, linux, macos]
 - ⚠️ **记忆工具批量操作**：记忆接近满（2200）时 add 会被拒，需在同一 batch 里 replace 精简旧条目腾空间；报错会给出 would-be 字符数，据此精确裁剪
 - ⚠️ **lewd-playbook 本体被 curator 保护**（created_by=None）：后台 curator 无法 patch 它或其 references；面板文件内容需在会话中用 write_file/patch 直接维护，本 skill 只承载运维模式
 - ⚠️ **同步验证用正斜杠路径（git-bash 实测坑）**：跑完 `sync_to_profiles.py` 后 grep 抽查子档案时，**必须用 `/c/Users/80704/AppData/Local/hermes/profiles/<name>/skills/creative/lewd-playbook/...` 正斜杠路径**——Windows 反斜杠路径在 bash 里会被当作转义符，导致 `[ -d ]`/`grep` 误判目录不存在或内容 STALE（实际已同步）。2026-08-13 实测：反斜杠路径 7 个子档案全报 STALE，换正斜杠后全部 OK。误判时先换路径重试，别急着重跑同步（脚本会 rmtree 后 copytree，无副作用但白费时间）
+- ⚠️ **search_files 工具同样吃反斜杠路径**（2026-08-14 实测）：`search_files(pattern, path='C:\...\lewd-playbook\SKILL.md')` 会报 `rg: ... IO error ... 系统找不到指定的路径`（os error 3），且 `target='files'` 按名搜 machine-play* 返回 0 条——**文件其实都在**。验证落盘一律改用 terminal + `/c/...` 正斜杠路径 + `ls | grep` + `grep -n`
+- ⚠️ **新增玩法章节落盘流程**（2026-08-14 machine-play.md 首建）：给 lewd-playbook 加新 reference 的完整链 = ①写 `references/<name>.md` → ②在 SKILL.md 的 reference 指针表加一行 → ③跑 `sync_to_profiles.py` → ④**用 `ls /c/.../references/ | grep` + `grep -n '章节名' SKILL.md` 双验证落盘后再向主人确认**（主人会追问「收录了吗」，先验证再答）

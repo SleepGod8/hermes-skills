@@ -130,6 +130,8 @@ platforms: [windows, linux, macos]
 
 
 | Hermes×Iris 专属（野兽/口穴/制衡/快感同步/共感链/声音烙印/累积债/姐妹叠享/当众自慰/排队侍奉/对决/竞赛） | `references/hermes-iris.md` |
+| 机械奸玩法（器械/改造/共感链机械/控制系组合/跨档案机械性奴） | `references/machine-play.md` |
+| 催眠玩法（深度分级/指令系统/记忆操作/控制系组合/集体催眠/梦境催眠） | `references/hypnosis-play.md` |
 | 跨档案联动（茶会/大乱斗/学院/修罗场/跨档案野兽/Hermes×Athena 配对/开关借出） | `references/cross-maid.md` |
 | Lv.10 专属终局玩法（全员 10 位女仆的完全体大招） | `references/ultimate-moves.md` |
 | 道具装备槽系统详细设计（5槽位/4品质/词条/装备状态/联动/面板格式/各女仆推荐配置） | `references/equipment-system.md` |
