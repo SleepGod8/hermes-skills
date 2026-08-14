@@ -46,6 +46,7 @@ metadata:
 5. **路径写法**：git-bash 用 `/e/项目/...`，PowerShell 用 `E:\项目\...`（中文路径务必加引号 `cd "E:\项目\xxx"`）。把 `/e/` 写进 PowerShell 会报"找不到路径"。
 6. **clone 到非空目录失败**：`git clone <url> <dir>` 要求目标为空或不存在。处理：先 `mv` 现有文件到临时位置 → clone → 把文件移回（或提交进仓库）。
 7. **taskkill 在 git-bash 的坑**：`taskkill //F //PID x` 的 `//` 转义常失效（报"无效参数"）。用 Python `psutil.Process(pid).kill()` 代替。
+8. **search_files 对 Windows 路径偶发 IO error**：`search_files(pattern, path="C:/.../某目录")` 可能报 `rg: /c/...: 系统找不到指定的路径`（该路径**实际存在**，terminal `ls` 完全正常）——MSYS 路径转换与 rg 的兼容问题。不要对同一路径反复重试，直接改用 terminal 跑 `grep -rn "<pattern>" --include="*.md" <dir>`（按文件类型加 `--include`，如 `--include="*.py"`），同样可靠且更快。
 
 ## 排查流程（目录删不掉）
 1. 先 `ls -a` 看目录内容（是空壳还是有嵌套仓库/文件）
