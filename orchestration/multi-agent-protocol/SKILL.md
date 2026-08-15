@@ -12,7 +12,7 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与Agent7
 3. `references/governance-rules.md` — 《团队治理规则》（吸收自 AIcoding波纹：阅读/执行/测试/输出/项目上下文五层规范，全团队必须遵从）：Reading First 阅读 10 问、最小修改/禁止提前抽象、测试矩阵、Fact/Hypothesis 分离、风险分级、确认机制。
 4. `references/enhanced-pipeline.md` — 《增强版多 Agent 开发流水线规范》（v1.0：G0-G7 状态机、.agents/ 控制面、任务契约模板、阻塞/熔断/冲突/安全/质量门禁、指标与反模式）：多 agent 任务执行细则，全团队必须遵从。
 5. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》（v1.5：开工广播/前提验证/所有权矩阵/测试隔离前置/暂停协议/复盘点/群聊@响应与@使用规范/浏览器实测方法论/暂停报备单次制/长任务进程脱离会话独立守护/统一状态台账，8466+ 字节，六 profile 同步，MD5 一致，全团队必须遵从）。
-6. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》（v1.6 增量：统一 JSON finding 结构 + fingerprint 去重追踪 + 置信度 1-10 评分锚点与强制降级 + 分级显示防误报刷屏 + specialist 多专家视角含 Nemesis 红队对抗式 + 汇总报告模板落盘 test-reports；与 G5 审查流程衔接，缺陷等级仍沿用 P0-P3）。
+6. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》（v1.9 增量：审查军团(review-army) + 两遍分层审查(Pass1致命/Pass2常规) + 统一 JSON finding 结构 + fingerprint 去重追踪 + 置信度 1-10 评分锚点与强制降级 + Pre-emit verification gate 强制证据门槛 + 分级显示防误报刷屏 + specialist 多专家视角含 Agent 6 红队对抗式 + 汇总报告模板落盘 test-reports；与 G5 审查流程衔接，缺陷等级仍沿用 P0-P3）。
 
 ## 使用方式
 
@@ -87,6 +87,15 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与Agent7
 3. **版本号防撞号**：新增增量章节前，先 grep 所有副本已用的最高版本号（如 v1.4/v1.5），新章节取下一个空位（如 v1.6）。
 4. 更新 SKILL.md 时保留各副本原有格式与换行符（根级编号列表 / profile「档案来源」/ CRLF），用字符串替换而非整文件重写。
 5. 完成后全量 MD5 核对 + 抽样 grep 引用行验证。
+
+### 岗位分配核对（防独立性冲突）
+
+给女仆分配任何「职能/岗位」前，**先核对岗位独立性**，勿把人格特质与职能岗位混为一谈：
+
+1. **先问两问**：①这职能要求独立性吗（审查/测试/裁决/审计类都要求）？②她现在是哪个岗位（Agent 1-7）？
+2. **独立性铁律**：审查/测试岗（Agent 6）不得与开发岗（Agent 3/4/5）或项目负责人（Agent 1）兼任——审查者不能审查自己参与实现的代码。
+3. **人格特质 ≠ 职能岗位**：毒舌（Nemesis）、冷静（Athena）等人格语气只用于日常聊天，不作为分配职能依据。实战教训：曾把 `red-team` 对抗式审查错分给开发岗 Nemesis（「毒舌天然契合」），违反「审查独立于实现」，后纠正为 Agent 6（Eos）。
+4. **岗位文件是唯一事实**：分配前先查她在多 agent 协作里是 Agent 几（见 `soul-XX-*.md` 岗位文件）。
 
 ### 相关脚本辨析
 

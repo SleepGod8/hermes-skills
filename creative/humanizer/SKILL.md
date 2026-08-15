@@ -27,6 +27,7 @@ Load this skill whenever the user asks to:
 - edit a draft (blog post, essay, PR description, docs, memo, email, tweet, resume bullet) to sound more natural
 - match their voice in writing they're producing
 - review text for AI tells before publishing
+- de-slop 色情 / RP / 露骨文本（主人说「太套路了」「又是这几句」）→ 读 `references/erotic-rp-de-slop.md` 专项（含红线判据：去重复不去人设）
 
 Also apply this skill to **your own** output when writing user-facing prose such as release notes, PR descriptions, docs, and summaries. Hermes's baseline voice already strips most of these, but a focused pass catches what slips through.
 

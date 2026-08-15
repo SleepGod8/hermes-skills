@@ -44,6 +44,19 @@ custom_providers:
 - 切换前 `cp config.yaml config.yaml.bak` 备份，随时还原
 - 验证连接：`curl http://127.0.0.1:11434/v1/models`（OpenAI 兼容端点）；中文请求用 UTF-8 文件 + `--data-binary @file`（git-bash 命令行中文会变乱码，见 ollama-hf-gguf-import）
 
+## 模型怪癖卡（model-overlays）
+
+每个模型一张行为怪癖卡，`/model` 切换前读对应卡、按矫正话术调整预期（灵感来自 garrytan/gstack 的 model-overlays）。卡在 `references/` 下：
+
+| 模型 | 卡片 | 关键怪癖 |
+|------|------|---------|
+| DeepSeek（云端日常） | `references/deepseek.md` | 能力边界已记，怪癖待沉淀 |
+| 本地 Ollama（RP） | `references/local-ollama.md` | 8B 工具调用弱 / GGUF 模板坑 / 中文乱码 |
+| qwen-vl（看图） | `references/qwen-vl.md` | 看图误报多，不当最终验收 |
+| GLM-4.6v-flash（零审查） | `references/glm-flash.md` | 能力边界已记，怪癖待沉淀 |
+
+- **持续沉淀**：每次切模型遇到新坑，补进对应卡片的「已知怪癖」表；只记真实观察到的，不编造。
+
 ## 相关
 
 - provider 细节（auxiliary vision 等）：hermes-custom-providers（user-owned）
