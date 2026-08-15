@@ -11,7 +11,8 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与Agent7
 2. `references/soul-07-reserve.md` — 《Agent 7：候补》岗位文件：不预设固定职能，仅在 Agent 1（项目负责人）判断开发环节压力过大、人手不足、存在等待瓶颈或需要临时补位时，按其明确分派进入团队流程；启用条件、严格边界、工作流程、交付报告、阻塞处理、停止条件。
 3. `references/governance-rules.md` — 《团队治理规则》（吸收自 AIcoding波纹：阅读/执行/测试/输出/项目上下文五层规范，全团队必须遵从）：Reading First 阅读 10 问、最小修改/禁止提前抽象、测试矩阵、Fact/Hypothesis 分离、风险分级、确认机制。
 4. `references/enhanced-pipeline.md` — 《增强版多 Agent 开发流水线规范》（v1.0：G0-G7 状态机、.agents/ 控制面、任务契约模板、阻塞/熔断/冲突/安全/质量门禁、指标与反模式）：多 agent 任务执行细则，全团队必须遵从。
-5. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》（v1.4：开工广播/前提验证/所有权矩阵/测试隔离前置/暂停协议/复盘点/群聊@响应/浏览器实测方法论/暂停报备单次制/长任务进程脱离会话独立守护/统一状态台账，8466 字节，六 profile 同步，MD5 一致，全团队必须遵从）。
+5. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》（v1.5：开工广播/前提验证/所有权矩阵/测试隔离前置/暂停协议/复盘点/群聊@响应与@使用规范/浏览器实测方法论/暂停报备单次制/长任务进程脱离会话独立守护/统一状态台账，8466+ 字节，六 profile 同步，MD5 一致，全团队必须遵从）。
+6. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》（v1.6 增量：统一 JSON finding 结构 + fingerprint 去重追踪 + 置信度 1-10 评分锚点与强制降级 + 分级显示防误报刷屏 + specialist 多专家视角含 Nemesis 红队对抗式 + 汇总报告模板落盘 test-reports；与 G5 审查流程衔接，缺陷等级仍沿用 P0-P3）。
 
 ## 使用方式
 
@@ -69,3 +70,26 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与Agent7
 - 岗位文件与本协议冲突时，以 Agent 1 确认的最新协议版本为准
 - 输出统一为：结果、主要修改、验证、注意事项；不输出私有思维链/隐藏推理过程
 - 不因一次普通代码测试失败就切换模型；不在认证/协议错误时无限重试
+
+## 跨 profile 同步维护
+
+本 skill 在根级 `skills/orchestration/multi-agent-protocol/` 与 9 个女仆 profile（`profiles/<name>/skills/orchestration/multi-agent-protocol/`）各有一份副本，且**非简单复制**：
+
+- references 分两类：
+  - **通用文件**（全团队一致，需全量同步）：`multi-agent-protocol.md` / `governance-rules.md` / `enhanced-pipeline.md` / `workflow-retro-*.md` / `review-findings-calibration.md`
+  - **岗位文件**（按女仆分配的 Agent 岗位定制，不跨 profile 同步）：根级用 `soul-07-reserve.md`（Agent 7 候补），各 profile 用 `soul-00-standby.md` / `soul-01-project-lead.md` / `soul-02-recon-architect.md` / `soul-03~05-feature-developer-*.md` / `soul-06-test-review.md`
+- SKILL.md 也分两种格式：根级用「编号列表」，profile 用「档案来源」列表；profile 文件为 CRLF 换行、根级为 LF。
+
+### 同步通用补丁标准流程（v1.6 实战总结）
+
+1. **先 MD5 对比找标准源**，不要假设「根级最新」或「profile 最新」——实测出现过版本漂移（workflow-retro 曾 6 处 v1.5、4 处 v1.4 并存；aphrodite/ares/dionysus 曾停在旧版）。
+2. 以最新 MD5 的那份为标准源，反向同步到所有旧版副本（文件复制 + 各自 SKILL.md 引用描述同步更新）。
+3. **版本号防撞号**：新增增量章节前，先 grep 所有副本已用的最高版本号（如 v1.4/v1.5），新章节取下一个空位（如 v1.6）。
+4. 更新 SKILL.md 时保留各副本原有格式与换行符（根级编号列表 / profile「档案来源」/ CRLF），用字符串替换而非整文件重写。
+5. 完成后全量 MD5 核对 + 抽样 grep 引用行验证。
+
+### 相关脚本辨析
+
+- `scripts/sync-skills.py`：从 GitHub 拉仓库，**不是**跨 profile 同步。
+- `lewd-playbook/scripts/sync_to_profiles.py`：lewd-playbook 专用，不通用。
+- 跨 profile 同步当前靠一次性 python 脚本（复制 + 字符串替换 + MD5 校验），无通用脚本。
