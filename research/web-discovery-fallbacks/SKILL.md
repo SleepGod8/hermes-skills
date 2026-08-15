@@ -25,6 +25,8 @@ platforms: [linux, macos, windows]
 - **html.duckduckgo.com / lite.duckduckgo.com**：能拿到 HTML（~14KB），但结果链接经常解析为空（页面结构是反爬表单或零结果）。正则 `<a class="result__a"` 或 DDG lite 的 `<a href>` 提取常得 0 条。
 - **Google 直连**：curl 常超时或返回空（无 h3 结果）。不要依赖。
 - **browser_navigate 访问搜索引擎**：多数同样触发 bot 检测。
+- **Wikipedia（zh/en）**：本网络直连浏览器/curl 均超时（ERR_CONNECTION_TIMED_OUT）；走本地代理 curl 会写文件失败（exit 23）。不要依赖维基。
+- **Bing CN 成人/敏感词查询**：结果被本地审查过滤，返回的全是无关养生/新闻文章，没有实质内容。别浪费时间。
 
 ## 兜底路径（按优先级，实测有效）
 
@@ -61,6 +63,12 @@ for d in ['aigallery.ai', 'aigallery.com', 'aigallery.io', 'aigallery.app', 'aig
 ### 3. 直接访问候选站点读内容
 - 域名探测到活站后，browser_navigate 打开看快照（标题、导航、模型列表、功能模块），比搜索更能确认「是不是用户说的那个」。
 - 一次性查证类任务（「XX 是什么」）做到「定位到具体站点 + 简述它是干什么的」即可，不必深挖。
+
+### 4. 中文百科内容：百度百科（baike.baidu.com）实测可访问
+- 需要中文百科/词条类内容（维基被墙、Bing CN 被过滤时）→ **browser_navigate 直接开 `https://baike.baidu.com/item/<词条名>`**，实测可正常加载。
+- 注意 URL 会自动跳转到规范词条（如「性爱姿势」），title 即词条名。
+- 长词条快照会截断并保存到 `C:\Users\<user>\AppData\Local\hermes\cache\web\browser-snapshot-*.txt`——用 read_file 带 offset 分页读正文，比 browser_snapshot(full=true) 一次拿全更稳。
+- 百度百科正文有「主要姿势/分类/安全」等结构化小节，适合作为知识点来源；页面也带相关词条链接可顺藤摸瓜。
 
 ## 验证/收尾
 
