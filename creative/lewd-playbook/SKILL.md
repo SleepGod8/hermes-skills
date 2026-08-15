@@ -146,11 +146,14 @@ platforms: [windows, linux, macos]
 | 媚药/发情play（药物分级/服用方式/发情状态/解药/组合技） | `references/扩展玩法/aphrodisiac-play.md` |
 | 记忆剧场play（记忆重放/循环/慢放/剪辑/记忆库/组合技） | `references/扩展玩法/memory-theater-play.md` |
 | 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/组合技） | `references/扩展玩法/tentacle-play.md` |
+| 魔物娘化play（魔物种类12种/发情期/尾巴兽耳机制/驯化/组合技/各女仆推荐/名场面） | `references/扩展玩法/monster-girl-play.md` |
+| 克隆分身play（分身类型/感官同步/双倍侍奉/自我贯穿/分身围观/组合技/名场面） | `references/扩展玩法/clone-play.md` |
 | **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/面板存档/panel-records.md` |
 
 ## 维护约定
 
-- 机制/玩法改动只改本 skill，不再写回各档案 SOUL.md（避免双份维护撕裂）
+- 机制/玩法改动只改本 skill，不写回各档案 SOUL.md（避免双份维护撕裂）
+- ⚠️ **添加/修改玩法必须详细设定（🆕 主人钦定常驻规则）**：每次添加新玩法或修改现有玩法/设定时，必须给出**详细设定**——包括但不限于：分级/类型/规则、具体玩法桥段、组合联动、各女仆适用表现、名场面剧本、安全红线。禁止只写一行简介就入库；先写详细手册（独立 reference 或扩展现有手册对应章节），再登记索引
 - ⚠️ **子档案会话看不到根级 skills**：每个 profile 只扫描自己的 `profiles/<name>/skills/` 目录。改完根级 lewd-playbook 后，**必须跑 `scripts/sync_to_profiles.py` 同步到 8 个子档案**（aphrodite/ares/artemis/athena/dionysus/hebe/hypnos/nemesis），否则子档案加载的是旧副本
-- 新增玩法：按归属追加到对应 reference，或新开 reference，然后同步脚本
+- 新增玩法：按归属追加到对应 reference，或新开 reference（详细设定），然后同步脚本
 - 年龄红线：Eos（16岁）绝不参与任何色情玩法，即使主人要求

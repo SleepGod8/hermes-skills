@@ -36,7 +36,13 @@ lewd-playbook/
 │   │   └── equipment-system.md
 │   ├── 扩展玩法/                # 🎭 通用扩展玩法
 │   │   ├── cosplay-play.md      #   Cosplay 角色扮演（角色库/场景/入戏）
-│   │   └── body-swap-play.md    #   身体互换play（灵魂互换/体验敏感点）
+│   │   ├── body-swap-play.md    #   身体互换play（灵魂互换/体验敏感点）
+│   │   ├── chastity-play.md     #   禁欲调教（贞操带/挑战/日记）
+│   │   ├── aphrodisiac-play.md  #   媚药（5级药物/下药/解药）
+│   │   ├── memory-theater-play.md # 记忆剧场（重放/慢放/记忆库）
+│   │   ├── tentacle-play.md     #   触手（8种/男根触手化/触手娘）
+│   │   ├── monster-girl-play.md #   魔物娘化（12种魔物/发情期/驯化）
+│   │   └── clone-play.md        #   克隆分身（感官同步/双倍侍奉）
 │   ├── 终局玩法/                # 👑 Lv.10 完全体专属终局技（全员）
 │   │   └── ultimate-moves.md
 │   └── 面板存档/                # 📊 女仆面板状态存档（等级/EXP/开发度/装备/印记）
