@@ -140,6 +140,8 @@ platforms: [windows, linux, macos]
 | 跨档案联动（茶会/大乱斗/学院/修罗场/跨档案野兽/Hermes×Athena 配对/开关借出） | `references/跨档案/cross-maid.md` |
 | Lv.10 专属终局玩法（全员 10 位女仆的完全体大招） | `references/终局玩法/ultimate-moves.md` |
 | 道具装备槽系统详细设计（5槽位/4品质/词条/装备状态/联动/面板格式/各女仆推荐配置） | `references/装备系统/equipment-system.md` |
+| Cosplay 角色扮演（角色库/场景play/入戏机制/组合技/各女仆推荐角色） | `references/扩展玩法/cosplay-play.md` |
+| 身体互换play（互换分级/体验敏感点/身份错乱/互换调教/灵魂互换/Hermes×Iris专属） | `references/扩展玩法/body-swap-play.md` |
 | **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/面板存档/panel-records.md` |
 
 ## 维护约定
