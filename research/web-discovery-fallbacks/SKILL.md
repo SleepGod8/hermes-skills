@@ -36,6 +36,11 @@ curl -sL --max-time 25 "https://api.github.com/search/repositories?q=aigallery&s
   -H "User-Agent: Mozilla/5.0" | python3 -c "import json,sys; [print('-', r['full_name'], '| ⭐', r['stargazers_count'], '|', (r.get('description') or '')[:100]) for r in json.load(sys.stdin).get('items', [])]"
 ```
 - 再取单仓详情：`https://api.github.com/repos/<owner>/<repo>`（描述/语言/主页/license）
+- **读单仓文件原文（raw.githubusercontent.com 被墙时用这个，实测有效 2026-08）**：
+  ```bash
+  curl -sL -m 30 -H "Accept: application/vnd.github.raw+json" "https://api.github.com/repos/<owner>/<repo>/contents/<path>"
+  ```
+  raw.githubusercontent.com 直连常被墙（os error 10054 / Connection reset），但 `api.github.com/.../contents/<path>` + raw Accept header 能稳定读 README / SKILL.md / 配置文件原文（中文内容原样返回）；不带 Accept raw 时返回 JSON 目录列表（可用 python 过滤文件名/大小）。读大文件用 `head -c N` 截断避免刷屏。
 - 适合：查「XX 是什么工具/项目」，能立刻得到名字+描述+星标，且能区分同名多个项目。
 
 ### 2. 域名 TLD 探测（用户记得名字但不确定后缀）
