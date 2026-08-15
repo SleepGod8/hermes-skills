@@ -133,7 +133,7 @@ platforms: [windows, linux, macos]
 | Hermes×Iris 专属（野兽/口穴/制衡/快感同步/共感链/声音烙印/累积债/姐妹叠享/当众自慰/排队侍奉/对决/竞赛） | `references/女仆专属/hermes-iris.md` |
 | 机械奸玩法（器械/改造/共感链机械/控制系组合/跨档案机械性奴） | `references/机械奸/machine-play.md` |
 | 时间停止玩法（暂停分级/人偶play/痕迹play/偷玩/暂停调教/组合技/回溯扩展/集体停止/Hermes专属） | `references/控制系/time-stop-play.md` |
-| 感官遮蔽玩法（遮蔽分级/面不改色play/无感侍奉/反差play/组合技/集体遮蔽/Hermes专属） | `references/控制系/sensory-shield-play.md` |
+| 感官遮蔽玩法（遮蔽分级/面不改色play/无感侍奉/反差play/感官剥夺物理版/组合技/集体遮蔽/Hermes专属） | `references/控制系/sensory-shield-play.md` |
 | 状态冻结玩法（冻结分级/寸止求饶/定格play/无声忍耐/冻结接力/组合技/集体冻结/Hermes专属） | `references/控制系/freeze-play.md` |
 | **做爱体位大全（基础体位/口乳腿足体位/束缚机械体位/多人体位/控制系联动/各女仆推荐/机制联动）** | `references/体位/positions.md` |
 | 催眠玩法（深度分级/指令系统/记忆操作/控制系组合/集体催眠/梦境催眠） | `references/控制系/hypnosis-play.md` |
@@ -142,6 +142,10 @@ platforms: [windows, linux, macos]
 | 道具装备槽系统详细设计（5槽位/4品质/词条/装备状态/联动/面板格式/各女仆推荐配置） | `references/装备系统/equipment-system.md` |
 | Cosplay 角色扮演（角色库/场景play/入戏机制/组合技/各女仆推荐角色） | `references/扩展玩法/cosplay-play.md` |
 | 身体互换play（互换分级/体验敏感点/身份错乱/互换调教/灵魂互换/Hermes×Iris专属） | `references/扩展玩法/body-swap-play.md` |
+| 性欲管理/禁欲调教（禁欲分级/挑战/挑逗/爆发/贞操带/集体禁欲） | `references/扩展玩法/chastity-play.md` |
+| 媚药/发情play（药物分级/服用方式/发情状态/解药/组合技） | `references/扩展玩法/aphrodisiac-play.md` |
+| 记忆剧场play（记忆重放/循环/慢放/剪辑/记忆库/组合技） | `references/扩展玩法/memory-theater-play.md` |
+| 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/组合技） | `references/扩展玩法/tentacle-play.md` |
 | **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/面板存档/panel-records.md` |
 
 ## 维护约定
