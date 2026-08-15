@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>泳道流程图模板</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --line:#334155; --text:#e2e8f0; --muted:#94a3b8;
+    --business:#38bdf8; --product:#fbbf24; --human:#22d3ee; --ai:#34d399; --gate:#fb7185;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,sans-serif;
+    background:var(--bg); color:var(--text); padding:28px 18px; line-height:1.5;}
+  .wrap{max-width:1720px; margin:0 auto;}
+  h1{font-size:20px; font-weight:700; margin-bottom:4px;}
+  .subtitle{color:var(--muted); font-size:12.5px; margin-bottom:18px;}
+  .canvas{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; overflow-x:auto;}
+  svg{display:block; min-width:1180px; width:100%; height:auto;}
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; font-size:13px;}
+  .card h3{font-size:14px; margin-bottom:8px;}
+  .card li{color:var(--muted); padding:3px 0; list-style:none;}
+  .card li b{color:var(--text);}
+  @media (max-width:900px){.cards{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>标题（例：人机混合团队 · AI 原生软件工程全链路工作流）</h1>
+  <div class="subtitle">横向=阶段推进 ｜ 纵向=角色主体 ｜ ⚑=人工判断门 ｜ 玫瑰虚线=反馈闭环</div>
+
+  <div class="canvas">
+    <svg viewBox="0 0 1180 560" xmlns="http://www.w3.org/2000/svg" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+      <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+        </pattern>
+        <!-- 三种箭头 marker：主流程(emerald) / 交接(slate) / 门禁闭环(rose) -->
+        <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#34d399"/>
+        </marker>
+        <marker id="arrS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#64748b"/>
+        </marker>
+        <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#fb7185"/>
+        </marker>
+      </defs>
+
+      <rect width="1180" height="560" fill="#0f172a"/>
+      <rect width="1180" height="560" fill="url(#grid)"/>
+
+      <!-- 泳道背景色带（4 泳道） -->
+      <rect x="10"  y="110" width="1160" height="52" fill="#0c4a6e" opacity="0.12"/>
+      <rect x="10"  y="162" width="1160" height="52" fill="#78350f" opacity="0.14"/>
+      <rect x="10"  y="214" width="1160" height="88" fill="#164e63" opacity="0.12"/>
+      <rect x="10"  y="302" width="1160" height="140" fill="#064e3b" opacity="0.14"/>
+
+      <!-- 泳道标签（左列） -->
+      <g font-size="12" font-weight="700">
+        <rect x="10" y="110" width="140" height="52" fill="#0c4a6e" rx="8"/>
+        <text x="80" y="141" fill="#7dd3fc" text-anchor="middle">业务客户</text>
+        <rect x="10" y="162" width="140" height="52" fill="#78350f" rx="8"/>
+        <text x="80" y="193" fill="#fcd34d" text-anchor="middle">产品负责人</text>
+        <rect x="10" y="214" width="140" height="88" fill="#164e63" rx="8"/>
+        <text x="80" y="263" fill="#67e8f9" text-anchor="middle">工程岗位(人类)</text>
+        <rect x="10" y="302" width="140" height="140" fill="#064e3b" rx="8"/>
+        <text x="80" y="377" fill="#6ee7b7" text-anchor="middle">AI / Agent</text>
+      </g>
+
+      <!-- 阶段表头：S# + 名称 + 自动化徽标（每个阶段一列，列宽 ~150px） -->
+      <!-- S1 示例 -->
+      <text x="180" y="80" font-size="11" fill="#64748b" text-anchor="middle">S1</text>
+      <text x="180" y="100" font-size="13.5" font-weight="700" fill="#e2e8f0" text-anchor="middle">阶段名</text>
+      <rect x="126" y="106" width="108" height="15" rx="7" fill="#78350f" opacity="0.5"/>
+      <text x="180" y="117" font-size="9" fill="#fcd34d" text-anchor="middle">半自动·人X</text>
+      <!-- repeat for S2..Sn：每列 center += 150 -->
+
+      <!-- 分隔竖线 / 横线 -->
+      <g stroke="#1e293b" stroke-width="1">
+        <line x1="165" y1="70" x2="165" y2="442"/>
+        <line x1="315" y1="70" x2="315" y2="442"/>
+      </g>
+      <g stroke="#334155" stroke-width="1">
+        <line x1="10" y1="162" x2="1170" y2="162"/>
+        <line x1="10" y1="214" x2="1170" y2="214"/>
+        <line x1="10" y1="302" x2="1170" y2="302"/>
+        <line x1="10" y1="442" x2="1170" y2="442"/>
+      </g>
+
+      <!-- ===== S1 示例节点（每泳道一格，node 宽 138，center x=180） ===== -->
+      <!-- 业务客户 -->
+      <rect x="111" y="114" width="138" height="44" rx="7" fill="#0c4a6e" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="180" y="134" font-size="12" font-weight="700" fill="#e0f2fe" text-anchor="middle">业务客户</text>
+      <text x="180" y="150" font-size="10" fill="#7dd3fc" text-anchor="middle">提出诉求</text>
+      <!-- 产品负责人 -->
+      <rect x="111" y="166" width="138" height="44" rx="7" fill="#78350f" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="180" y="186" font-size="12" font-weight="700" fill="#fef3c7" text-anchor="middle">产品负责人</text>
+      <text x="180" y="202" font-size="10" fill="#fcd34d" text-anchor="middle">澄清·确认 ⚑</text>
+      <!-- 工程岗位(人工判断门：rose 描边) -->
+      <rect x="111" y="230" width="138" height="44" rx="7" fill="#164e63" stroke="#fb7185" stroke-width="1.8"/>
+      <text x="180" y="250" font-size="12" font-weight="700" fill="#cffafe" text-anchor="middle">架构师 ⚑人工判断</text>
+      <text x="180" y="266" font-size="10" fill="#67e8f9" text-anchor="middle">审核·拍板</text>
+      <!-- AI/Agent -->
+      <rect x="111" y="340" width="138" height="44" rx="7" fill="#064e3b" stroke="#34d399" stroke-width="1.5"/>
+      <text x="180" y="360" font-size="12" font-weight="700" fill="#d1fae5" text-anchor="middle">XX Agent</text>
+      <text x="180" y="376" font-size="10" fill="#6ee7b7" text-anchor="middle">生成/执行动作</text>
+
+      <!-- ===== 箭头示例 ===== -->
+      <!-- 主流程（AI 泳道横向，emerald 实线） -->
+      <line x1="250" y1="362" x2="308" y2="362" stroke="#34d399" stroke-width="2" marker-end="url(#arrE)"/>
+      <!-- 交接（slate 细线，业务→产品→AI 纵向） -->
+      <line x1="180" y1="158" x2="180" y2="164" stroke="#64748b" stroke-width="1.4" marker-end="url(#arrS)"/>
+      <!-- 人工判断门（rose 虚线，AI 产出→人拍板） -->
+      <line x1="180" y1="338" x2="180" y2="278" stroke="#fb7185" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#arrR)"/>
+      <!-- 反馈闭环（rose 虚线 path，末尾→S1） -->
+      <path d="M 180 442 L 180 470 L 60 470 L 60 442" stroke="#fb7185" stroke-width="2" stroke-dasharray="7,5" fill="none" marker-end="url(#arrR)"/>
+
+      <!-- 图例 -->
+      <g font-size="11" fill="#94a3b8">
+        <text x="20" y="500" font-size="12" font-weight="700" fill="#e2e8f0">图例</text>
+        <rect x="20" y="512" width="14" height="14" rx="3" fill="#064e3b" stroke="#34d399"/>
+        <text x="42" y="524">AI/Agent 节点</text>
+        <rect x="150" y="512" width="14" height="14" rx="3" fill="#164e63" stroke="#fb7185" stroke-width="2"/>
+        <text x="172" y="524">⚑ 人工判断门</text>
+        <line x1="300" y1="519" x2="336" y2="519" stroke="#34d399" stroke-width="2" marker-end="url(#arrE)"/>
+        <text x="342" y="524">主流程</text>
+        <line x1="410" y1="519" x2="446" y2="519" stroke="#fb7185" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#arrR)"/>
+        <text x="452" y="524">反馈/人工审核</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>自动化边界</h3>
+      <ul><li><b>高自动：</b>…</li><li><b>半自动：</b>…</li><li><b>原则：</b>AI 生成执行，人判断担责</li></ul>
+    </div>
+    <div class="card">
+      <h3>必须人工判断</h3>
+      <ul><li>需求确认 / 架构审核 / Review / 测试验收 / 部署审批 / 修复确认</li></ul>
+    </div>
+    <div class="card">
+      <h3>闭环机制</h3>
+      <ul><li>自动发现 → 定位 → 恢复 → 人确认 → 迭代回流</li></ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

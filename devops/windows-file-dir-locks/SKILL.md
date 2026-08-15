@@ -57,6 +57,16 @@ python -c "import os; os.rename(r'E:\项目\智能财富管家系统', r'E:\项�
 ```
 Python 对 Unicode 路径最稳。改名后验证：`git status`、`git remote -v` 一切照旧（`.git` 跟着文件夹走，**本地文件夹名与 git 推送完全无关**）。
 
+## 3b. 空目录 rmdir 仍 busy → Python os.rmdir（2026-08 实测）
+
+空目录（`ls` 已无任何内容）`rmdir` 报 `Device or resource busy`，且 **`cd` 离开后依旧失败**——常见于英文路径（如 `E:/ai1`），往往不是 cwd 锁，而是 Explorer / 搜索索引 / 杀软短暂握有句柄。**最稳的一行解法：**
+```bash
+python -c "import os; os.rmdir(r'E:/ai1')"
+```
+`os.rmdir` 只删空目录（非空抛 `OSError`，天然安全，不会误删）。git-bash 的 `rmdir` 反复 busy 时，直接上 `os.rmdir`，别跟 shell 较劲。
+
+> 迁移小知识：同一盘符内 `mv`（含 GB 级目录，如 1.3G 的 models）是**原子 rename**，秒级完成、零拷贝；只有跨盘符 `mv` 才走 copy+delete（慢、可中断）。整目录迁移优先同盘 `mv`，迁完源目录删不掉就用上面的 `os.rmdir` 收尾。
+
 ## 4. 启动桌面 GUI 程序：PowerShell Start-Process（不要 cmd start）
 
 `cmd //c 'start "" "path"'` 在 git-bash 里常因引号/编码被吞，进程根本没起来（检查 `tasklist` 或 psutil 才知道）。用 PowerShell：
