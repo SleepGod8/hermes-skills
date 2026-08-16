@@ -148,6 +148,8 @@ platforms: [windows, linux, macos]
 | 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/组合技） | `references/扩展玩法/tentacle-play.md` |
 | 魔物娘化play（魔物种类12种/发情期/尾巴兽耳机制/驯化/组合技/各女仆推荐/名场面） | `references/扩展玩法/monster-girl-play.md` |
 | 克隆分身play（分身类型/感官同步/双倍侍奉/自我贯穿/分身围观/组合技/名场面） | `references/扩展玩法/clone-play.md` |
+| 寄生play（寄生体设定/寄生阶段/9种桥段/寄生触手化男根/成长/组合/各女仆表现/名场面/解除方式） | `references/扩展玩法/parasite-play.md` |
+| 隐奸play（分级/风险值/强忍系统/暴露结局/11种桥段/认知屏蔽Lv.6/组合/各女仆表现/名场面） | `references/扩展玩法/hidden-play.md` |
 | **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/面板存档/panel-records.md` |
 
 ## 维护约定
