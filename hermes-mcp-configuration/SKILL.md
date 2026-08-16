@@ -124,6 +124,48 @@ For remote HTTP MCP servers that need an `Authorization: Bearer <token>` header 
 - Duplicate entries: if a failed add left `hugging_face` + `huggingface` (name mangling), remove both with `hermes mcp remove NAME` then re-add.
 - config.yaml is protected from direct patch/write_file — use `hermes config set/unset` for config keys, `hermes mcp remove` for servers, and direct `>>` append for `.env` only.
 
+## stdio Server Env Vars — Use `${VAR}` Placeholders, Never Raw Values
+
+For stdio MCP servers (npx/uvx) that need an API token via `env:` (e.g. `GITHUB_PERSONAL_ACCESS_TOKEN` for `@modelcontextprotocol/server-github`, verified 2026-08):
+
+**Pitfall**: `hermes mcp add NAME --command npx --env KEY= --args ...` (or `KEY=<raw-token>`) writes the env value literally into config.yaml:
+```yaml
+github:
+  command: npx
+  args: ["-y", "@modelcontextprotocol/server-github"]
+  env:
+    GITHUB_PERSONAL_ACCESS_TOKEN: ''      # ❌ empty string OVERRIDES .env!
+```
+Hermes's `_build_safe_env()` (tools/mcp_tool.py) passes only a whitelist of base vars + whatever is in the server's `env:` block, then does `env.update(user_env)`. So an **empty string or raw token in config.yaml silently clobbers the value you put in `.env`** — the subprocess gets an empty/wrong credential and the MCP connects but every authed call fails (401).
+
+**Correct recipe (verified):**
+
+1. **Pre-seed the real token into `.env`**:
+   ```bash
+   echo "GITHUB_PERSONAL_ACCESS_TOKEN=github_pat_..." >> "C:/Users/80704/AppData/Local/hermes/.env"
+   ```
+2. **Pass `${KEY}` as the env VALUE** so `_interpolate_env_vars()` resolves it at server start (single-quote in bash so the shell doesn't expand it):
+   ```bash
+   hermes mcp add github --command npx \
+     --env 'GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}' \
+     --args -y @modelcontextprotocol/server-github
+   ```
+3. **Verify persisted config** — must show the placeholder, never the raw token or empty string:
+   ```yaml
+   github:
+     command: npx
+     args: ["-y", "@modelcontextprotocol/server-github"]
+     env:
+       GITHUB_PERSONAL_ACCESS_TOKEN: ${GITHUB_PERSONAL_ACCESS_TOKEN}   # ✅
+     enabled: true
+   ```
+4. `hermes mcp test github` → `✓ Connected` + tools discovered. New session required for tools to load.
+
+**Notes:**
+- `--env` MUST come BEFORE `--args` (args must be the last option, otherwise `--env KEY=...` gets swallowed into `args:` and the config is malformed — verified twice with both fetch and github).
+- The `-y` in npx args is a separate arg token (`--args -y @modelcontextprotocol/server-github`), not combined.
+- Keep the raw token ONLY in `.env`; config.yaml stores the `${...}` reference. This matches the HTTP/headers pattern (`Authorization: Bearer ${MCP_..._API_KEY}`) from the section above.
+
 ## Pitfalls
 
 - **uvx stdio servers + PYTHONPATH contamination (Windows, verified 2026-08)**: running an MCP server via `uvx` from inside a Hermes session inherits Hermes's own venv on `PYTHONPATH`, so the server imports Hermes's `mcp`/pydantic instead of its own → cryptic ImportError. Fix: pass `--env PYTHONPATH=` (empty value) to `hermes mcp add`. Note `--env` MUST come BEFORE `--args` (args must be the last option, otherwise `--env PYTHONPATH=` gets swallowed into args and the config is broken — verified).
@@ -134,6 +176,7 @@ For remote HTTP MCP servers that need an `Authorization: Bearer <token>` header 
 - **Config key is `mcp_servers`, not `mcp` or `servers`** — wrong key silently disables MCP discovery.
 - **HTTP servers need `url`, stdio servers need `command`** — a config with both or neither fails validation.
 - **Bearer token missing after `--auth header` add**: if `hermes mcp list` shows the server but config.yaml has NO `headers:` block (or `.env` has no `MCP_<NAME>_API_KEY`), the interactive token prompt silently failed. Re-seed `.env` manually then re-add without `--auth` (see "HTTP Auth (Bearer Token) MCP — Correct Setup" section above).
+- **stdio env value empty/raw clobbers `.env`**: if config.yaml shows `env: {KEY: ''}` or the raw token (not `${KEY}`), the subprocess gets a broken credential — every authed tool call 401s even though `mcp test` connects fine. Fix: re-add with `--env 'KEY=${KEY}'` (see "stdio Server Env Vars" section above).
 - **`mcp` Python package required**: if startup logs show "MCP SDK not available -- skipping MCP tool discovery", install `pip install mcp` (or `uv pip install mcp`).
 - **Tools missing after add**: check `hermes mcp list` shows the server enabled; if yes, start a new session (`/reset`) — MCP tools load at startup only.
 - **HTTP import error**: "requires HTTP transport but mcp.client.streamable_http is not available" → `pip install --upgrade mcp`.
