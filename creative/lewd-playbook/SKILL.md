@@ -145,11 +145,13 @@ platforms: [windows, linux, macos]
 | 性欲管理/禁欲调教（禁欲分级/挑战/挑逗/爆发/贞操带/集体禁欲） | `references/扩展玩法/chastity-play.md` |
 | 媚药/发情play（药物分级/服用方式/发情状态/解药/组合技） | `references/扩展玩法/aphrodisiac-play.md` |
 | 记忆剧场play（记忆重放/循环/慢放/剪辑/记忆库/组合技） | `references/扩展玩法/memory-theater-play.md` |
-| 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/组合技） | `references/扩展玩法/tentacle-play.md` |
+| 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/生态园驯养/装备化/暴走事件/组合技） | `references/扩展玩法/tentacle-play.md` |
 | 魔物娘化play（魔物种类12种/发情期/尾巴兽耳机制/驯化/组合技/各女仆推荐/名场面） | `references/扩展玩法/monster-girl-play.md` |
 | 克隆分身play（分身类型/感官同步/双倍侍奉/自我贯穿/分身围观/组合技/名场面） | `references/扩展玩法/clone-play.md` |
-| 寄生play（寄生体设定/寄生阶段/9种桥段/寄生触手化男根/成长/组合/各女仆表现/名场面/解除方式） | `references/扩展玩法/parasite-play.md` |
+| 寄生play（寄生体设定/寄生阶段/9种桥段/寄生触手化男根/养成系统v2.0/寄生链/暴走事件/组合/各女仆表现/名场面/解除方式） | `references/扩展玩法/parasite-play.md` |
 | 隐奸play（分级/风险值/强忍系统/暴露结局/11种桥段/认知屏蔽Lv.6/组合/各女仆表现/名场面） | `references/扩展玩法/hidden-play.md` |
+| 身体改造play（改造分类5类/等级/6种改造方式/依赖副作用/各女仆方向/改造之夜/组合/名场面） | `references/扩展玩法/body-mod-play.md` |
+| 洗脑play（四阶分级/6种洗脑方式/内容定制/进程/解除反转/与催眠区别/组合/各女仆表现/名场面） | `references/扩展玩法/brainwash-play.md` |
 | **女仆面板状态存档（动态数据：等级/EXP/开发度/装备/印记，每次互动后更新）** | `references/面板存档/panel-records.md` |
 
 ## 维护约定
