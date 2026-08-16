@@ -743,3 +743,31 @@ Use `/context` in interactive mode to see a colored grid of context usage. Key t
 8. **Report results to user** — after completion, summarize what Claude did and what changed
 9. **Don't kill slow sessions** — Claude may be doing multi-step work; check progress instead
 10. **Use `--allowedTools`** — restrict capabilities to what the task actually needs
+
+## 本机部署状态（Windows · 2026-08 已就绪）
+
+**此环境已配置完成，直接调用即可：**
+
+- **安装位置**：`E:\npm-global`（npm 全局 prefix 已迁移 E 盘，用户 PATH 已持久化）
+- **版本**：Claude Code 2.1.233+
+- **认证**：Anthropic 账号被 ban → 走 **DeepSeek Anthropic 兼容端点**
+- **⚠️ 官方 Claude 桌面端（MSIX/Store 版 v1.30096）有全局登录墙**：强制官方账号 OAuth 登录，账号被 ban 无法进入；用户级环境变量也无法绕过（MSIX 沙盒隔离 + 强制登录）。**结论：桌面端不可用，一律用 CLI 版**（claude -p / 交互模式），或 VS Code + Claude Code 扩展（读同一配置，可接 DeepSeek）
+- **配置**：`~/.claude/settings.json` 的 `env` 里已设：
+  - `ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic`
+  - `ANTHROPIC_AUTH_TOKEN=<DeepSeek key，存于 C:/Users/80704/AppData/Local/hermes/.env 的 DEEPSEEK_API_KEY>`
+  - `ANTHROPIC_MODEL=deepseek-v4-pro`（完整版，写代码用；轻量版 deepseek-v4-flash；旧别名 deepseek-chat 已下架仅兼容期可用）
+  - `CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1`
+
+**快速调用（Print 模式，一键委派）：**
+```bash
+export PATH="/e/npm-global:$PATH"
+claude -p "任务描述" --allowedTools "Read,Write,Bash" --max-turns 10
+```
+
+**多 agent 开发约定（女仆家族通用）：写代码任务统一委派 Claude Code（deepseek-v4-pro），Hermes/女仆负责拆需求、验收、汇报。**
+
+**并行调用（多开发岗同时写代码）——已实测可行：** `claude -p` 是独立进程/独立会话，可同时启动多个（实测 3 个并行 6 秒全成，3/3）。Windows 下 Python subprocess 调用须用 `E:\npm-global\claude.cmd` 完整路径（不是 `claude`）。注意：
+1. **目录隔离**：每个开发岗分配独立模块目录，避免文件互相覆盖
+2. **git 分支隔离**：各开 feature 分支，避免提交冲突
+3. **共享 key 限流**：多个并发共享同一 DeepSeek key，注意 API 限流（429 时重试/排队）
+4. **编排与审查**：编排岗（如 Athena）拆模块边界，审查岗（如 Eos）独立验收

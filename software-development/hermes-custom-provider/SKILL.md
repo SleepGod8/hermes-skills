@@ -66,6 +66,33 @@ hermes config set custom_providers '[
 
 **Warning:** This replaces the entire `custom_providers` list — you must include ALL existing providers, not just the new one. Read the current list from config.yaml first if unsure.
 
+**⚠️ CRITICAL PITFALL — `hermes config set custom_providers` stores the JSON as a STRING!**
+`hermes config set custom_providers '[...]'` writes a quoted JSON *string* into
+config.yaml (`custom_providers: '[{...}]'`), NOT a YAML list. `get_compatible_custom_providers()`
+in `hermes_cli/config.py` does `if not isinstance(custom_providers, list): return []`,
+so EVERY named custom provider becomes invisible → auxiliary tasks (vision, compression,
+title generation) fail with `No LLM provider configured for task=vision provider=custom:NAME`.
+The main model still works if it uses a built-in provider (e.g. deepseek), which masks the bug.
+**Fix:** edit config.yaml directly so `custom_providers` is a real YAML list:
+
+```yaml
+custom_providers:
+  - name: ZhipuGLM
+    base_url: https://open.bigmodel.cn/api/paas/v4/
+    api_key: your-key-here
+```
+
+Verify with:
+```bash
+cd ~/.hermes/hermes-agent && python -c "
+from hermes_cli.config import load_config, get_compatible_custom_providers
+print([e.get('name') for e in get_compatible_custom_providers(load_config())])"
+# then confirm the named lookup works:
+python -c "from hermes_cli.runtime_provider import _get_named_custom_provider; print(_get_named_custom_provider('ZhipuGLM'))"
+```
+
+Config changes need a fresh session (`/reset`) or gateway `/restart` to take effect.
+
 ### Option B: Python YAML editing
 
 ```python
