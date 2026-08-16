@@ -56,6 +56,12 @@ metadata:
        f.write(content.replace('\n', '\r\n'))    # 统一写回 CRLF
    ```
    单行内替换 patch 工具没问题；一涉及跨行匹配就转 Python。
+10. **`\r\r\n`（双 CR+LF）文件的识别与批量更新**：UTF-8 但行尾为 `\r\r\n` 的文件（如被多工具反复编辑的存档 md），`read_file` 报 binary、Python `open(..., 'r')` universal newline 读出来行尾只剩 `\n`——**按 `\r\r\n` 写的 old_string 永远匹配不上**。稳妥流程：
+    - 探测：`open(path,'rb').read()` 看原始字节 / 用 `repr` 打印片段确认 `\r\r\n`
+    - **更新脚本不要用 write_file 生成**：write_file 会把内容里的 `\n` 转成 `\r\n`，源码字符串里的 `\r\r\n` 会变成 `\r\r\r\n`，replace 全部静默失败；直接用 `execute_code`（代码不经文件写入的行尾转换）读写，或 Python 里用 `chr(13)` 构造行尾
+    - **批量替换用区块锚点**：在 `## 标题` 到下一个 `## ` 之间的子串内 replace，而不是全文件 replace——全零/常见行（如 `秘处: 0/0 ｜ ...`）在多个区块间不唯一，直接 replace 会误改到别的条目（曾把 A 区块的数据误改到 B 区块）
+    - 插入新字段：锚定区块内某固定行（如「部位统计」行），在该行后插入新行
+    - 改完用 Python 再读一遍验证（正则抽样关键字段），再执行后续同步脚本
 
 ## 排查流程（目录删不掉）
 1. 先 `ls -a` 看目录内容（是空壳还是有嵌套仓库/文件）
