@@ -8,11 +8,14 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 用户指定的多 Agent 开发必须严格遵从以下文件（完整原文保存于本技能 `references/` 目录）：
 
 1. `references/multi-agent-protocol.md` — 《多 Agent 项目协作协议》：固定编制、三档模型分层、任务编号/状态机、认领释放、标准消息格式、文件所有权、合并顺序、候补位启用纪律、模型熔断与质量门禁。
-2. `references/soul-07-reserve.md` — 《Agent 7：候补军团》岗位文件：Ares/Aphrodite/Dionysus 三种候补位的启用条件、职责边界、主备模型和停止条件。
-3. `references/governance-rules.md` — 《团队治理规则》。
-4. `references/enhanced-pipeline.md` — 《增强版多 Agent 开发流水线规范》。
-5. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》。
-6. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》。
+2. `references/soul-00-standby.md` — 《预备役岗位》文件：未接入开发团队的待接入占位岗位。
+3. `references/soul-07a-execution-reserve.md` — 《Agent 7A：执行候补（Ares）》岗位文件。
+4. `references/soul-07b-expression-reserve.md` — 《Agent 7B：表达候补（Aphrodite）》岗位文件。
+5. `references/soul-07c-exploration-reserve.md` — 《Agent 7C：发散候补（Dionysus）》岗位文件。
+6. `references/governance-rules.md` — 《团队治理规则》。
+7. `references/enhanced-pipeline.md` — 《增强版多 Agent 开发流水线规范》。
+8. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》（v1.6，含合并方向 merge-base 核实、同步后全员可读性确认）。
+9. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》。
 
 ## 使用方式
 
@@ -21,7 +24,7 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 1. 加载本技能，并读取 `references/` 下全部相关文件。
 2. 先按固定编制选队形：`default` 总控中枢，`Athena/Hypnos/Hebe/Artemis/Nemesis/Eos` 为主队，`Ares/Aphrodite/Dionysus` 为候补军团。
 3. 按协议执行：任务编号、状态机、标准消息格式、文件所有权、合并顺序、质量门禁。
-4. 关键决定落到 `.agent/` 工件，不以聊天消息为唯一事实来源。
+4. 关键决定落到 `.agents/` 工件，不以聊天消息为唯一事实来源。
 
 ## 核心要点速查
 

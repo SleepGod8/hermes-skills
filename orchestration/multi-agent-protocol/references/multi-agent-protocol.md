@@ -120,15 +120,15 @@ Eos     测试与审查
 
 ## 唯一事实来源
 
-项目负责人维护以下工件，建议放在项目的 `.agent/` 目录：
+项目负责人维护以下工件，统一放在项目的 `.agents/` 目录（与 enhanced-pipeline.md 及仓库现状一致；`.agent/` 写法已废弃，不得再使用）：
 
 ```text
-.agent/tasks.yaml       任务、依赖、负责人和状态
-.agent/contracts/       接口和数据契约
-.agent/adr/             架构决策记录
-.agent/reports/         侦察、测试、审查和交付报告
-.agent/risks.yaml       风险、责任人和缓解措施
-.agent/release.yaml     版本、验证、批准和回滚信息
+.agents/tasks.yaml       任务、依赖、负责人和状态
+.agents/contracts/       接口和数据契约
+.agents/adr/             架构决策记录
+.agents/reports/         侦察、测试、审查和交付报告
+.agents/risks.yaml       风险、责任人和缓解措施
+.agents/release.yaml     版本、验证、批准和回滚信息
 ```
 
 聊天消息不是唯一事实来源，关键决定必须落到工件中。

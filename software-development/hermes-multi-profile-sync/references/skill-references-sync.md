@@ -15,6 +15,14 @@ references 会**历史漂移**，三方可能不一致。实测 multi-agent-prot
 2. 按 MD5 分组 → 最新版（字节数最大/版本号最高）为**标准源**
 3. 把标准源 `shutil.copy2` 到所有旧版位置（**含根级**，即「反向同步」）
 
+## 2026-08-17 v1.6 同步实录（multi-agent-protocol）
+
+- 差异点：根级 `multi-agent-protocol.md` 是旧 `.agent/` 写法，Athena 档案已 patch 为 `.agents/`（控制面目录裁定）；`workflow-retro-2026-08.md` 主队 6 档案已是 v1.6（含第 12/13 节），根级缺 12/13，候补 3 档案还是 v1.5。
+- 做法：标准源 = Athena 版协议（3faa4140）+ 主队版复盘（8685febd），`shutil.copy2` 反向同步到 root + 其余 8 档案，全量 MD5 复验 10/10 一致。
+- 根级 SKILL.md 引用更新：`soul-07-reserve.md`（旧合并候补）→ 拆分为 `soul-00-standby.md` + `soul-07a/b/c-*-reserve.md` 四个文件（从候补档案复制）；`.agent/` → `.agents/`。
+- 坑：正在运行的档案（如 artemis 会话）的 reference 文件可能被占用（WinError 32）——同步前先确认目标档案不在活跃会话中，或跳过该档案（若它本身就是标准源）。
+- 教训：同步前先 `md5sum` 十处 + 检查 SKILL.md 引用清单，别只比 references 文件；各档案 SKILL.md 是定制版，只覆盖通用 reference，绝不覆盖岗位文件。
+
 ## 坑与对策
 
 | 坑 | 对策 |
