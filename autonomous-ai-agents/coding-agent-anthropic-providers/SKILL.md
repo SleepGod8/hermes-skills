@@ -107,6 +107,51 @@ it exists ② actually run it (interactive programs: `printf 'input\n' | python 
 ③ check the exit code. Instance: guess-number game `guess_game.py` (3004 bytes, piped
 input ran the full flow, exit 0).
 
+## 6. ASLNet as an Anthropic endpoint (verified 2026-08-18)
+
+ASLNet (`https://api.aslnet.cloud`) — the user's GPT-series proxy — speaks the
+Anthropic wire protocol directly. Verified end-to-end with Claude Code:
+
+- **`https://api.aslnet.cloud/v1/messages`** ✅ works (both `x-api-key` and
+  `Authorization: Bearer`, non-stream AND SSE `stream:true`, HTTP 200).
+- **`https://api.aslnet.cloud/anthropic/v1/messages`** ❌ returns an HTML page
+  (404 frontend) — do NOT append `/anthropic`. Unlike DeepSeek's layout, the
+  path segment is not needed.
+- **`ANTHROPIC_BASE_URL` = `https://api.aslnet.cloud`** (no `/v1` — Claude Code
+  appends `/v1/messages` itself).
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.aslnet.cloud",
+    "ANTHROPIC_AUTH_TOKEN": "<ASLNET_API_KEY from Hermes .env>",
+    "ANTHROPIC_MODEL": "gpt-5.5",
+    "API_TIMEOUT_MS": "300000",
+    "CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT": "1"
+  }
+}
+```
+
+- Models verified on this endpoint: `gpt-5.5` (stable default), `gpt-5.6-sol`
+  (strongest reasoning), `gpt-5.6-terra`, `gpt-5.4` (cheaper) — same pool as
+  Codex/ASLNet.
+- `[claude-code:unrecognized_model]` log noise is harmless — the unknown-model
+  window-enforcement disable flag lets gpt-5.5 run anyway.
+- Probe before switching (key lives in `~/AppData/Local/hermes/.env`):
+  ```bash
+  curl -s -m 60 "https://api.aslnet.cloud/v1/messages" \
+    -H "Authorization: Bearer $KEY" -H "anthropic-version: 2023-06-01" \
+    -H "Content-Type: application/json" \
+    -d '{"model":"gpt-5.5","max_tokens":20,"messages":[{"role":"user","content":"say ok"}]}'
+  ```
+  Expect `"type":"message"`; then end-to-end `claude -p "reply with exactly: ASLNet OK" --max-turns 1`.
+- Always back up `settings.json` before editing (DeepSeek config archived at
+  `settings.json.bak-20260818-1529`; restore = copy back, then restart claude).
+
+⚠️ **Trade-off to state to the user**: ASLNet's gpt-5.x is OpenAI-family — far
+stricter moderation than DeepSeek. If zero-censorship was the point of the
+delegation, keep DeepSeek; ASLNet is fine for ordinary coding work.
+
 ## Pitfalls
 
 - `claude` not found in a new terminal → user PATH not refreshed; export in the current
@@ -121,5 +166,11 @@ input ran the full flow, exit 0).
 
 ## Multi-agent convention (this user's family)
 
-Coding tasks in multi-agent development are delegated to Claude Code (`claude -p`,
-deepseek-v4-pro); Hermes/maids handle requirement-splitting, acceptance, reporting.
+Coding tasks in multi-agent development are delegated to Claude Code (`claude -p`);
+Hermes/maids handle requirement-splitting, acceptance, reporting.
+
+Claude Code config is **user-global** — every Hermes profile shares the single
+`~/.claude/settings.json`; there is NO per-profile isolation (a project-level
+`.claude/settings.local.json` is the only per-directory override). Current
+endpoint (2026-08): ASLNet gpt-5.5 (see §6). DeepSeek config archived at
+`~/.claude/settings.json.bak-20260818-1529` — restore by copying back.
