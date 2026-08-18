@@ -62,6 +62,15 @@ metadata:
     - **批量替换用区块锚点**：在 `## 标题` 到下一个 `## ` 之间的子串内 replace，而不是全文件 replace——全零/常见行（如 `秘处: 0/0 ｜ ...`）在多个区块间不唯一，直接 replace 会误改到别的条目（曾把 A 区块的数据误改到 B 区块）
     - 插入新字段：锚定区块内某固定行（如「部位统计」行），在该行后插入新行
     - 改完用 Python 再读一遍验证（正则抽样关键字段），再执行后续同步脚本
+11. **execute_code 里数 CRLF 必须用十六进制字节**：`raw.count(b'\x0d\x0a')`。⚠️ 写 `b'\\r\\n'` 会因 JSON 转义变成字面「反斜杠 r 反斜杠 n」4 字符序列，计数恒为 0，误判为「LF 文件」（实测踩中，误以为文件无 CRLF）。配套核验：
+    ```python
+    with open(path, 'rb') as f: raw = f.read()
+    crlf    = raw.count(b'\x0d\x0a')
+    lf_only = raw.count(b'\x0a') - crlf
+    cr_only = raw.count(b'\x0d') - crlf
+    bom     = raw[:3] == b'\xef\xbb\xbf'
+    ```
+    读 CRLF 文件用 `io.open(path, 'r', encoding='utf-8', newline='')`（`newline=''` 保留真实行尾，否则 universal newline 会把 `\r\n` 吞成 `\n`，行尾核验又变假）。写回显式 CRLF：`out = '\r\n'.join(lines) + '\r\n'` 再 `io.open(..., 'w', encoding='utf-8', newline='')`。
 
 ## 排查流程（目录删不掉）
 1. 先 `ls -a` 看目录内容（是空壳还是有嵌套仓库/文件）
