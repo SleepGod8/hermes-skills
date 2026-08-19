@@ -123,6 +123,16 @@ plugin tree failed to load ... Cannot find package '<plugin-name>' imported from
 
 失败时守护器会自动回滚 `web-desktop` profile 到最后良好快照；看 `logs/desktop.log` 的 `guard` 与 `logs/dsh-web.log` 的 `ERR_MODULE_NOT_FOUND` 判断原因。
 
+### 带额外根文件/资源目录的插件
+
+EAC `main.js` 的 `copyPluginPackage()`/`pluginCopyEntries()` 只会复制白名单文件和目录。安装新插件前要对照其 `package.json.files` 和入口 import：如果插件在根目录引用 `memes.js`、`panel.html` 等非白名单文件，或带 `memes/`、`docs/` 等非白名单资源目录，必须把它们加入两处复制清单，否则同步到 `~/.dsh/profiles/web-desktop/node_modules/<pkg>` 后会缺文件，日志表现为：
+
+```text
+failed to import loader entry <id> (<pkg>): Cannot find module '.../<pkg>/<file>.js'
+```
+
+真实案例：`yyh-001/dsh-meme` 需要复制根文件 `memes.js`、`panel.html`，以及目录 `memes/`、`docs/`；否则 `index.js` import `./memes.js` 时启动失败。修完复制清单后重启，日志应出现 `[dsh-expression] send_meme 已注册(...)`。
+
 ## 多份安装 / 来源鉴定 / 安装完整性
 
 用户可能装了多份（同源不同版本，常见嵌套目录：新版装在旧版目录里）。判定流程：
