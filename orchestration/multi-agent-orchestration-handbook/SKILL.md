@@ -11,6 +11,8 @@ metadata:
 
 # Hermes 多智能体编排落地实施手册
 
+> **边界说明**：本 skill 是通用 Hermes 多智能体部署/编排参考手册；女仆家族固定编制的软件开发流程以 `multi-agent-protocol` 为准。若本手册的通用 profile 示例、模型路由或 Kanban 编排与女仆岗位协议冲突，优先遵从 `multi-agent-protocol`、项目工程宪法和 Athena 裁决。
+
 > **版本**: v1.0.0 | **状态**: Production-Ready | **更新**: 2026-07-28
 >
 > **定位**: 从零到生产的完整实施路径，包含配置模板、编排脚本、排查指南

@@ -1,0 +1,18 @@
+schema_version: "1.0"
+project: "<PROJECT_NAME>"
+run_id: "<RUN_ID>"
+updated_at: "<ISO-8601>"
+owner: "Athena"
+rules:
+  exclusive_write: true
+  shared_contract_changes_require_athena: true
+  release_lock_after_acceptance_or_handoff: true
+modules:
+  - module: "<MODULE_NAME>"
+    paths: ["<PATH_OR_GLOB>"]
+    write_owner: "<AGENT_PROFILE>"
+    reviewers: ["Eos"]
+    frozen_contracts: ["<CONTRACT_PATH_OR_NONE>"]
+    lock_status: "FREE | CLAIMED | FROZEN"
+    task_id: "<TASK_ID>"
+    notes: ""

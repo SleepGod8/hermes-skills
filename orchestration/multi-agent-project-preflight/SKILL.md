@@ -18,12 +18,23 @@ metadata:
 
 ## 工作流（实测验证的顺序）
 
+### Step 0: 建立项目工程宪法
+
+工程宪法建立或确认后，根据任务复杂度从 `multi-agent-protocol/templates/agents/` 初始化项目根目录 `.agents/` 控制面。标准/重型任务至少创建 `project-brief.md`、`task-board.yaml`、`module-ownership.yaml`、`decisions.md`、`validation-log.md`、`risk-register.md`、`handoff.md`；所有 Agent 以这些文件作为跨会话执行状态来源。（多 Agent 开工前置）
+- 在任何派工前，先加载 `project-constitution-authoring`。
+- `default` 或 `Athena` 负责读取需求/架构/骨架仓库，产出或更新项目级 `PROJECT_CONSTITUTION.md` / `AGENTS.md` / `DEVELOPMENT_GUIDE.md`。
+- 工程宪法必须明确：技术栈、禁止项、架构边界、代码风格、测试命令、Git/PR、需批准操作、Agent 执行协议、Done Definition、待确认事项。
+- 后续 `Hypnos` 设计、`Athena` 派工、开发位实现、`Eos` 验收时，都必须先读取并遵守该宪法；若任务需求与宪法冲突，先列冲突并请求裁决，不得擅自覆盖。
+- 文档优先级固定为：项目工程宪法/AGENTS > 冻结契约/ADR/schema/CI > Agent 任务书 > `.agents/` 本轮状态 > 聊天临时说明。
+- 工程宪法建立后，若需要给具体开发位分活，加载 `agent-task-book-authoring` 生成域/模块任务书，再由 `Athena` 根据任务书和文件所有权派工。
+- 若用户只给了单份规范文档（如 FocusFlow 风格 `agent_example.md`），先把它整理成工程宪法，再进入 Step 1。
+
 ### Step 1: 侦察目录结构
 ```bash
 find . -maxdepth 2 -not -path './.git/*' -not -path './.venv/*' | head -80
-ls -la README.md AGENTS.md .env.example pyproject.toml requirements.txt
+ls -la README.md AGENTS.md PROJECT_CONSTITUTION.md DEVELOPMENT_GUIDE.md .env.example pyproject.toml requirements.txt
 ```
-找：README / **AGENTS.md**（多 agent 总章程）/ docs/00-README（文档索引）/ docs/02-roles/*（角色页+DRI）/ docs/01-architecture/*（冻结契约）/ sql/（实际 DDL）。
+找：README / **AGENTS.md**（多 agent 总章程）/ PROJECT_CONSTITUTION.md / DEVELOPMENT_GUIDE.md / docs/00-README（文档索引）/ docs/02-roles/*（角色页+DRI）/ docs/01-architecture/*（冻结契约）/ sql/（实际 DDL）。
 
 ### Step 2: 读文档顺序（按依赖）
 README → AGENTS.md → docs/00-README.md → docs/02-roles/00（DRI 矩阵）+ 目标角色页 → 冻结契约（接口/事件/Tool/DDL）→ 故障治理 → 门禁规范 → .env.example / pyproject.toml。

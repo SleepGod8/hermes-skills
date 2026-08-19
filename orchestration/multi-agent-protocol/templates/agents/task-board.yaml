@@ -1,0 +1,23 @@
+schema_version: "1.0"
+project: "<PROJECT_NAME>"
+run_id: "<RUN_ID>"
+constitution:
+  path: "<PROJECT_CONSTITUTION.md>"
+  version: "<CONSTITUTION_VERSION>"
+updated_at: "<ISO-8601>"
+owner: "Athena"
+status_values: [BACKLOG, READY, CLAIMED, IN_PROGRESS, REVIEW, BLOCKED, ACCEPTED, RELEASED]
+tasks:
+  - id: "T-001"
+    title: "<TASK_TITLE>"
+    owner: "<AGENT_PROFILE>"
+    status: "READY"
+    depends_on: []
+    task_book: "<PATH_TO_TASK_BOOK>"
+    file_scope: ["<PATH_OR_GLOB>"]
+    acceptance: ["<MEASURABLE_CRITERION>"]
+    validation_commands: ["<COMMAND>"]
+    evidence: []
+    blockers: []
+    claimed_at: null
+    completed_at: null
