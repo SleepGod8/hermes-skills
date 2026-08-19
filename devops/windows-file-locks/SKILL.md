@@ -53,6 +53,27 @@ EOF
 ```
 **不要 kill 查到的 bash/python 进程**——它们是 Hermes 自己的 terminal 后端，kill 会破坏工具会话（且 kill 一批又冒一批）。正确顺序永远是：**移 cwd → 确认 NO_LOCK → 再删/改名**。
 
+## 🔧 cwd 移走后仍 busy：句柄锁 → robocopy /MOVE + Sysinternals handle64
+
+psutil 只查 **cwd 锁**，查不到**句柄锁**（进程持有目录句柄但 cwd 不在里面，如文件监视器/资源管理器/IDE 运行时）。当 `cd` 离开 + psutil NO_LOCK 后 `rmdir` 仍报 busy，按此链走（2026-08 实测）：
+
+1. **robocopy /MOVE 兜底搬内容**（mv 失败时的宽容替代）：复制全部内容后尝试删源
+   ```bash
+   MSYS_NO_PATHCONV=1 robocopy "<src>" "<dst>" /MOVE /E /NFL /NDL /NJH /NJS
+   ```
+   内容能搬走，但源空壳目录若被锁仍删不掉（Error 32）——此时目标是"内容到位"，空壳另处理。
+2. **handle64 定位句柄持有者**（Sysinternals，比 psutil 权威）：
+   ```bash
+   cd /tmp && curl -sL -o handle.zip https://download.sysinternals.com/files/Handle.zip
+   unzip -o handle.zip -d handle_tool
+   MSYS_NO_PATHCONV=1 /tmp/handle_tool/handle64.exe -accepteula -nobanner "<目录名>"
+   ```
+   输出 `进程名 pid: N type: File 句柄: 路径` —— 真正的句柄持有者。注意 Restart Manager API 可能报 NO_LOCKER_FOUND（它不覆盖目录树监视句柄），handle64 才能看到。
+3. **Hermes Studio 运行时锁（本机特有）**：`.hermes-web-ui\desktop-runtime\hermes\...\python.exe main.py`（常见 PID 50968/15172）会**监视 `E:\Hermes workspace` 整棵目录树**，持有其下任何目录句柄 → workspace 下项目移动/删除被拒的元凶之一。**不要 kill**（会弄挂 Studio 本体）；只能重启 Hermes Studio 释放句柄，或留空壳等下次重启。这也解释了 8000/8748 端口为何一直被 Studio 占着。
+4. **taskkill 在 git-bash 的正确写法**：`taskkill //F //PID x` 无效（乱码报错）、`cmd //c "taskkill..."` 可能掉进交互式 cmd；可用 `MSYS_NO_PATHCONV=1 taskkill /F /PID x` 或 psutil kill。
+
+> PowerShell 单引号坑：`powershell -NoProfile -Command '...'` 必须用**单引号**包命令，否则 bash 会把 `$_`、`$()` 展开导致脚本错误。
+
 ## 中文路径改名：用 Python os.rename，别用 cmd ren
 
 实测（2026-08）：中文目录改名
