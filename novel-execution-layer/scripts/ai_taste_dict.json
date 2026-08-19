@@ -1,0 +1,1249 @@
+[
+ {
+  "word": "一个念头浮现",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "值得一提的是",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "嘴角勾起一抹",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "无奈地笑了笑",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "然而就在这时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "眼中闪过一丝",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "眼底闪过一丝",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "脑中灵光一闪",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "脸上露出一抹",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "若有所思地说",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "万万没想到",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "但就在这时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "偏偏在这时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "可就在这时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "呼出一口气",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "忍不住笑了",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "恐怖如斯！",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "慢慢站起身",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "掩饰不住的",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "沉默了许久",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "深吸一口气",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "眼神中透着",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "竟恐怖如斯",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "脑海中浮现",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "难以掩饰的",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "一丝寒意",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "一时无言",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "一股暖流",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "不由自主",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "不禁想到",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "不难发现",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "与此同时",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "也就是说",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "众所周知",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "似笑非笑",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "低下头去",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "低笑一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "倾国倾城",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "偏偏此时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "内心挣扎",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "内心深处",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "冷笑一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "出乎意料",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "划过一丝",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "勾起嘴角",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "半晌无言",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "另一方面",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "叹了口气",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "哑然失笑",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "喃喃自语",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "嘴角上扬",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "回过神来",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "妙不可言",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "威压如山",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "带着一丝",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "归根结底",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "微微一笑",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "微微点头",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "微微颔首",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心中一动",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心中一震",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心中暗想",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心头一紧",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心头一跳",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心底一沉",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心底深处",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "心念电转",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心里咯噔",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "忽然之间",
+  "category": "connector",
+  "strategy": "rewrite",
+  "replacement": "具体动作/事件"
+ },
+ {
+  "word": "思绪万千",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "总的来说",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "总而言之",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "恐怖如斯",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "恰在此时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "情不自禁",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "惊为天人",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "意味深长",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "意料之外",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "愣了一愣",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "抬起头来",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "挑了挑眉",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "换句话说",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "摇了摇头",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "无可挑剔",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "无妨无妨",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "无法言喻",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "无碍无碍",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "无言以对",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "显而易见",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "暗暗想到",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "暗自心惊",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "杀气凛然",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "正在此时",
+  "category": "connector",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "毋庸置疑",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "气势如虹",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "气势磅礴",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "气质出尘",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "沉默半晌",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "沉默片刻",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "沉默良久",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "油然而生",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "淡淡地说",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "淡淡开口",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "潜意识里",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "点了点头",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "皱了皱眉",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "目光深邃",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "眼前浮现",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "睁开双眼",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "突然之间",
+  "category": "connector",
+  "strategy": "rewrite",
+  "replacement": "具体动作/事件"
+ },
+ {
+  "word": "算了算了",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "综上所述",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "缓缓开口",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "缓缓起身",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "罢了罢了",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "耳边响起",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "良久无言",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "若有所思",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "苦笑一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "莫名其妙",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "藏着一丝",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "语带深意",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "语气冷漠",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "语气平淡",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "转过身来",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "轻叹一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻声开口",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻笑一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻轻一笑",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "轻轻地说",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻轻放下",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻轻点头",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "轻轻颔首",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "迈开步伐",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "长叹一声",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "闪现一丝",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "闭上双眼",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "难以言说",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "露出一抹",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "风采绝世",
+  "category": "adjective",
+  "strategy": "rewrite",
+  "replacement": "具体细节描写"
+ },
+ {
+  "word": "鬼使神差",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "下一刻",
+  "category": "connector",
+  "strategy": "rewrite",
+  "replacement": "具体动作/事件"
+ },
+ {
+  "word": "下一瞬",
+  "category": "connector",
+  "strategy": "rewrite",
+  "replacement": "具体动作/事件"
+ },
+ {
+  "word": "下一秒",
+  "category": "connector",
+  "strategy": "rewrite",
+  "replacement": "具体动作/事件"
+ },
+ {
+  "word": "下意识",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "不由得",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "不自觉",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "事实上",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "低声道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "冷声道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "吧……",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "呢……",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "呢喃着",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "回过神",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "实际上",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "怔了怔",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "悠悠道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "本能地",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "柔声道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "沉声道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "没想到",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "缓缓道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "说到底",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "轻声道",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "不由",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "不禁",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "不过",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "于是",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "仿佛",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "俊美",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "修长",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "像是",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "内心",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "升起",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "呢喃",
+  "category": "action",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "啊。",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "啊！",
+  "category": "tone",
+  "strategy": "delete"
+ },
+ {
+  "word": "好似",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "宛如",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "幽幽",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "幽深",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "微微",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "心中",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "心底",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "心想",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "心里",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "忽然",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "总算",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "悄悄",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "慢慢",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "掠过",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "旋即",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "明亮",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "暗暗",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "暗自",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "暗道",
+  "category": "psychology",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "最终",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "毕竟",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "泛着",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "泛起",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "浮现",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "涌起",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "淡淡",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "深深",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "深邃",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "清澈",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "渐渐",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "滋生",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "然而",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "犹如",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "猛然",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "精致",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "纤细",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "终于",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "终究",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "绝美",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "绝色",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "缓缓",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "罢了",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "而已",
+  "category": "tone",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "英俊",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "莫名",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "蔓延",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "轻轻",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "透着",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "逐渐",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "闪着",
+  "category": "adjective",
+  "strategy": "rewrite"
+ },
+ {
+  "word": "闪过",
+  "category": "psychology",
+  "strategy": "rewrite",
+  "replacement": "动作/对话呈现"
+ },
+ {
+  "word": "随即",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "隐隐",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "静静",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ },
+ {
+  "word": "顿时",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "骤然",
+  "category": "connector",
+  "strategy": "delete"
+ },
+ {
+  "word": "默默",
+  "category": "action",
+  "strategy": "replace",
+  "replacement": "具体动作"
+ }
+]
