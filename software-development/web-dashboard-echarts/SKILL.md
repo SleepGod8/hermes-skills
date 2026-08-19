@@ -1,6 +1,6 @@
 ---
 name: web-dashboard-echarts
-description: "Use when 开发/维护 FastAPI+ECharts Web 看板：慢任务前端异步化、图表渲染坑。"
+description: "Use when 开发/维护 FastAPI+ECharts Web 看板：慢任务前端异步化、图表渲染坑、主题切换、多维雷达图。"
 version: 1.0.0
 tags: [fastapi, echarts, frontend, async, dashboard, javascript]
 ---
@@ -67,6 +67,7 @@ dataZoom: [
 3. API 实测：分别测「核心端点首次耗时」「慢任务端点耗时」「二次访问缓存命中耗时」（time curl -w），用 python json 解析核对关键字段
 4. 前端交互实测：browser_navigate → 点击 → 等核心数据时间 → snapshot 确认各 panel → browser_vision 视觉确认横轴可读性与 dataZoom
 5. MSYS curl 0 字节伪象 → 用 python urllib 复核真实字节数（详见 local-web-service-debugging）
+6. browser_console 求值复杂 JS 用**单行表达式**（多行 IIFE 报 `SyntaxError: Unexpected end of input`）；新前端特性逐项用 python 脚本查 HTML 落位 + console 查全局状态（charts/lastData/localStorage）
 
 ## 实测参考（2026-08 GitHub 体检工具）
 
@@ -98,3 +99,21 @@ dataZoom: [
 
 - shell 环境可能残留旧 `PORT=8748` 环境变量 → 新代码默认 8010 也被覆盖，必须显式 `PORT=8010 python main.py`
 - MSYS 杀进程：`MSYS_NO_PATHCONV=1 taskkill /F /PID <pid>`（`//PID` 与 `cmd //c` 都不可靠，详见 local-web-service-debugging/references/windows-process-kill-msys.md）
+- `terminal(background=true)` 返回的 PID 是 bash 包装进程，不是真实服务 PID → 用 `netstat -ano | grep ":<port>" | grep LISTEN` 取真实 PID 再 taskkill（否则报「找不到进程」）
+
+## 8. 主题切换（深色/浅色）+ ECharts 颜色跟随
+
+- CSS 变量方案：`:root` 定义深色，`html[data-theme="light"] { --bg/--card/--text/... }` 覆盖；切换按钮只改 `data-theme` + localStorage 记忆
+- **图表颜色必须走 CSS 变量**：ECharts setOption 里硬编码的 axisLabel/splitLine/borderColor/backgroundColor 在切主题后不会变 → 加 helper `cssVar(name) = getComputedStyle(document.documentElement).getPropertyValue(name).trim()` 取色
+- 组件专属变量（`--chart-border`/`--lang-bar-bg`/`--commit-border`/`--table-border`）与语义色（`--muted`/`--accent`/`--border`）分开定义，图表引用前者、UI 引用后者
+- 切主题后必须 `reRenderCharts()`：用保存的 lastData 重跑各 render + 重绘雷达图，再 requestAnimationFrame resize；AI 数据也要存 lastAI 供重绘
+- 打印/PDF 导出：`@media print` 隐藏 header/search/toolbar，`.panel,.card { break-inside: avoid }` 防跨页
+
+## 9. 多维评分雷达图（LLM 结构化输出增强）
+
+- 给 AI prompt 加新字段（如 5 维 dims）后，**LLM 常不遵守新格式**（实测 gpt-5.4 仍返回旧 JSON 无 dims）→ 双保险：
+  1. 提高 max_tokens（600→800）给新字段留空间
+  2. 加确定性兜底函数：LLM 没返回 dims 时从仓库指标（stars/forks/issues/releases/archived/homepage/wiki/topics）推导，保证前端永远有图
+- **缓存多读路径坑**：兜底注入若只加在 ai_score() 主函数，`/api/score` 端点直接 `_ai_cache_get()` 命中返回会绕过它 → 每个读缓存返回的路径都要补兜底
+- 旧缓存兼容：命中缓存时检测新字段缺失 → 补算并回写缓存（前端也需判 dims 缺失时隐藏雷达图）
+- 前端雷达图：容器已可见时 init 无 0 宽问题；indicator `{name, max:100}` + series type radar；值用 `Math.min(100, Math.max(0, Number(v)||0))` 夹取

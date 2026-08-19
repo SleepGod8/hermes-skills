@@ -41,6 +41,12 @@ powershell -Command "Get-Process -Id <PID> | Select-Object ProcessName, Path | F
 3. 核心 API：带真实参数调一遍，用 Python 解析 JSON 核对关键字段非空
 4. AI/慢接口：缓存命中后重测，记录耗时（如 `ai_elapsed_ms`）
 5. 前端：浏览器打开 → 输入→点按钮→等待 → accessibility snapshot 各 panel 齐全 + `browser_console` 确认 **0 JS 错误** + 用 `document.querySelectorAll` / `img.complete && img.naturalWidth>0` 验证 canvas 与 fallback 图片真实加载
+   - **`.loading` 元素常驻但 `display:none`**：`!!document.querySelector('.loading')` 永远 true，判断"是否还在加载"必须 `[...document.querySelectorAll('.loading')].some(e => getComputedStyle(e).display !== 'none')`——否则会把已完成的页面误判为卡住
+   - **等异步结果**：browser_console 的 expression 里用 `new Promise(r => setTimeout(() => r(JSON.stringify({...})), N))` 做延时轮询（如 4s/8s/10s 递增），别用死等
+   - **localStorage 记忆别猜 key 名**：主题/历史等记忆 key（实测为 `gh_theme`/`gh_history`，不是 `theme`/`repoHistory`）用 `for (let i=0;i<localStorage.length;i++){...localStorage.key(i)...}` 枚举拿真实 key
+   - **记忆持久化验证**：单次切换只证明写入；要 `browser_navigate` 刷新同 URL 后看按钮图标（🌙/☀️）+ `getComputedStyle(document.body).backgroundColor` 是否保持——刷新后仍在才算记忆成功
+   - **浏览器会话会重置 localStorage**：跨会话/重开浏览器 localStorage 可能全空，历史/主题记忆验证要在同一次浏览器会话内完成，别拿上次会话的数据当现状
+   - **图表重绘验证**：主题切换/数据更新后 `document.querySelectorAll('canvas').length` 应保持预期数量（如 3 = 雷达+语言分布+活跃度），再配合 `browser_vision` 做视觉确认（浅色背景、五边形、无遮挡）
 6. 端口冲突时找空闲端口：`for p in 8010 8011 8012; do netstat -ano | grep ":$p " | grep LISTENING || echo "$p FREE"; done`
 
 ## 交付打包要点
