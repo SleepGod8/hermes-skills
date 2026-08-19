@@ -16,6 +16,7 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 7. `references/enhanced-pipeline.md` — 《增强版多 Agent 开发流水线规范》。
 8. `references/workflow-retro-2026-08.md` — 《2026-08 工作流复盘新增要点》（v1.6，含合并方向 merge-base 核实、同步后全员可读性确认）。
 9. `references/review-findings-calibration.md` — 《审查 Findings 结构化与置信度校准规范》。
+10. `references/workflow-retro-2026-08-smart-wealth.md` — 《2026-08 smart-wealth 项目复盘新增要点》（v1.7，含验收状态机、环境口径登记表、日志噪音分级、运维进程台账、汇报四要素）。
 
 ## 使用方式
 

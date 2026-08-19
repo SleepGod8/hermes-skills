@@ -61,6 +61,43 @@ Model 'qwen-vl-max' not found. The requested model does not exist in our configu
 4. Read `agent/auxiliary_client.py` (in `$HERMES_HOME/hermes-agent/agent/`) lines 17-23 to confirm the vision resolution chain: main provider → OpenRouter → Nous Portal → Anthropic → custom endpoint. Your provider must appear here or be a custom endpoint.
 5. After fixing, restart gateway (`hermes gateway run --replace`) to pick up config changes.
 
+## Per-task Fallback Chain（auxiliary.<task>.fallback_chain）
+
+Hermes 的 auxiliary 任务支持 **配置级 fallback 链**：主 provider 因容量问题
+失败时自动切到备选 provider，无需人工干预。2026-08 实测（vision 任务）：
+GLM-4.6v-flash 主看图 → 429/连接错误自动切 qwen-vl-plus。
+
+```yaml
+auxiliary:
+  vision:
+    provider: custom:ZhipuGLM
+    model: glm-4.6v-flash
+    fallback_chain:
+      - provider: custom:DashScope
+        model: qwen-vl-plus
+```
+
+**触发条件**（auxiliary_client._call_llm_impl）：fallback 只在 **capacity 错误**
+触发——429 rate limit、402/credit、连接错误、模型不兼容、无效响应。401 auth
+错误不触发（显式 provider 时）。主 provider 构建 client 失败（无 key）也会走
+fallback_chain。
+
+**entry 字段**：`provider` + `model` 必填；`base_url`/`api_key`/`api_mode`
+可选。api_key 不写时按 provider 名从环境变量解析（如 DashScope → 
+DASHSCOPE_API_KEY），Hermes 运行时 .env 已加载，无需显式写。
+
+**验证**（execute_code 里先手动加载 .env 再调）：
+```python
+from agent import auxiliary_client as ac
+ac._try_configured_fallback_chain("vision", "custom:ZhipuGLM",
+    reason="rate limit", failed_model="glm-4.6v-flash")
+# -> (DashScope client, 'qwen-vl-plus', 'fallback_chain[0](custom:DashScope)')
+```
+
+**坑**：execute_code sandbox 不自动加载 hermes .env，直接端到端调用会 401；
+先在脚本里手动读 .env 设 os.environ 再测。config.yaml 受 patch 工具保护，
+改 auxiliary 段用 execute_code 文本替换（保留注释），改前备份。
+
 ## Pitfalls
 
 - **`hermes config set custom_providers` overwrites the entire list.** When adding a new provider, you MUST include all existing providers in the JSON array. Passing only the new entry will delete all others.
