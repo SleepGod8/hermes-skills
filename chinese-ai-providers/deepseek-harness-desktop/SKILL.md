@@ -1,6 +1,6 @@
 ---
 name: deepseek-harness-desktop
-description: "Use when 配置/排查 DeepSeek Harness 桌面客户端 API key、凭据、多份安装与来源鉴定。"
+description: "Use when 配置/排查 DeepSeek Harness 桌面客户端 API key、第三方模型 provider、多份安装。"
 version: 1.0.0
 author: Hermes Agent
 license: MIT
@@ -30,6 +30,42 @@ Use when 用户问 DeepSeek Harness / DeepSeek Harness EAC 桌面客户端怎么
 
 其它变量：`DEEPSEEK_API_BASE`（API 基址）、`DEEPSEEK_BALANCE_URL`（余额端点）、`DSH_HOME`（数据目录）。
 
+## 主聊天模型接第三方 OpenAI 兼容 provider（llm-pi-ai，第一方适配器）
+
+主聊天模型（Web UI 模型选择器）接任意 OpenAI 兼容端点（ASLNet/SiliconFlow 等）——编辑 `~/.dsh/settings.yaml`（先备份 `.bak`）：
+```yaml
+llm-pi-ai:
+  providers:
+    aslnet-plus:                       # provider 组名（模型选择器里显示）
+      displayName: ASLNet Plus
+      apiKeyEnv: ASLNET_PLUS_KEY       # 环境变量名；DSH 只读 Windows 环境变量，不读 Hermes .env
+      api: openai-completions          # 或 anthropic-messages / openai-responses
+      baseURL: https://api.aslnet.cloud/v1
+      models:
+        - id: gpt-5.5
+          name: gpt-5.5
+          contextWindow: 128000
+          maxTokens: 16384
+          input: [text]
+```
+- schema 权威来源：`<安装目录>\resources\app\node_modules\@deepseek-ai\dsh-llm-pi-ai\lib\index.js`（`Config = z.object({ providers: z.dict(profile) })`；profile 可配 reasoningEfforts/compat/headers/transport 等）
+- `apiKeyEnv` 指向的 key 需 `setx` 到 Windows 用户环境变量（DSH 进程不继承 Hermes 的 .env）
+- ⚠️ **改完必须重启 DSH**（llm-pi-ai 启动时读 settings.yaml）；日志出现 `[dsh-third-party-thinking] wrapped N third-party adapter(s)` = 第三方适配器已注册
+- reasoning_effort 注入默认关闭（dsh-third-party-thinking 插件），严格校验请求体的第三方 API 会 4xx——先别急着开
+- 完整 ASLNet 实测配置见 `references/aslnet-provider-2026-08.md`
+
+## IM 桥接第三方端点（openclaw-bridge）
+
+- 设置 → ClawBot/IM 桥接，settings 命名空间 `openclaw-bridge`，provider id `openclaw-custom`
+- 字段：customBaseURL / customApiKey / customModel；走 OpenAI 兼容 `/chat/completions`，热生效
+- 只作用于微信/飞书消息驱动的 agent（接收模型），**不是** Web UI 主聊天模型
+
+## 运维/排障
+
+- 数据目录：安装版 `%APPDATA%\<productName>\` 各自独立（v0.3.9 = `%APPDATA%\DSH Desktop`；v4.1.0 换皮版 = `%APPDATA%\Deepseek Harness EAC`）；dsh 配置在 `~/.dsh/settings.yaml`。查当前进程数据目录：`powershell Get-CimInstance Win32_Process -Filter "Name='<exe>'" | select ExecutablePath`，再看子进程 node 命令行里的 `--user-data-dir`
+- Web UI 端口：`settings.json` 的 `webPort` 可能已过期；以 `logs\dsh-web.log` 的 `dsh web: http://127.0.0.1:<port>` 为准；也可 `netstat -ano | grep <主进程PID>`。UI 是 SPA（`http://127.0.0.1:<port>/`），curl 200 即就绪
+- 从 bash 启动 Electron GUI 可能静默退出（exit 0 无窗口）→ **实测可靠方式：`explorer.exe "E:\path\App.exe"`**（2026-08-19 验证，`cmd //c start` 与 `powershell Start-Process` 都可能静默失败——开了 cmd 但进程没起来）；仍不起就让用户桌面双击。启动即退时查 `logs\watchdog.log` 的 `clean exit marker found`（正常退出标记/单实例锁）和 `logs\desktop.log` 尾部；改完环境变量先 `taskkill /IM "<exe>" /T /F` 再启，避免旧进程残留
+
 ## 排查步骤
 
 1. **看环境变量（不要只信 bash `env`）**：
@@ -56,6 +92,7 @@ Use when 用户问 DeepSeek Harness / DeepSeek Harness EAC 桌面客户端怎么
 
 - 改完用 `reg query "HKCU\Environment" /v DEEPSEEK_API_KEY` 确认写入值与目标 key 一致（只回显后几位 + 长度即可，勿打印完整 key）。
 - 用更新后的 key 实测 chat/completions 200 + balance 返回 `balance_infos`（字段：total_balance 总额 / granted_balance 赠送 / topped_up_balance 充值）。
+- 第三方 provider 端到端：Web UI 发一条无害消息（如「回复OK」），desktop.log 出现 `[notify] 任务完成: {title: 消息, body: 工作区 · 会话 xxx}` + UI 有回复 = 真实调用成功（2026-08-19 实测 ASLNet gpt-5.4，首轮 ¥0.0103）。模型选择器菜单应按 displayName 分组显示（DeepSeek / ASLNet Plus 等）。
 
 ## 多份安装 / 来源鉴定 / 安装完整性
 
