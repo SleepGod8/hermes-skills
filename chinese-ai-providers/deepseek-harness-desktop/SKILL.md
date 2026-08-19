@@ -94,6 +94,35 @@ llm-pi-ai:
 - 用更新后的 key 实测 chat/completions 200 + balance 返回 `balance_infos`（字段：total_balance 总额 / granted_balance 赠送 / topped_up_balance 充值）。
 - 第三方 provider 端到端：Web UI 发一条无害消息（如「回复OK」），desktop.log 出现 `[notify] 任务完成: {title: 消息, body: 工作区 · 会话 xxx}` + UI 有回复 = 真实调用成功（2026-08-19 实测 ASLNet gpt-5.4，首轮 ¥0.0103）。模型选择器菜单应按 displayName 分组显示（DeepSeek / ASLNet Plus 等）。
 
+## EAC 内置插件安装（assets/plugins + COMPANION_PLUGINS）
+
+给 DeepSeek Harness EAC 桌面版安装内置/随包分发插件时，不能只把插件目录复制到 `E:\Deepseek Harness EAC\resources\app\assets\plugins\<dir>`，也不能只手改 `~/.dsh/profiles/web-desktop/cordis.patch.yml`。EAC 启动会从 `resources/app/main.js` 的 `COMPANION_PLUGINS` 表同步内置插件到 `~/.dsh/profiles/web-desktop/node_modules`、`.dsh-builtin-plugins.json` 和 `cordis.patch.yml`；手工 patch 行若包未进入 profile 解析链，会报：
+
+```text
+plugin tree failed to load ... Cannot find package '<plugin-name>' imported from C:\Users\...\.dsh\profiles\web-desktop\
+```
+
+正确流程：
+
+1. 下载/构建插件运行时文件到 `resources/app/assets/plugins/<dir>`，至少包含 `package.json`、`lib/`、`cordis.patch.yml` 以及运行资源。
+2. 在 `resources/app/main.js` 的 `COMPANION_PLUGINS` 数组里追加：
+   ```js
+   { id: '<entry-id>', name: '<package-name>', dir: '<assets-dir>' },
+   ```
+   `id` 要与插件 `cordis.patch.yml` 中的 loader entry id 一致，`name` 要与插件 `package.json.name` 一致，`dir` 是 `assets/plugins` 下目录名。
+3. `node --check 'E:/Deepseek Harness EAC/resources/app/main.js'` 验证语法（不要用 MSYS `/e/...` 路径给 Node，否则可能误解析）。
+4. 完全重启 EAC。启动日志应出现 `已同步配套插件/皮肤到 web profile: ... <entry-id>`。
+5. 验证：
+   ```bash
+   grep -n "<entry-id>\|<package-name>" /c/Users/80704/.dsh/profiles/web-desktop/cordis.patch.yml
+   grep -n "<package-name>" /c/Users/80704/.dsh/profiles/web-desktop/.dsh-builtin-plugins.json
+   test -f /c/Users/80704/.dsh/profiles/web-desktop/node_modules/<package-name>/package.json
+   curl -I http://127.0.0.1:<webPort>/
+   node --input-type=module -e "import('file:///C:/Users/80704/.dsh/profiles/web-desktop/node_modules/<package-name>/lib/index.js').then(()=>console.log('ok'))"
+   ```
+
+失败时守护器会自动回滚 `web-desktop` profile 到最后良好快照；看 `logs/desktop.log` 的 `guard` 与 `logs/dsh-web.log` 的 `ERR_MODULE_NOT_FOUND` 判断原因。
+
 ## 多份安装 / 来源鉴定 / 安装完整性
 
 用户可能装了多份（同源不同版本，常见嵌套目录：新版装在旧版目录里）。判定流程：
