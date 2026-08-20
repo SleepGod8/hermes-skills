@@ -134,6 +134,63 @@ Phase 7：复盘           W0 主持复盘，记录流程改进点
 - 状态变更必须记录：时间、岗位、原因、引用 bible 版本。
 - 禁止跳过「待审查」直接「已合并」。
 
+### 5.1 可恢复状态机与回合 checkpoint
+
+中大型创作任务使用以下状态；简单的一次性灵感问答可跳过：
+
+```text
+received → interrogating → awaiting_owner_decision → baselined
+→ assigned → producing → integrating → reviewing → repairing
+→ accepted → archived
+                 ↘ blocked → recovering → reviewing
+```
+
+- `awaiting_owner_decision` 表示确实等待主人拍板，不得伪装成岗位未完成。
+- `blocked` / `recovering` 不得直接广播为完成。
+- 每回合必须记录：状态、回合号、负责人、依据 bible 版本、已执行动作、真实证据、修改文件、风险和下一步。
+- 回合流程：读取 checkpoint → 执行有限动作 → 收集证据 → 更新 checkpoint → 决定下一回合。
+- 工具成功只证明动作执行，不证明创作目标达成；文件、脚本和外部状态必须重新读取或运行验证。
+
+推荐 `.novel/state/checkpoints.yaml` 条目：
+
+```yaml
+task_id: PLOT-01
+status: producing
+round: 1
+owner: W3
+input_bible: v2.5.1
+completed_actions: []
+evidence: []
+changed_files: []
+risks: []
+next_action: ...
+```
+
+### 5.2 设定状态标签
+
+所有影响创作的设定必须标明状态，禁止把建议或废案当成正典：
+
+```text
+[CANON]        主人钦定正典
+[W0-RULING]    W0 裁决，可执行但不得覆盖主人方向
+[DERIVED]      从正典推导出的约束
+[PROPOSAL]     岗位建议，未入典
+[PENDING]      等待主人拍板
+[REJECTED]     废案，仅供追溯
+```
+
+W1-W4 写作时默认只读 `[CANON]`、相关 `[W0-RULING]` 和 `[DERIVED]`；遇到 `[PROPOSAL]` 或 `[PENDING]` 必须向 W0 报告，不得自行定案。
+
+### 5.3 决策影响分析
+
+每次新增或修正主人决策后，W0 必须建立影响清单：直接受影响的 bible 条目、任务、伏笔、时间线和章节；同时列出需要复核与明确无需修改的范围。流程为：
+
+```text
+decision → impact_scan → affected_tasks → targeted_repair → regression_review
+```
+
+只修改受影响范围，禁止为了局部设定变更而无证据全量重写。
+
 ## 六、群聊协作规则
 
 ### 6.1 消息格式（创作场景专用）
@@ -175,6 +232,13 @@ Phase 7：复盘           W0 主持复盘，记录流程改进点
 
 - W0 是节奏控制器：某岗位超过 5 分钟未交付，W0 @ 提醒。
 - 群聊超过 10 分钟无实质进展，W0 主动收敛议题或向主人汇报进度。
+
+
+### 7.3 分卷与长期项目扩展
+
+长篇进入多个分卷后，不把全部内容继续堆入总 Bible：每卷建立局部 Bible，必须声明继承的全局正典、卷内新增正典、卷内临时状态和卷末回写项。局部 Bible 不得覆盖全局 `[CANON]`，冲突必须进入决策影响分析。
+
+每卷交付前至少完成：角色状态快照、伏笔状态对账、章节回归审查、人物/势力/伏笔关系图更新和本卷复盘指标。复盘指标用于发现流程问题，不作为文学质量的唯一评分。
 
 ## 七、主人交互边界
 

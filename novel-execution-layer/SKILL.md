@@ -21,6 +21,14 @@ platforms: [linux, macos, windows]
 | 质量自检 | 机械脚本 + Eos（W5）审查 | 脚本先跑 → Eos 人工挑刺互补 |
 | 修订回退 | W0 派工修订 | 沿用 W3 修订流程 |
 
+### 0.1 通用 Skill 与项目执行层边界
+
+- `novel-execution-layer` 是通用流程、脚本和提示词模板的来源。
+- 项目 `.novel/execution-layer/` 是当前小说的实际执行副本，可以有项目级 override，但不得无记录覆盖通用规则。
+- 项目副本必须维护 `project-manifest.yaml`，记录来源 Skill 版本、项目修订号、覆盖项和最近验证结果。
+- 同步顺序：读取通用 Skill → 检查项目 override → 选择性同步 → 运行脚本验证 → 记录迁移结果。
+- 若两者冲突，以项目 Bible 的主人钦定硬约束优先；其余冲突交 W0 裁决并写入 manifest。
+
 ## 1. 九阶段流程（按序推进，禁止跳阶段）
 
 `topic(选题) → setting(核心设定) → character(人设) → outline(全书大纲) → volume(分卷) → chapter(分章细纲) → writing(正文) → revision(修订) → done(完本)`
@@ -45,13 +53,20 @@ platforms: [linux, macos, windows]
 5. **修订**：W0 分发审查意见 → Dionysus 修订 → 复核通过 → 章归档。
 6. **状态登记**：正文可维护书级状态（境界/装备/关系）→ 追加到 `ledger.json`，下一章写作前先查账本。
 
-## 4. 机械质检三件套（scripts/）
+### 3.1 章节执行包
+
+W0 派工正文前必须生成 `.novel/chapter-packets/CH-xxx.yaml`，至少包含：`chapter_id`、`bible_version`、`outline_version`、`pov`、`time_position`、`location`、`must_happen`、`must_not_happen`、`character_state_before`、`foreshadowing` 和 `acceptance`。Dionysus 只能在执行包、Bible、细纲、前文和账本一致后写章；缺失关键字段时退回 W0，不自行补定案。
+
+## 4. 机械质检与扩展检查（scripts/）
 
 | 脚本 | 对应 DSH 模块 | 检测内容 | 用法 |
 |------|--------------|---------|------|
 | `golden3.py` | diagnose/rules.ts | 字数达标/对话占比/章末钩子/开场钩子/设定灌输/冲突引入，6 维评分 0-100 | `python golden3.py 第1章.md 第2章.md --min 2000 --max 5000` |
 | `ai_taste.py` | polish/scanner.ts | AI 味 234 词 5 类匹配，命中明细 + 密度评分（每千字加权） | `python ai_taste.py 章文件.md` |
 | `consistency.py` | consistency/detect.ts | 账本覆盖冲突/时间线倒挂/世界书沉淀建议 | `python consistency.py --ledger ledger.json --timeline timeline.json` |
+| `canon_guard.py` | 项目正典边界 | 按显式规则检查禁写断言与必需约束 | `python canon_guard.py draft.md --rules canon-rules.json` |
+| `foreshadowing_audit.py` | 伏笔台账 | 检查无 ID、逾期和孤儿伏笔 | `python foreshadowing_audit.py foreshadowing.json` |
+| `novel_metrics.py` | 工作坊复盘 | 汇总回合、返工、阻塞和正典冲突指标 | `python novel_metrics.py retrospective.json` |
 
 - 词库：`ai_taste_dict.json`（234 词，5 类：转折连接词/万能动作/心理AI腔/形容词堆叠/句末语气）。
 - 口径：主口径 totalChars（含标点空白），辅助 cjkChars；对话占比按成对引号内字符数。
@@ -65,6 +80,8 @@ platforms: [linux, macos, windows]
 - [ ] 本章完成细纲目标；章末留钩子
 - [ ] bible 一致性：无新增设定绕过账本/未裁决直接进 bible
 - [ ] Eos 审查通过
+- [ ] `canon_guard.py` 无未登记核心设定或硬约束冲突
+- [ ] `foreshadowing_audit.py` 无新增孤儿伏笔或逾期伏笔未处理
 
 ## 6. 修订与完本
 

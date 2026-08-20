@@ -66,6 +66,31 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 - `Aphrodite`：Agent 7B，表达候补
 - `Dionysus`：Agent 7C，发散候补
 
+### OpenStory 式状态与提案/裁决
+
+多 Agent 任务借鉴 OpenStory 的“状态先于行动、行动统一结算”模式，但不引入 Ray 或故事世界运行时：
+
+1. 每个任务从 `received → scoped → planned → executing → verifying → completed` 推进；失败进入 `blocked` 或 `recovering`，不得跳过验证直接宣告完成。
+2. 开发位先提交行动提案：目标、输入、文件范围、依赖、预期副作用、验证命令、回滚点；集成者检查后再允许实施。
+3. 共享接口、配置、schema、权限和跨模块文件的改动由 `Athena`/集成者统一裁决；开发位不得以局部成功替代全局状态确认。
+4. 每回合结束写入最小 checkpoint：当前状态、已执行动作、真实工具结果、已改文件、未决风险、下一回合动作。
+5. 统一结算后再广播给其他 Agent；其他 Agent 使用 checkpoint 和验证证据继续，不依赖聊天记忆猜测状态。
+
+推荐控制面字段：
+
+```yaml
+status: executing
+round: 2
+owner: Hebe
+proposal: ...
+changed_files: []
+evidence: []
+risks: []
+next_action: ...
+```
+
+该模式只增加状态和治理，不改变固定人格/岗位编制，也不允许把人格特质当作权限边界。
+
 ### 多 Agent 开工前置：项目工程宪法
 - 用户提供需求/骨架/规范并准备多人或多 Agent 开发时，必须先加载 `project-constitution-authoring`。
 - `default` 或 `Athena` 先把需求、架构、代码现状整理成项目级工程宪法；没有则创建，有则更新。
