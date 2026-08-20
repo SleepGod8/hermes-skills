@@ -102,6 +102,32 @@ grep -c "api.agnes-ai.cn" README.md            # 期望 0
 - 验证：zip 内 exe 哈希 == dist exe 哈希（`sha256sum` 对比）；zip 内所有文件过一遍密钥特征扫描
 - README 提「模型名示例」也可能被扫到，一并换中性占位符
 
+## AV 误报原因与缓解（onedir vs onefile）
+
+**现象**：PyInstaller 打包的 exe 在别的电脑上容易被杀毒软件（Defender 等）识别为病毒/木马。这是误报，不是工具真有毒。
+
+**误报成因（按权重）**：
+1. **onefile 自解压行为最像木马**：单文件运行时自动解压到 `%TEMP%\_MEIxxxx` 再执行，「单文件 + 自我解压 + 动态执行」与恶意壳/加载器（dropper）特征高度相似，启发式直接命中。
+2. **PyInstaller bootloader 特征被拉黑**：恶意软件作者大量用 PyInstaller 打包 Python 木马，AV 社区对「PyInstaller 产物」声誉分低，常见报法 `PUA:Win32/PyInstaller` / `Heur` 系列。
+3. **无代码签名证书**：未签名 exe 在 SmartScreen 显示「未知发布者」，信任度默认拉低。
+4. **行为叠加过阈值**：本地起 Web 服务（监听端口）+ 联网请求外部 API + 读写文件，未签名 + 自解压 + 联网 + 监听，行为引擎逐项加分超线。
+5. **信誉不足**：新 exe 样本少、无社区信誉，VirusTotal 多引擎启发式报毒；放几天/提交申诉会缓解但不会完全消失。
+
+**缓解方案（按性价比排序）**：
+
+| 方案 | 效果 | 成本 |
+|---|---|---|
+| 收件端加信任：SmartScreen「更多信息→仍要运行」+ Defender 加排除目录 | 最实用 | 0 |
+| 提交误报申诉：Microsoft Security Intelligence + VirusTotal 各提交一次 | 长期有效 | 0 |
+| **改用 `--onedir` 目录模式（zip 分发）** | 无自解压行为，误报率明显下降，**首选** | 低 |
+| 代码签名证书（EV 证书最好） | 基本根治 | 花钱 |
+
+**onedir 打包要点**：
+- 命令：`--onedir` 代替 `--onefile`，产物为 `dist/AppName/AppName.exe + 一堆依赖 dll/pyd`，整个目录压缩 zip 分发
+- 首次启动比 onefile 快（免解压）；目录形态可加 AppName.ini / 日志便于排查
+- 交付 README 需注明「解压整个文件夹再运行 exe」，不能只发单个 exe
+- onedir 同样要过密钥清扫三重扫描（exe 二进制 + zip 压缩流 + 包内文本）
+
 ## 验证清单（全部通过才算完成）
 
 - [ ] exe 启动进程存活，端口监听正常，全部端点 200
