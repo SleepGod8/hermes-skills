@@ -1,7 +1,7 @@
 ---
 name: pyinstaller-windows-packaging
 description: "Use when 打包 Python 为 Windows 免装 exe：uv 重建、GBK 修复、密钥清扫、交付验证。"
-version: 1.0.0
+version: 1.1.0
 author: Hermes & Iris (learned from session 2026-08)
 tags: [pyinstaller, windows, packaging, exe, security, key-scrub]
 platforms: [windows]
@@ -24,7 +24,7 @@ platforms: [windows]
 | Python 环境 | **uv 建干净 venv + 官方 CPython**（实测 3.12.11，`uv venv --python 3.12.11`） | conda Python 3.13 → PyInstaller 报 ffi.dll 缺失/DLL 警告 |
 | 打包命令 | PyInstaller 6.x，`--onefile` + `--add-data static` 内置静态资源 | 依赖外部 static 目录 → 别人机器上页面 404 |
 | 隐式导入 | 显式 `--hidden-import` 补 uvicorn 等（FastAPI 项目必查） | 依赖 PyInstaller 自动分析 → 运行时 ImportError |
-| 控制台 | 无控制台模式（`--noconsole`）时 stdout 为 GBK | 入口 print 含 emoji/中文 → 必崩 |
+| 控制台 | 无控制台模式（`--noconsole`）时 stdout 为 **None**（uvicorn 日志初始化崩）或 GBK（emoji 崩） | 入口 print 含 emoji/中文 → 必崩；uvicorn 直接报 `Unable to configure formatter 'default'` |
 | 密钥 | 交付包必须零真实密钥（三重扫描） | 环境变量兜底把 key 写进 config.json → 泄露 |
 
 ## 标准流程
@@ -99,6 +99,7 @@ grep -c "api.agnes-ai.cn" README.md            # 期望 0
 ### 6. 交付 zip 构建与最终验证
 
 - zip 内容：exe + README（使用说明：双击即用、默认端口、占用自动切换、/setup 填自己的 key）
+- 打包用 **Python zipfile**（`ZIP_DEFLATED` + `os.walk` 相对路径），中文文件名自动加 UTF-8 标志，跨系统解压不乱码；不要用 git-bash GNU tar（不支持 zip），bsdtar 会存 GBK 名（仅中文 Windows 可用）
 - 验证：zip 内 exe 哈希 == dist exe 哈希（`sha256sum` 对比）；zip 内所有文件过一遍密钥特征扫描
 - README 提「模型名示例」也可能被扫到，一并换中性占位符
 
@@ -146,3 +147,6 @@ grep -c "api.agnes-ai.cn" README.md            # 期望 0
 - **Windows curl 直连某些域名需 `--ssl-no-revoke`**（CRYPT_E_REVOCATION_OFFLINE）；应用侧 httpx 走 certifi 校验不受影响，不用改应用。
 - **size=0 别慌**：PyInstaller onefile 的 /tmp 路径映射问题可能导致 curl 看到 size=0，直接解析响应体/urllib 确认真实内容，非应用缺陷。
 - **README 示例文本也要扫**：示例 URL/模型名/示例 key 都可能被扫描命中，统一用中性占位符。
+- **`--noconsole` + uvicorn/FastAPI = 双击必崩**（`AttributeError: 'NoneType' object has no attribute 'isatty'` → `ValueError: Unable to configure formatter 'default'`）：windowed bootloader（runw.exe）把 `sys.stdout`/`sys.stderr` 置为 None，uvicorn 的 `DefaultFormatter.__init__` 调 `sys.stdout.isatty()` 直接抛异常退出。**任何环境启动都会复现**（不是只有双击）。修复（uvicorn.run 之前）：`if sys.stdout is None: sys.stdout = open(os.devnull, 'w', encoding='utf-8')`，stderr 同理；devnull 流自带 `.isatty()/reconfigure()`，后面 GBK reconfigure 循环也安全。验证：windowed exe 在 bash 里跑同样触发旧崩溃，修复后 `curl /api/health` 应 200。
+- **git-bash 的 GNU tar 不支持 zip**：`tar -a -c -f x.zip dir` 会生成 32MB 的伪 zip（无 central directory，unzip 报 `End-of-central-directory signature not found`）。用 `/c/Windows/System32/tar.exe`（bsdtar，支持 zip）或 Python zipfile。
+- **zip 中文文件名编码**：bsdtar 打 zip 存 GBK 文件名 + 无 UTF-8 标志（flag_bits=0x0）——中文 Windows 资源管理器解压正常，但 Python zipfile 按 cp437 解码显示乱码，跨系统（非中文 locale）必乱码。最规范：用 Python `zipfile.ZipFile(out,'w',ZIP_DEFLATED)` + `os.walk` 打包，非 ASCII 名自动加 UTF-8 标志（flag_bits=0x800），Win10/11 原生支持。诊断方法：读 zip local header 的原始 filename 字节（offset 30, 长度在 26-28）分别 utf-8/gbk 解码判断。
