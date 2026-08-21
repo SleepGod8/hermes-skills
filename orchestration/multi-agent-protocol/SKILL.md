@@ -28,6 +28,17 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 3. 先按固定编制选队形：`default` 总控中枢，`Athena/Hypnos/Hebe/Artemis/Nemesis/Eos` 为主队，`Ares/Aphrodite/Dionysus` 为候补军团。
 4. 按协议执行：任务编号、状态机、标准消息格式、文件所有权、合并顺序、质量门禁。
 5. 关键决定落到 `.agents/` 工件，不以聊天消息为唯一事实来源。
+6. 开工、派工、验收和交接前，把 OpenViking 作为共享档案馆使用：先用 `openviking_find` / `openviking_grep` 检索历史工程宪法、ADR、交接、验证和排障记录；需要长期追溯的结构化结论用 `openviking_archive` 归档。
+
+## 材料证据前置层（persona-distillation）
+
+当项目输入包含用户明确指定的图片、PDF、扫描文档或其他人物/需求材料时，先使用 `persona-distillation` 做本地只读提取，输出 `ocr-report-v1` 来源报告和证据分级，再进入工程宪法、预检或任务书流程。它只产生证据包，不直接冻结工程契约。
+
+- 输入必须是用户明确指定的有限文件；不得自动扫描目录、联网或上传。
+- 来源报告中的 `[EXTRACTED]`/低置信度内容只能作为候选材料；不能直接写入 `PROJECT_CONSTITUTION.md`、`AGENTS.md`、冻结接口、DDL 或任务书硬约束。
+- `default`/Athena 负责审阅证据包，区分事实、推断、冲突和待确认项；主人确认后才能升级为项目约束。
+- 证据包应记录来源 ID、页码、引擎、实际置信度、敏感字段和提取状态；敏感原文不得复制进共享 Agent 工件。
+- 证据包建议放在项目 `.agents/evidence/`，任务书和工程宪法只引用来源 ID/报告路径，不复制未经确认的私人原文。
 
 ## 多 Agent 开工技能加载顺序
 
@@ -48,7 +59,8 @@ description: Use when 多agent开发。严格遵从多Agent协作协议与固定
 2. 架构契约、ADR、冻结接口、数据库 schema、权限模型、CI/测试配置。
 3. Agent 任务书：某一域/模块/角色的一次性执行契约。
 4. `.agents/task-board.yaml`、`.agents/module-ownership.yaml`、`.agents/project-brief.md`：本轮执行状态与文件锁。
-5. 当前聊天中的临时说明。
+5. OpenViking 档案：跨会话历史、旧 ADR、验证证据、排障经验和交接快照；可用于追溯与提醒，但不得覆盖项目工程宪法和当前 `.agents/` 控制面。
+6. 当前聊天中的临时说明。
 
 若低优先级内容与高优先级内容冲突，开发位必须停止并列出冲突，由 `Athena`/主人裁决；不得用聊天临时指令静默覆盖工程宪法或冻结契约。
 
@@ -90,6 +102,17 @@ next_action: ...
 ```
 
 该模式只增加状态和治理，不改变固定人格/岗位编制，也不允许把人格特质当作权限边界。
+
+### OpenViking 共享工程档案馆
+
+OpenViking 是 Hermes / DSH / 多档案之间的共享检索档案馆，用于跨会话追溯，不替代项目文件：
+
+- **读取时机**：`default` / `Athena` 在开工和派工前检索项目名、模块名、ADR、冻结接口、任务编号、错误码；开发位执行前检索自己的模块历史和禁区；`Eos` 验收前检索 Done Definition、旧缺陷、旧验证证据和排障记录。
+- **工具选择**：语义查找用 `openviking_find`；精确查任务编号、接口、表名、错误码用 `openviking_grep`；命中 `viking://...` 后用 `openviking_read` 读取；需要归档长期结论时用 `openviking_archive`。
+- **归档类别**：多 Agent 开发只归档 `constitution`、`decision`、`handoff`、`validation`、`troubleshooting`、`review`、`reference`。归档内容必须是结构化结论、真实工具证据、裁决或交接，不归档 secrets、完整环境变量、无结论长日志和临时 TODO。
+- **权威边界**：`PROJECT_CONSTITUTION.md` / `AGENTS.md` / `.agents/` 仍是当前权威；OpenViking 命中内容只作为历史证据。若 OpenViking 与当前项目文件冲突，停止并交给 `Athena` / 主人裁决。
+- **容错**：OpenViking 工具会尝试自动启动 `openviking` Docker 容器；若 Docker Desktop 未运行或工具失败，不得编造历史结论，改用项目文件、session_search 或向主人报告缺口。
+- **推荐 workspace**：项目名使用稳定短名，例如 `smart-wealth`。归档标题包含 ADR/任务编号/模块名，tags 包含项目名、模块、阶段和角色，方便 DSH 与其他档案检索。
 
 ### 多 Agent 开工前置：项目工程宪法
 - 用户提供需求/骨架/规范并准备多人或多 Agent 开发时，必须先加载 `project-constitution-authoring`。

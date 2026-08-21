@@ -18,6 +18,10 @@ metadata:
 
 ## 工作流（实测验证的顺序）
 
+### Step -1: 材料证据预处理（按需）
+
+若输入包含用户明确指定的图片/PDF/扫描文档，先调用 `persona-distillation` 的本地只读流程，生成 `ocr-report-v1` JSON/Markdown 报告和证据分级。报告只作为预检输入，不等同于冻结契约；低置信度、敏感字段、冲突和待确认项必须进入数据缺口/对齐提案，主人确认后才能写入工程宪法或任务书。
+
 ### Step 0: 建立项目工程宪法
 
 工程宪法建立或确认后，根据任务复杂度从 `multi-agent-protocol/templates/agents/` 初始化项目根目录 `.agents/` 控制面。标准/重型任务至少创建 `project-brief.md`、`task-board.yaml`、`module-ownership.yaml`、`decisions.md`、`validation-log.md`、`risk-register.md`、`handoff.md`；所有 Agent 以这些文件作为跨会话执行状态来源。（多 Agent 开工前置）
