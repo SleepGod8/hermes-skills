@@ -115,20 +115,78 @@ After running it, answer from the returned snippets and say when evidence is inc
 - Official install path assumes standard `dsh` profile/plugin management:
 
 ```bash
-bash <(curl -fsSL https://ovrelease.tos-cn-beijing.volces.com/memory-plugin-shared/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/volcengine/OpenViking/main/examples/memory-plugin-shared/install.sh)
 # or
- dsh plugin --profile web add @openviking/dsh-memory-plugin
+dsh plugin --profile web add @openviking/dsh-memory-plugin
+dsh --profile web --dump-config
 ```
 
-- Verify with `dsh --profile web --dump-config`; runtime should inject OpenViking context and expose `mcp__openviking__*` tools.
-- For this user's DeepSeek Harness EAC desktop build, do not assume the official CLI plugin install works. EAC often requires built-in plugin synchronization via `resources/app/assets/plugins`, `COMPANION_PLUGINS`, profile node_modules, and `cordis.patch.yml`. Validate compatibility before promising success.
+- Verify composed config contains `openviking-memory` and `openviking-memory-runtime`; runtime should inject OpenViking context and expose `mcp__openviking__*` tools.
+- DSH integration doc recommends isolating OpenViking and connecting over HTTP.
+- When multiple agents/profiles use one OpenViking service, configure account/user/actor-peer or peer scope to avoid cross-project memory bleed.
+
+### DSH EAC v4.4.1 local validation notes
+
+Observed user layout:
+
+- App: `E:/Deepseek Harness EAC/resources/app`
+- DSH core: `E:/Deepseek Harness EAC/resources/app/node_modules/@deepseek-ai/dsh` (`0.1.0-rc.7`)
+- Profile: `C:/Users/80704/.dsh/profiles/web`
+- `dsh` may not be on PATH; run via:
+
+```bash
+APP='E:/Deepseek Harness EAC/resources/app'
+node "$APP/node_modules/@deepseek-ai/dsh/lib/bin.js" --profile web --dump-config
+```
+
+Validated EAC install path:
+
+1. Ensure `pnpm` exists. If `dsh plugin` says `pnpm` not found, install it globally. This profile was linked to pnpm store v11, so pnpm 11 was required; pnpm 10 caused `ERR_PNPM_UNEXPECTED_STORE`.
+2. If package path contains spaces, copy tarball to a no-space path before install; `dsh plugin ... add 'E:/Hermes workspace/...'` was misresolved under the profile workspace.
+3. Working install commands:
+
+```bash
+npm pack @openviking/dsh-memory-plugin@0.2.1 --registry=https://registry.npmjs.org/
+cp openviking-dsh-memory-plugin-0.2.1.tgz C:/Users/80704/.dsh/openviking-dsh-memory-plugin-0.2.1.tgz
+APP='E:/Deepseek Harness EAC/resources/app'
+node "$APP/node_modules/@deepseek-ai/dsh/lib/bin.js" plugin --profile web add 'C:/Users/80704/.dsh/openviking-dsh-memory-plugin-0.2.1.tgz'
+```
+
+4. Add/patch runtime config in `C:/Users/80704/.dsh/profiles/web/cordis.patch.yml` under `openviking-memory-runtime` rather than relying on ambient env:
+
+```yaml
+- id: openviking-memory-runtime
+  config:
+    endpoint: http://127.0.0.1:1933
+    apiKey: "<local key>"
+    account: local
+    user: master
+    peerId: dsh-eac-test
+    recallPeerScope: all
+    recallTokenBudget: 2000
+    scoreThreshold: 0.2
+    mcpToolCallTimeoutMs: 60000
+```
+
+5. Verify composed config:
+
+```bash
+node "$APP/node_modules/@deepseek-ai/dsh/lib/bin.js" --profile web --dump-config | grep -A20 openviking-memory
+```
+
+6. Start a disposable server for boot validation:
+
+```bash
+node "$APP/node_modules/@deepseek-ai/dsh/lib/bin.js" --profile web --port 0
+```
+
+7. Verify MCP proxy independently by launching `node C:/Users/80704/.dsh/profiles/web/node_modules/@openviking/dsh-memory-plugin/servers/mcp-proxy.mjs` with `OPENVIKING_URL`, `OPENVIKING_API_KEY`, `OPENVIKING_ACCOUNT`, `OPENVIKING_USER`, `OPENVIKING_PEER_ID`; send JSON-RPC `initialize`, `tools/list`, and `tools/call`. Expected tools include `find`, `read`, `grep`, `remember`, etc.
 
 ## Pitfalls
 
 - Do not conflate OpenViking with Milvus/Dify-style black-box RAG; emphasize the `viking://` filesystem and traceable retrieval.
 - Do not advise installing OpenViking into Hermes' own Python venv. The upstream Hermes integration doc recommends isolating OpenViking and connecting over HTTP.
-- When multiple agents/profiles use one OpenViking service, configure account/user/actor-peer or peer scope to avoid cross-project memory bleed.
-- DSH EAC compatibility is a separate validation problem from standard CLI DSH support.
+- DSH EAC compatibility requires both composed-config and runtime/proxy verification; package install alone is not proof.
 
 ## References
 
