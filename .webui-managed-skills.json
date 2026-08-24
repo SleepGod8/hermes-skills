@@ -1,8 +1,8 @@
 {
   "apikey-image-gen": {
     "owner": "hermes-web-ui",
-    "source_hash": "28e0829bee5f81f69b8b68dc8a25fabe152ad9500c0b911ae0934cd2029a123d",
-    "installed_hash": "28e0829bee5f81f69b8b68dc8a25fabe152ad9500c0b911ae0934cd2029a123d"
+    "source_hash": "68268596a6a26559fa5ff38151b013e2986f4e63be8a6dc53b008ab17a24cf44",
+    "installed_hash": "68268596a6a26559fa5ff38151b013e2986f4e63be8a6dc53b008ab17a24cf44"
   },
   "grok-image-to-video": {
     "owner": "hermes-web-ui",
