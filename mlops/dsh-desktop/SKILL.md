@@ -63,8 +63,11 @@ ASLNet 实测（2026-08）：`https://api.aslnet.cloud/v1` + `gpt-5.5` 可用。
 - Electron 应用缺 `resources/app`、`resources.pak`、`icudtl.dat` 必坏，无法启动；被「卸载不干净」破坏的目录直接整删重装
 - `~/.dsh/settings.yaml` 里 `agent-default-model.model` 是当前默认模型（余额小部件按它估算价格）
 - 其他环境变量：`DSH_DESKTOP_BACKEND=local|wsl`（WSL 托管模式）、`NPM_CONFIG_REGISTRY`（更新慢时设 npmmirror）、`DSH_VISION_API_KEY`（识图）
+- **`dsh plugin --profile web add ...` 装错 profile**：EAC 实际加载 `web-desktop`（`main.js` 有 `const DESKTOP_PROFILE = 'web-desktop'`），`web` 是旧共享 profile；必须用 `--profile web-desktop`，否则 EAC 不加载。详见 `references/plugin-install.md`
+- **`dsh plugin add` 只注册 bundle 不补 cordis.patch.yml**：装完插件还需手动在 profile 的 `cordis.patch.yml` 末尾追加 `- insert: {id: <pkg>, name: '<pkg>'}` 块，否则插件不激活
 
 ## 支持文件
 
 - `references/windows-env-vars.md` — Windows 环境变量查询/写入/key 验证方法
 - `references/aslnet-provider.md` — ASLNet 端点实测与接入示例
+- `references/plugin-install.md` — **`dsh plugin` CLI 安装插件**（`--profile web-desktop` 坑、npm vs pnpm、cordis.patch.yml 手动补插）
