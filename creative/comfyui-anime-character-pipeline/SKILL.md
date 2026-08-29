@@ -50,6 +50,26 @@ platforms: [windows]
 - 高大丰腴身材：`tall, voluptuous, curvy, wide hips, thick thighs, big breasts, hourglass figure`；负向加 `petite, skinny, thin, flat chest`
 - 角色设定示例：Hermes=白短发巨乳眯眯眼；Athena=银长直发眯眯眼冷艳女仆（`athena_maid_workflow_api.json` 无精修 / `athena_maid_detailer_api.json` 带精修）
 
+## Anima 模型（新，2026-08 添加）
+
+**Anima**（circlestone-labs/Anima）＝ CircleStone Labs × Comfy Org 合作 2B 动漫文生图，基于 NVIDIA Cosmos-Predict2-2B，单文件 diffusion 格式，ComfyUI 原生支持。
+
+- **三个文件**：`anima-base-v1.0.safetensors`（→ diffusion_models，3988MB）、`qwen_3_06b_base.safetensors`（→ text_encoders，1137MB）、`qwen_image_vae.safetensors`（→ vae，242MB）
+- **工作流节点链**：`UNETLoader(unet_name=anima) → CLIPLoader(clip=qwen_3_06b, type=cosmos) → VAELoader(qwen_image_vae)`，另加 `ModelSamplingContinuousEDM(sampling=cosmos_rflow, sigma_max=120, sigma_min=0.002)`
+- **参数**：分辨率 512²~1536²；30-50 steps / CFG 4-5；采样器 `er_sde`（默认）/ `euler_a` / `dpmpp_2m_sde_gpu`；调度器 sgm_uniform
+- **提示词**：Danbooru 标签，小写+空格（score_* 用下划线）；质量前缀 `masterpiece, best quality, score_7, safe`；画师用 `@artist`；负向 `worst quality, low quality, score_1, score_2, score_3, artist name`
+- **测试实测**：anima-base 30 steps/CFG4.5/er_sde/sgm_uniform/896×1152 → 30 秒出图（RTX 4060 8GB），质量良好
+
+### ⚠️ Anima-2.9B（社区层扩展版）坑
+
+**Anima-2.9B**（Gazingstars123）= 官方 Anima 层扩展微调（28→40层，~2.9B），知识截止 2026-07。
+
+- 全精度 `Anima-2.9B-preview-v1.safetensors`（5843MB）
+- int8 量化 `Anima-2.9B-preview-v1_int8_convrot.safetensors`（3082MB）
+- **int8 量化版在 ComfyUI 输出灰图**！日志特征：`Detected mixed precision quantization` + `model weight dtype torch.bfloat16, manual cast: torch.bfloat16` → 量化权重被当普通 bfloat16 用，反量化没生效。v0.31.0 和 v0.34.2 都复现。**不要用 int8 版，用全精度版**（int8 版已删，避免误用）
+- ComfyUI 旧版（<0.33.1）加载 2.9B 会报 `unet unexpected: blocks.28-39.*`（扩展层被忽略→灰图），需升级或装 ComfyUI-Anima-2.9B 插件
+- 2.9B 推荐参数：euler/sgm_uniform（或 res-multistep/linear-quadratic），812×1216 / 1152×1536，28-50 steps，CFG 3.5-5；提示词越详细越好，推荐加 @artist
+
 ## 踩坑记录
 
 1. **pip 装依赖换掉 torch**：`pip install ultralytics`（带依赖）会把 torch 重装成 CPU 版。**必须 `--no-deps`**，再单独补轻量依赖（matplotlib opencv-python-headless dill）。恢复 CUDA torch 用阿里镜像 wheel：`https://mirrors.aliyun.com/pytorch-wheels/cu130/torch-2.13.0+cu130-cp313-cp313-win_amd64.whl`。
