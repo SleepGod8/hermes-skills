@@ -12,8 +12,9 @@ tags: [llm, local-model, vram, quantization, gguf, uncensored, roleplay, hugging
 ## 触发场景
 
 - 用户给出一个模型名（如 DarkIdol）问本地性能/能不能跑
-- 用户给出用途（言情/角色扮演/无审查/写作）问本地有什么更好选择
+- 用户给出用途（言情/角色扮演/无审查/写作/看图/判断画风）问本地有什么更好选择
 - 用户报显存/内存问该下哪个量化档
+- 用户发图问画风但云端视觉模型被拦截，需要本地视觉模型替代
 
 ## 工作流
 
@@ -30,6 +31,12 @@ nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
 - 14B Q4_K_M ≈ 9GB → **超显存**，靠 32GB RAM 部分 CPU offload → 15-25 tok/s
 - Q8_0 8B ≈ 8.5GB → 超 8GB 显存，掉到 10-20 tok/s，不推荐
 - 速度估算基准：4060 Laptop 带宽 ~256GB/s；8B Q4 全 GPU 约 40-55 tok/s
+
+**视觉模型（VLM）档位**（需要额外 mmproj 投影器文件）：
+- Qwen2.5-VL-7B Q4_K_M ≈ 4.5GB（mmproj-Q8_0 ≈ 0.6GB）→ 合计 ~5.1GB，全 GPU 可行
+- Qwen2.5-VL-7B abliterated Q4_K_M ≈ 4.5GB → 去审查版，NSFW 图片无限制
+- moondream2 ≈ 1.8GB → 极轻量但画风判断能力弱，仅做兜底
+- 注意：VLM 比同参数量文本模型多占 ~0.5-1GB（mmproj 投影器），选显存预算时要多算进去
 
 ### Step 2: HF API 发现候选（headless，比浏览器快）
 
@@ -77,6 +84,39 @@ curl -sL --max-time 30 "https://huggingface.co/<repo>/raw/main/README.md" | grep
 3. RP 氛围靠 RP 微调层（如 Josiefied 版 Qwen2.5-7B-abliterated-v2 = 去审查 + 言情微调，8GB 甜点）
 4. 英文向 RP 模型（DarkIdol/Lumimaid）中文文笔存疑，作为备选而非首选
 
+## 本地 VLM 视觉模型（云端视觉被内容审计拦截时）
+
+**2026-08 实测背景**：NSFW 图片会同时被 GLM-4.6v-flash（1301）、qwen-vl-plus（data_inspection_failed）、ASLNet（403）三家内容审计拦截，本地无审查 VLM 是唯一出路。
+
+### 推荐选型（8GB 卡）
+
+| 模型 | 大小 | 说明 |
+|------|------|------|
+| `mradermacher/Qwen2.5-VL-7B-Abliterated-Caption-it-GGUF` | Q4_K_M 4.4GB + mmproj-Q8_0 0.6GB | ⭐ 首选：去审查 + 专攻图像描述 + 支持中文 |
+| `mradermacher/Qwen2.5-VL-7B-Instruct-abliterated-GGUF` | 同上 | 通用指令版去审查 |
+| `qwen2.5vl:7b`（Ollama 官方库） | 6GB | 未去审查；Ollama 直拉国内极慢（实测 119-153 KB/s，14h+） |
+
+### 下载与导入（mmproj 双文件结构）
+
+VLM 的 GGUF 是**双文件**：主模型 `.gguf` + 视觉投影器 `mmproj-*.gguf`，两个都要下：
+
+```bash
+# hf-mirror 下载（国内直连）
+curl -L -o model.Q4_K_M.gguf 'https://hf-mirror.com/<repo>/resolve/main/<model>.Q4_K_M.gguf'
+curl -L -o mmproj-Q8_0.gguf 'https://hf-mirror.com/<repo>/resolve/main/<model>.mmproj-Q8_0.gguf'
+```
+
+Ollama 导入 VLM 需要同时指定主模型 + mmproj。Modelfile 用 `FROM` 指向本地 gguf，`ADAPTER` 挂载 mmproj。Ollama 新版语法也可用 `ollama create <name> --model gguf --mmproj mmproj`。国内 hf.co 直拉 Ollama VLM 极慢，建议走 hf-mirror 手动下载再导入。
+
+### 运行验证
+
+```bash
+ollama ps  # 确认没有其他模型占显存
+curl http://127.0.0.1:11434/api/chat -d @request.json  # 带图 base64 测试
+```
+
+显存注意：8GB 卡跑 7B VLM Q4 基本占满，darkidol 等文本模型要先退出。
+
 ## Pitfalls
 
 - **Ollama 从 hf.co 直拉 GGUF 可能模板未识别（重大坑）**：`ollama pull hf.co/<repo>:Q4_K_M` 成功后，模型可能只输出 "safe"（中英文提示都只回一个词）。诊断：`ollama show <model>` 看 Capabilities 只有 **completion**（没有 chat）→ Ollama 没读到 GGUF 内嵌聊天模板，把输入当 raw completion 处理。修复：手动写 Modelfile 指定正确 TEMPLATE（Llama 3.1 用 `<|begin_of_text|><|start_header_id|>...`，Qwen 用 `<|im_start|>...`）+ `PARAMETER temperature 0.7`，然后 `ollama create <短名> -f Modelfile`（FROM 直接引用已拉的模型名，**不用重新下载**）。完整复现/修复见 [references/ollama-gguf-import.md](references/ollama-gguf-import.md)。
@@ -84,6 +124,8 @@ curl -sL --max-time 30 "https://huggingface.co/<repo>/raw/main/README.md" | grep
 - **模型卡声明 ≠ 实测**：尤其「重新对齐中日韩但只测英文」这类话术，中文效果必须实测（下 Q4 跑一段中文提示词验证）。
 - **Q8_0 看起来更准但超显存**：8GB 卡上 8B Q8_0 要 CPU offload，反而比 Q4_K_M 全 GPU 慢得多。
 - **35B-A3B 这类 MoE 别推荐给 8GB 卡**：激活参数小但权重总量大（Q4 ≈ 20GB），offload 后速度不佳。
+- **ASLNet 模型碰 NSFW 内容会 403 风控拦截**：涉及 NSFW/色情图片分析时，禁止用 ASLNet（gpt-5.x 系列）的视觉能力，必须走 GLM-4.6v-flash / qwen-vl 或本地 VLM。
+- **像素统计推断画风是瞎猜**：当视觉 API 全部被内容审计拦截时，用 PIL+numpy 算饱和度/色数/边缘强度来推断画风（赛璐璐 vs 厚涂 vs 欧美风）是不可靠的——纯数值层面日系和欧美动漫风几乎无法区分。正确做法：坦诚告知用户看不到图，让用户描述画面特征后再判断，或者部署本地无审查 VLM（见「本地 VLM 视觉模型」章节）。
 - **git-bash 下测速/计时坑**：`bc` 不存在（用 `awk "BEGIN{print ...}"` 算耗时）；curl `-o /dev/null` 会报 exit 23 写失败（写临时文件再测）。
 - 模型迭代快，下载量/生态结论每几个月会变；以当次 HF 搜索为准，reference 文件当背景知识。
 
