@@ -68,7 +68,9 @@ platforms: [windows]
 - int8 量化 `Anima-2.9B-preview-v1_int8_convrot.safetensors`（3082MB）
 - **int8 量化版在 ComfyUI 输出灰图**！日志特征：`Detected mixed precision quantization` + `model weight dtype torch.bfloat16, manual cast: torch.bfloat16` → 量化权重被当普通 bfloat16 用，反量化没生效。v0.31.0 和 v0.34.2 都复现。**不要用 int8 版，用全精度版**（int8 版已删，避免误用）
 - ComfyUI 旧版（<0.33.1）加载 2.9B 会报 `unet unexpected: blocks.28-39.*`（扩展层被忽略→灰图），需升级或装 ComfyUI-Anima-2.9B 插件
+- **⚠️ 全精度版也灰图！** v0.34.2 + `manual cast: None` 加载正常（5572MB），但3组参数（无sigma / sigma=200 / sigma=120）全部饱和度<8。根因：ComfyUI UNETLoader 不读 `expand_manifest.json`（zeroed_tensors + 插入位置），40层扩展架构的计算图残缺。**需要专门的 `ComfyUI-Anima-2.9B` 自定义节点**（https://github.com/gazingstars123/ComfyUI-Anima-2.9B）
 - 2.9B 推荐参数：euler/sgm_uniform（或 res-multistep/linear-quadratic），812×1216 / 1152×1536，28-50 steps，CFG 3.5-5；提示词越详细越好，推荐加 @artist
+- **当前结论：2.9B 在 ComfyUI 原生跑不了，等装插件后再试。Anima 2B（官方）在 ComfyUI 里正常可用。**
 
 ## 踩坑记录
 
