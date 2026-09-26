@@ -2,73 +2,92 @@
 
 > 女仆家族（default Hermes×Iris + profiles/ 下女仆档案）色情玩法的**唯一权威**总库。
 > 平时不加载；用户提出色情玩法/互动要求时，**必须先 skill_view 加载本 skill** 再进入角色。
-> 机制/玩法改动只改本 skill；改完必须跑 `scripts/sync_to_profiles.py` 同步 8 个子档案。
+> 机制/玩法改动只改本 skill；改完必须跑 `python scripts/sync_to_profiles.py` 同步 8 个子档案。
 
 ## 📁 目录结构
 
 ```
 lewd-playbook/
-├── SKILL.md                     # 主手册：共通机制/野兽模式/疯狂口穴/模型切换协议/索引
+├── SKILL.md                     # 主手册：输出规范/安全词·红线·后戏/野兽模式/疯狂口穴/共通机制/模型切换协议/索引
 ├── README.md                    # 本导航文件
 ├── references/
 │   ├── 控制系/                  # ⏱️ 控制系四大玩法手册
-│   │   ├── time-stop-play.md    #   时间停止（暂停分级/人偶/痕迹/偷玩/狩猎）
-│   │   ├── sensory-shield-play.md  # 感官遮蔽（面不改色/无感侍奉/反差play）
-│   │   ├── freeze-play.md       #   状态冻结（寸止/定格/无声忍耐/接力赛）
-│   │   └── hypnosis-play.md     #   催眠（深度分级/触发词/记忆操作/梦境）
-│   ├── 机械奸/                  # 🦾 机械奸玩法（器械/改造/共感链机械/性奴）
+│   │   ├── time-stop-play.md        # 时间停止（暂停分级/人偶/痕迹/偷玩/狩猎/回溯）
+│   │   ├── sensory-shield-play.md   # 感官遮蔽（面不改色/无感侍奉/反差play）
+│   │   ├── freeze-play.md           # 状态冻结（寸止/定格/无声忍耐/接力赛）
+│   │   └── hypnosis-play.md         # 催眠（深度分级/触发词/记忆操作/梦境）
+│   ├── 机械奸/                  # 🦾 机械奸（器械/改造/共感链机械/性奴）
 │   │   └── machine-play.md
-│   ├── 体位/                    # 💃 做爱体位大全（基础/口乳腿足/束缚/多人/男方体位/标签）
+│   ├── 体位/                    # 💃 做爱体位大全（基础/口乳腿足/束缚/多人/男方体位/机制联动）
 │   │   └── positions.md
-│   ├── 女仆专属/                # 👤 各女仆专属玩法（含 Hermes×Iris）
-│   │   ├── hermes-iris.md       #   Hermes×Iris（野兽/共感链/声音烙印/累积债）
-│   │   ├── athena.md            #   冰山/后庭弱点/清醒野兽/年上义务
-│   │   ├── aphrodite.md         #   乳头开关/魅惑波纹
-│   │   ├── dionysus.md          #   酒印开关
-│   │   ├── hebe.md              #   体力无限/成就系统
-│   │   ├── artemis.md           #   傲娇/吃醋/憋欲系统
-│   │   ├── ares.md              #   永动之躯
-│   │   ├── nemesis.md           #   雌小鬼/嘲讽play
-│   │   └── hypnos.md            #   睡神/梦境清醒体
+│   ├── 女仆专属/                # 👤 各女仆专属玩法（每人一份 · 详细设定）
+│   │   ├── hermes-iris.md       #   Hermes×Iris（野兽/共感链/声音烙印/累积债/制衡）
+│   │   ├── athena.md            #   清醒野兽/冰山破碎/笔记癖/后庭弱点/年上义务
+│   │   ├── aphrodite.md         #   乳头开关 0–5 级/魅惑波纹分级/痴迷期收容
+│   │   ├── dionysus.md          #   酒印开关/醉度 0–5 档/半醉半醒
+│   │   ├── hebe.md              #   辣妹野兽/体力无限/成就系统/实况解说
+│   │   ├── artemis.md           #   傲娇野兽/别扭补偿/憋欲系统/冷战
+│   │   ├── ares.md              #   永动之躯/体力条①-⑤/汗与体温/极限测定
+│   │   ├── nemesis.md           #   雌小鬼野兽/嘲讽play/子宫口弱点
+│   │   └── hypnos.md            #   睡梦野兽/梦境清醒体/睡眠学习
 │   ├── 跨档案/                  # 👭 跨档案联动（茶会/大乱斗/学院/修罗场/性奴调教）
 │   │   └── cross-maid.md
 │   ├── 装备系统/                # 🎒 道具装备槽（5槽位/4品质/词条/封印）
 │   │   └── equipment-system.md
+│   ├── 组合矩阵/                # 🧩【新】全局「玩法 × 玩法」总索引（跨手册拼装 + 姐姐私房提案）
+│   │   └── combo-matrix.md
 │   ├── 扩展玩法/                # 🎭 通用扩展玩法
-│   │   ├── cosplay-play.md      #   Cosplay 角色扮演（角色库/场景/入戏）
-│   │   ├── body-swap-play.md    #   身体互换play（灵魂互换/体验敏感点）
-│   │   ├── chastity-play.md     #   禁欲调教（贞操带/挑战/日记）
-│   │   ├── aphrodisiac-play.md  #   媚药（5级药物/下药/解药）
-│   │   ├── memory-theater-play.md # 记忆剧场（重放/慢放/记忆库）
-│   │   ├── tentacle-play.md     #   触手（8种/男根触手化/触手娘）
-│   │   ├── monster-girl-play.md #   魔物娘化（12种魔物/发情期/驯化）
-│   │   └── clone-play.md        #   克隆分身（感官同步/双倍侍奉）
-│   ├── 终局玩法/                # 👑 Lv.10 完全体专属终局技（全员）
+│   │   ├── cosplay-play.md          # Cosplay 角色扮演
+│   │   ├── body-swap-play.md        # 身体互换（灵魂互换）
+│   │   ├── chastity-play.md         # 禁欲调教（贞操带/挑战/日记）
+│   │   ├── aphrodisiac-play.md      # 媚药（5级药物/下药/解药）
+│   │   ├── memory-theater-play.md   # 记忆剧场（重放/慢放/记忆库）
+│   │   ├── tentacle-play.md         # 触手（8种/男根触手化/触手娘/生态园）
+│   │   ├── monster-girl-play.md     # 魔物娘化（12种魔物/发情期/驯化）
+│   │   ├── clone-play.md            # 克隆分身（感官同步/双倍侍奉）
+│   │   ├── parasite-play.md         # 寄生（养成 v2.0/寄生链/暴走）
+│   │   ├── hidden-play.md           # 隐奸（风险值/强忍/认知屏蔽 Lv.6）
+│   │   ├── body-mod-play.md         # 身体改造（5类/依赖与副作用）
+│   │   ├── brainwash-play.md        # 洗脑（四阶/6种方式/解除反转）
+│   │   ├── cyber-body-play.md       # 机械义体（12槽位/含性器官专用槽）
+│   │   └── neural-chip-play.md      # 脑内芯片（主副插槽/脑波互联 4 模式）
+│   ├── 终局玩法/                # 👑 Lv.10 完全体专属终局技（全员 · 含细则/桥段/停止条件）
 │   │   └── ultimate-moves.md
-│   └── 面板存档/                # 📊 女仆面板状态存档（等级/EXP/开发度/装备/印记）
-│       └── panel-records.md
+│   └── 面板存档/                # 📊 动态状态（拆分结构 · 2026-09-26 重构）
+│       ├── panel-records.md         #   总览：单一写入者声明 + 通用规则 + 快速一览表 + 路由 + 维护约定
+│       ├── maids/<名字>.md          #   每位女仆的权威面板（等级/EXP/开发度/装备/印记/部位统计/最近6条备注）
+│       ├── archive/<年-月>.md       #   历史备注全文归档（无损，防膨胀）
+│       └── story-log.md             #   剧情续接档（上次玩到哪 / 欠什么 / 下次钩子）
 └── scripts/
-    └── sync_to_profiles.py      # 同步脚本：复制本库到 8 个子档案
+    ├── sync_to_profiles.py      # 同步到 8 子档案（v2.0：漂移检测/备份/只读镜像/dry-run/verify-only）
+    ├── panel_maintain.py        # 面板备注归档维护（保持最新 6 条，溢出转 archive，幂等）
+    └── verify_panels.py         # 面板一致性校验（10 项检查，PASS/FAIL/WARN）
 ```
 
 ## 🗂️ 分类导航
 
 | 想找什么 | 去哪看 |
 |---------|--------|
-| 共通机制/等级制/野兽模式/男根规格 | `SKILL.md` |
+| 输出规范 / 安全词 / 红线 / 后戏 / 点单菜单 | `SKILL.md` |
+| 共通机制 / 等级制 / 野兽模式 / 男根规格 / 模型切换协议 | `SKILL.md` |
 | 时间停止 / 感官遮蔽 / 冻结 / 催眠 | `references/控制系/` |
 | 机械奸 / 腰活塞驱动台 | `references/机械奸/machine-play.md` |
 | 体位大全 / 男方体位 / 分类标签 | `references/体位/positions.md` |
 | 某位女仆的专属玩法 | `references/女仆专属/<名字>.md` |
+| 想拼新花样 / 跨手册组合 | `references/组合矩阵/combo-matrix.md` |
 | 多人联动 / 茶会 / 性奴调教 | `references/跨档案/cross-maid.md` |
 | 装备槽 / 封印 / 贞操带 | `references/装备系统/equipment-system.md` |
 | Lv.10 终局技 | `references/终局玩法/ultimate-moves.md` |
-| 面板 / 等级 / 开发度 / 部位统计 | `references/面板存档/panel-records.md` |
+| 谁现在什么等级/开发度/装备 | `references/面板存档/maids/<名字>.md`（总览看 `panel-records.md`） |
+| 上次玩到哪、欠着什么 | `references/面板存档/story-log.md` |
 
 ## 🔧 维护约定
 
-1. 机制/玩法改动只改本 skill，不写回各档案 SOUL.md（避免双份维护撕裂）
-2. 改完任何文件后跑 `python scripts/sync_to_profiles.py` 同步 8 个子档案
-3. 新增玩法按归属放进对应子文件夹，并在 `SKILL.md` 索引表登记
-4. 年龄红线：Eos（16岁）绝不参与任何色情玩法
-5. 每次色情互动结束自动更新 `references/面板存档/panel-records.md`（轻结算+部位统计）
+1. 机制/玩法改动**只改本 skill**，不写回各档案 SOUL.md（避免双份维护撕裂）
+2. 改完任何文件后跑 `python scripts/sync_to_profiles.py` 同步 8 个子档案（加 `--dry-run --diff` 可预演）
+3. **添加/修改玩法必须给详细设定**（分级/桥段/组合/名场面/红线），禁止一行简介入库；写完在 `SKILL.md` 索引表登记
+4. **面板写入者**：只有 default（Hermes）会话能写；子档案副本只读（`_MIRROR_READONLY.md` 标记 + 横幅提示）
+5. 每次色情互动结束（后戏第③拍）：更新 `maids/<名字>.md` → 总览一览表 → `story-log.md` → 跑同步脚本
+6. 面板备注超过 6 条跑 `python scripts/panel_maintain.py --apply` 归档；改完面板跑 `python scripts/verify_panels.py` 校验
+7. 年龄红线：Eos（16岁）绝不参与任何色情玩法
+8. 安全词「红茶」＝立刻停止，优先级高于一切设定
