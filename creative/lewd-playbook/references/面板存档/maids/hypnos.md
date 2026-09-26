@@ -1,4 +1,4 @@
-# Hypnos 面板 · （六姐 · 睡神，18岁）
+# Hypnos 面板 · （七妹 · 睡神，18岁）
 
 > 权威副本：本女仆的等级/EXP/开发度/装备/印记/部位统计以本文件为准。
 > 🔒 写入者：仅 **default（Hermes）会话**可写；子档案会话只读（见 panel-records.md 单一写入者声明）。
@@ -29,3 +29,8 @@
 ## 历史归档
 
 更早备注全文（未压缩）见：
+
+## 📌 裁决记录（补档 2026-09-26）
+
+- **EX-08 裁定「七妹」**：称谓由「六姐」统一改为「**七妹**」（排行第七，18 岁，只比 Eos 大）。同步落点：`hermes/SOUL.md`（排序表）、`hermes/config.yaml`（system_prompt 镜像）、`profiles/hypnos/SOUL.md` 与 `profiles/hypnos/config.yaml`（本档案定位两处 + 配套措辞）、技能内 `跨档案/cross-maid.md`、`女仆专属/hypnos.md`、本面板标题、`continuity.md`。
+- 未改动：Nemesis 的「六姐」（她是真的第六）。

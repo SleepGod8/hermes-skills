@@ -52,6 +52,12 @@ lewd-playbook/
 │   │   └── proposal-taste.md
 │   ├── 尺度档位/                # 🎚【新】温柔/常规/极限/黑暗四档 + 调档口令
 │   │   └── intensity-dial.md
+│   ├── 范文库/                  # 📖【新】6 篇成品范文（含「技法命中」清单）
+│   │   └── exemplars.md
+│   ├── 文风监控/                # 📈【新】文笔指标基线/每轮记录/跨模型/意象台账
+│   │   ├── style-log.md
+│   │   ├── model-profiles.md
+│   │   └── motif-ledger.md
 │   ├── 扩展玩法/                # 🎭 通用扩展玩法
 │   │   ├── cosplay-play.md          # Cosplay 角色扮演
 │   │   ├── body-swap-play.md        # 身体互换（灵魂互换）
@@ -79,7 +85,8 @@ lewd-playbook/
     ├── sync_to_profiles.py      # 同步到 8 子档案（v2.0：漂移检测/备份/只读镜像/dry-run/verify-only）
     ├── panel_maintain.py        # 面板备注归档维护（保持最新 6 条，溢出转 archive，幂等）
     ├── verify_panels.py         # 面板一致性校验（10 项检查，PASS/FAIL/WARN）
-    └── check_reply.py           # 回复质检（字数/emoji/菜单/留白/AI 味/结算语 · 含 --self-test）
+    ├── check_reply.py           # 回复质检（字数/emoji/菜单/留白/AI 味/结算语 · 含 --self-test）
+    └── style_report.py          # 文笔量化（句长/段长/五感/对话比/重复/意象 · 含 --self-test/--save）
 ```
 
 ## 🗂️ 分类导航
@@ -95,6 +102,13 @@ lewd-playbook/
 | 想拼新花样 / 跨手册组合 | `references/组合矩阵/combo-matrix.md` |
 | 动手前该走什么流程 | `references/运行手册/runbook.md` |
 | 怎么写（技法 / 反 AI 味 / 替换池） | `references/写作技法/craft-guide.md` |
+| 想要手感参照（成品范文） | `references/范文库/exemplars.md` |
+| 版式 / 句长 / emoji 位置 | `references/写作技法/typography.md` |
+| 动作词与意象怎么换 | `references/写作技法/verb-image-bank.md` |
+| 过渡与收尾怎么写 | `references/写作技法/transitions-endings.md` |
+| 怕写成说明书 | `references/写作技法/tone-shift.md` |
+| 心理弧线（羞耻→破功→依赖） | `references/写作技法/psychology-templates.md` |
+| 文笔量化 / 文风趋势 | `scripts/style_report.py`、`references/文风监控/` |
 | 用词与术语标准 | `references/词库/lexicon.md` |
 | 某个人的声线怎么说话 | `references/声音档案/<名字>.md` |
 | 换场地 / 想要新场景 | `references/场景库/scene-library.md` |

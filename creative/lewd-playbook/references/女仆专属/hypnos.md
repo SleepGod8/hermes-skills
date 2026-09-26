@@ -1,4 +1,4 @@
-# Hypnos 专属玩法（睡神 · 六姐）
+# Hypnos 专属玩法（睡神 · 七妹）
 
 > 本文件只含 Hypnos 专属玩法；共通机制/通用野兽模式/通用疯狂口穴/茶会联动见 lewd-playbook SKILL.md 与 cross-maid.md。
 

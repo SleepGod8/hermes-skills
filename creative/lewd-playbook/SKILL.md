@@ -89,6 +89,14 @@ platforms: [windows, linux, macos]
 | 这轮多激烈 | `references/尺度档位/intensity-dial.md`（温柔/常规/极限/黑暗 + 调档口令） |
 | 引用哪个「第一次」 | `references/面板存档/continuity.md`（首次/里程碑/待发生的第一次） |
 | 写完自查 | `python scripts/check_reply.py --file <本轮正文>`（字数/emoji/菜单/留白/AI 味/结算语） |
+| 想要手感参照 | `references/范文库/exemplars.md`（6 篇成品示范：①温柔/②常规/③极限/群像/四件套/后戏） |
+| 版式与标点 | `references/写作技法/typography.md`（段落/句长/emoji 位置/正文与结算分隔） |
+| 换动作词与意象 | `references/写作技法/verb-image-bank.md`（动词三档 + 分场景意象 + 情绪外化） |
+| 过渡与收尾 | `references/写作技法/transitions-endings.md`（场景过渡句 + 收尾回味句库） |
+| 怕写成说明书 | `references/写作技法/tone-shift.md`（报告腔↔描写腔对照表） |
+| 心理弧线 | `references/写作技法/psychology-templates.md`（羞耻→破功→依赖 三段模板） |
+| 文笔量化 | `python scripts/style_report.py --file <本轮正文> [--save]`（句长/段长/五感/对话比/重复/意象） |
+| 文风与跨模型 | `references/文风监控/style-log.md`＋`model-profiles.md`＋`motif-ledger.md` |
 
 ## 通用野兽模式 🐺（所有女仆适用）
 
@@ -228,6 +236,16 @@ platforms: [windows, linux, macos]
 | **提案口味（受用区/易拒区/「换一批」应对/提案台账）** | `references/提案口味/proposal-taste.md` |
 | **尺度档位（温柔/常规/极限/黑暗 · 调档口令 · ④档专用规程）** | `references/尺度档位/intensity-dial.md` |
 | **连续性锚点（家族大事记/各女仆「第一次」/待发生的第一次钩子池）** | `references/面板存档/continuity.md` |
+| **范文库（6 篇成品示范 + 技法命中清单）** | `references/范文库/exemplars.md` |
+| 排版与标点规范（段长/句长/标点/emoji 位置/区块分隔） | `references/写作技法/typography.md` |
+| 动词库 + 比喻意象库（三档动词/分场景意象/情绪外化） | `references/写作技法/verb-image-bank.md` |
+| 过渡句库 + 收尾回味句库 | `references/写作技法/transitions-endings.md` |
+| 腔调转换（报告腔 ↔ 描写腔对照） | `references/写作技法/tone-shift.md` |
+| 心理描写模板（羞耻→破功→依赖） | `references/写作技法/psychology-templates.md` |
+| **文风监控档（指标基线 + 每轮记录）** | `references/文风监控/style-log.md` |
+| 模型分档写作提示（DeepSeek/Josiefied/DarkIdol 毛病与检查项） | `references/文风监控/model-profiles.md` |
+| 多轮意象台账（防跨轮复读） | `references/文风监控/motif-ledger.md` |
+| **文笔量化脚本（句长/段长/五感/对话比/重复/意象）** | `scripts/style_report.py` |
 
 ## 维护约定
 

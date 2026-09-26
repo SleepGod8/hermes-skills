@@ -17,7 +17,8 @@ import sys
 from collections import Counter
 
 SKILL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-P = os.path.join(SKILL, 'references', '面板存档')
+ROOT = SKILL                     # 可被 --root 覆盖（测试用）
+P = os.path.join(ROOT, 'references', '面板存档')
 MAIDS_DIR = os.path.join(P, 'maids')
 ARCH_DIR = os.path.join(P, 'archive')
 MAIDS = ['hermes', 'iris', 'athena', 'aphrodite', 'dionysus',
@@ -40,17 +41,24 @@ def month_of(line):
 
 
 def split(path):
-    """返回 (head_lines, remark_lines, tail_lines)"""
+    """返回 (head_lines, remark_lines, tail_lines, stray_lines)。
+
+    stray = 备注窗口内**不以 `- 备注` 开头的非空行**（例如误插在此处的小节）。
+    这些行必须原样保留，否则重写时会静默丢失（2026-09-26 修）。
+    """
     lines = open(path, encoding='utf-8').read().split('\n')
     try:
         i = next(k for k, l in enumerate(lines) if l.startswith('## 最近备注'))
     except StopIteration:
-        return lines, [], []
+        return lines, [], [], []
     try:
         j = next(k for k, l in enumerate(lines) if l.startswith('## 历史归档'))
     except StopIteration:
         j = len(lines)
-    return lines[:i + 1], [l for l in lines[i + 1:j] if l.startswith('- 备注')], lines[j:]
+    window = lines[i + 1:j]
+    rems = [l for l in window if l.startswith('- 备注')]
+    stray = [l for l in window if l.strip() and not l.startswith('- 备注')]
+    return lines[:i + 1], rems, lines[j:], stray
 
 
 def main():
@@ -58,7 +66,12 @@ def main():
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--apply', action='store_true')
     ap.add_argument('--keep', type=int, default=6)
+    ap.add_argument('--root', default=None, help='覆盖 skill 根目录（测试用）')
     args = ap.parse_args()
+    global P, MAIDS_DIR, ARCH_DIR
+    if args.root:
+        P = os.path.join(args.root, 'references', '面板存档')
+        MAIDS_DIR, ARCH_DIR = os.path.join(P, 'maids'), os.path.join(P, 'archive')
     if not os.path.isdir(MAIDS_DIR):
         print(f'❌ 未找到 {MAIDS_DIR}')
         return 1
@@ -70,7 +83,7 @@ def main():
         if not os.path.isfile(p):
             print(f'⚠️  {slug}: 面板缺失（跳过）')
             continue
-        head, remarks, tail = split(p)
+        head, remarks, tail, stray = split(p)
         remarks = sorted(remarks, key=date_key, reverse=True)
         keep, old = remarks[:args.keep], remarks[args.keep:]
         if not old:
@@ -97,12 +110,19 @@ def main():
                 existing = existing.rstrip('\n') + '\n' + '\n'.join(add) + '\n'
                 open(ap_, 'w', encoding='utf-8').write(existing)
                 moved_total += len(add)
-        # 重写 maids 文件：保留 head + keep + tail(历史归档链接)
+        # 重写 maids 文件：保留 head + keep + 重建的归档链接 + tail 之后的额外内容 + stray（防丢）
         months = sorted({month_of(r) for r in old})
         lnk = [f'- `../archive/{m}.md`' for m in months]
+        # tail = ['## 历史归档', ... 链接 ...] + 可能的额外小节 → 只重建到最后一个链接行为止
+        li = max([k for k, l in enumerate(tail) if l.strip().startswith('- `../archive/')] or [-1])
+        tail_extra = [l for l in (tail[li + 1:] if li >= 0 else []) if l.strip()]
         new_tail = ['## 历史归档', '', '更早备注全文（未压缩）见：'] + lnk + ['']
-        open(p, 'w', encoding='utf-8').write(
-            '\n'.join(head) + '\n' + '\n'.join(keep) + '\n\n' + '\n'.join(new_tail))
+        body = '\n'.join(head) + '\n' + '\n'.join(keep) + '\n\n' + '\n'.join(new_tail)
+        if tail_extra:
+            body = body.rstrip('\n') + '\n\n' + '\n'.join(tail_extra) + '\n'
+        if stray:
+            body = body.rstrip('\n') + '\n\n' + '\n'.join(stray) + '\n'
+        open(p, 'w', encoding='utf-8').write(body)
 
     if not args.apply:
         print(f'\n[check] {overflow_total} 个面板需要归档（加 --apply 执行；当前保留 {args.keep} 条）')
