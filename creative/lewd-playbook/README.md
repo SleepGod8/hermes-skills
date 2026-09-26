@@ -36,6 +36,22 @@ lewd-playbook/
 │   │   └── equipment-system.md
 │   ├── 组合矩阵/                # 🧩【新】全局「玩法 × 玩法」总索引（跨手册拼装 + 姐姐私房提案）
 │   │   └── combo-matrix.md
+│   ├── 运行手册/                # 📋【新】单次互动 SOP（开场三读→配方→写作→后戏→落档→自检）
+│   │   └── runbook.md
+│   ├── 写作技法/                # ✍️【新】技法层（五感配比/五段节奏/镜头/反 AI 味/替换池）
+│   │   └── craft-guide.md
+│   ├── 词库/                    # 🔤【新】术语标准写法 + 四档呻吟/淫语/称呼/各女仆变体
+│   │   └── lexicon.md
+│   ├── 声音档案/                # 🗣【新】10 位女仆声线档案（声线/称呼/口癖/台词/OOC 边界）
+│   │   └── <名字>.md
+│   ├── 场景库/                  # 🏛【新】14 张场地卡 + 场地×玩法速查 + 痕迹连续性
+│   │   └── scene-library.md
+│   ├── 菜单引擎/                # 🍽【新】菜单生成算法/四型配比/菜单外加点单
+│   │   └── menu-engine.md
+│   ├── 提案口味/                # 🎯【新】受用区/易拒区/「换一批」应对/提案台账
+│   │   └── proposal-taste.md
+│   ├── 尺度档位/                # 🎚【新】温柔/常规/极限/黑暗四档 + 调档口令
+│   │   └── intensity-dial.md
 │   ├── 扩展玩法/                # 🎭 通用扩展玩法
 │   │   ├── cosplay-play.md          # Cosplay 角色扮演
 │   │   ├── body-swap-play.md        # 身体互换（灵魂互换）
@@ -57,11 +73,13 @@ lewd-playbook/
 │       ├── panel-records.md         #   总览：单一写入者声明 + 通用规则 + 快速一览表 + 路由 + 维护约定
 │       ├── maids/<名字>.md          #   每位女仆的权威面板（等级/EXP/开发度/装备/印记/部位统计/最近6条备注）
 │       ├── archive/<年-月>.md       #   历史备注全文归档（无损，防膨胀）
-│       └── story-log.md             #   剧情续接档（上次玩到哪 / 欠什么 / 下次钩子）
+│       ├── story-log.md             #   剧情续接档（上次玩到哪 / 欠什么 / 下次钩子）
+│       └── continuity.md            #   连续性锚点（初次/里程碑/待发生的第一次）
 └── scripts/
     ├── sync_to_profiles.py      # 同步到 8 子档案（v2.0：漂移检测/备份/只读镜像/dry-run/verify-only）
     ├── panel_maintain.py        # 面板备注归档维护（保持最新 6 条，溢出转 archive，幂等）
-    └── verify_panels.py         # 面板一致性校验（10 项检查，PASS/FAIL/WARN）
+    ├── verify_panels.py         # 面板一致性校验（10 项检查，PASS/FAIL/WARN）
+    └── check_reply.py           # 回复质检（字数/emoji/菜单/留白/AI 味/结算语 · 含 --self-test）
 ```
 
 ## 🗂️ 分类导航
@@ -75,6 +93,16 @@ lewd-playbook/
 | 体位大全 / 男方体位 / 分类标签 | `references/体位/positions.md` |
 | 某位女仆的专属玩法 | `references/女仆专属/<名字>.md` |
 | 想拼新花样 / 跨手册组合 | `references/组合矩阵/combo-matrix.md` |
+| 动手前该走什么流程 | `references/运行手册/runbook.md` |
+| 怎么写（技法 / 反 AI 味 / 替换池） | `references/写作技法/craft-guide.md` |
+| 用词与术语标准 | `references/词库/lexicon.md` |
+| 某个人的声线怎么说话 | `references/声音档案/<名字>.md` |
+| 换场地 / 想要新场景 | `references/场景库/scene-library.md` |
+| 结尾给什么菜单 | `references/菜单引擎/menu-engine.md` |
+| 提案会不会被「换一批」 | `references/提案口味/proposal-taste.md` |
+| 这轮多激烈 / 怎么调档 | `references/尺度档位/intensity-dial.md` |
+| 引用哪个「第一次」 | `references/面板存档/continuity.md` |
+| 写完自查正文 | `python scripts/check_reply.py --file <正文>` |
 | 多人联动 / 茶会 / 性奴调教 | `references/跨档案/cross-maid.md` |
 | 装备槽 / 封印 / 贞操带 | `references/装备系统/equipment-system.md` |
 | Lv.10 终局技 | `references/终局玩法/ultimate-moves.md` |

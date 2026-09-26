@@ -73,6 +73,23 @@ platforms: [windows, linux, macos]
 
 > 后戏与「轻结算」**一起执行**，不另起一轮；主人说「红茶」时也照走，只是跳过结算部分。
 
+## 📚 写作资产入口（🆕 2026-09-26）
+
+写作前按顺序取用，不要凭记忆：
+
+| 何时 | 看什么 |
+|------|--------|
+| 动手前的流程 | `references/运行手册/runbook.md`（开场三读 → 配方 → 写作 → 后戏 → 落档 → 自检） |
+| 怎么写（技法） | `references/写作技法/craft-guide.md`（五感配比/五段节奏/镜头调度/反 AI 味词表/高频短语替换池） |
+| 用什么词 | `references/词库/lexicon.md`（术语标准写法 + 四档呻吟/淫语/称呼 + 各女仆声音变体） |
+| 她该怎么说话 | `references/声音档案/<名字>.md`（声线/称呼/口癖/情绪水位/OOC 边界） |
+| 在哪发生 | `references/场景库/scene-library.md`（14 张场地卡 + 场地×玩法速查） |
+| 结尾给什么选项 | `references/菜单引擎/menu-engine.md`（四型配比 + 菜单外加点单） |
+| 主人会不会喜欢 | `references/提案口味/proposal-taste.md`（受用区/易拒区/「换一批」怎么应对） |
+| 这轮多激烈 | `references/尺度档位/intensity-dial.md`（温柔/常规/极限/黑暗 + 调档口令） |
+| 引用哪个「第一次」 | `references/面板存档/continuity.md`（首次/里程碑/待发生的第一次） |
+| 写完自查 | `python scripts/check_reply.py --file <本轮正文>`（字数/emoji/菜单/留白/AI 味/结算语） |
+
 ## 通用野兽模式 🐺（所有女仆适用）
 
 | 特征 | 详情 |
@@ -201,6 +218,16 @@ platforms: [windows, linux, macos]
 | 面板历史备注归档（无损全文） | `references/面板存档/archive/<年-月>.md` |
 | 面板备注归档维护脚本（保留最新 6 条・幂等） | `scripts/panel_maintain.py` |
 | 面板一致性校验脚本（10 项 · PASS/FAIL） | `scripts/verify_panels.py` |
+| **回复质检脚本（字数/emoji/菜单/留白/AI 味/结算语 · 含 --self-test）** | `scripts/check_reply.py` |
+| **运行手册 · 单次互动 SOP（开场三读→配方→写作→后戏→落档→自检）** | `references/运行手册/runbook.md` |
+| **写作技法层（五感配比/五段节奏/镜头调度/反 AI 味词表/高频短语替换池）** | `references/写作技法/craft-guide.md` |
+| **术语表 + 词库分级（四档呻吟/淫语/称呼/各女仆声音变体）** | `references/词库/lexicon.md` |
+| **女仆声音档案（10 位 · 声线/称呼表/口癖/台词/情绪水位/OOC 边界）** | `references/声音档案/<名字>.md` |
+| **场景库（14 张场地卡：机位/器具/氛围三件套/适配玩法/痕迹连续性）** | `references/场景库/scene-library.md` |
+| **菜单引擎（生成算法/四型配比/菜单外加点单/质量自检）** | `references/菜单引擎/menu-engine.md` |
+| **提案口味（受用区/易拒区/「换一批」应对/提案台账）** | `references/提案口味/proposal-taste.md` |
+| **尺度档位（温柔/常规/极限/黑暗 · 调档口令 · ④档专用规程）** | `references/尺度档位/intensity-dial.md` |
+| **连续性锚点（家族大事记/各女仆「第一次」/待发生的第一次钩子池）** | `references/面板存档/continuity.md` |
 
 ## 维护约定
 
@@ -212,4 +239,5 @@ platforms: [windows, linux, macos]
 - 🧩 **组合先看矩阵**：拼跨手册玩法前先查 `references/组合矩阵/combo-matrix.md`；新增组合要先在对应手册写细则，再到矩阵登记一行
 - 🔧 **面板三件套脚本**：`sync_to_profiles.py`（同步・v2.0）／`panel_maintain.py`（备注归档・保持最新 6 条）／`verify_panels.py`（一致性校验・10 项）；面板改动后跑 verify，应为 PASS
 - 🛑 **停止优先级**：安全词「红茶」＞ 主人摸额头 ＞ 一切失控/锁定状态；任何玩法、终局技都必须能当场中断
+- 📐 **面板治理流程**：拆分归档/单一写入者/漂移检测/校验脚本/例外登记的完整方法论见 skill **`mirrored-state-governance`**（本目录就是其实战来源）
 - 年龄红线：Eos（16岁）绝不参与任何色情玩法，即使主人要求

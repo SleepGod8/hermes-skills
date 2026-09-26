@@ -206,6 +206,7 @@ metadata:
 
 ## 与其他 skill 的关系
 
+- **镜像状态档案的具体实施层**（拆分/单一写入者/漂移检测/校验脚本/例外登记/三重验收）：`mirrored-state-governance`
 - skill 创建与维护质量：`skill-authoring-quality-workflow`。
 - Hermes 自身配置和能力：`hermes-agent`，官方文档优先。
 - 多 Agent 项目开发：`multi-agent-protocol`。

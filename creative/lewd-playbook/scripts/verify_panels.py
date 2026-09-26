@@ -54,12 +54,19 @@ def ok(c, m):
 
 
 def parse_table(text):
+    """只解析「⚡ 快速一览表」那一段（否则后面的「面板路由」表会覆盖同名行，导致比对静默失效）。"""
+    seg = text
+    m = re.search(r'##\s*⚡?\s*快速一览表[^\n]*\n(.*?)(?=\n##\s|\Z)', text, re.S)
+    if m:
+        seg = m.group(1)
     rows = {}
-    for line in text.split('\n'):
+    for line in seg.split('\n'):
         if not line.startswith('|'):
             continue
         cells = [c.strip() for c in line.strip('|').split('|')]
         if len(cells) < 4 or cells[0] in ('女仆', '------') or set(cells[0]) <= set('-: '):
+            continue
+        if re.match(r'^`', cells[0]) or cells[0].startswith('maids/'):
             continue
         rows[cells[0]] = cells
     return rows
@@ -97,11 +104,31 @@ def strip_notes(s):
     return s
 
 
+def main_value(s):
+    """只取行首主值（第一个括号之前）——括号里是说明/溯源，不参与判定。"""
+    return re.split(r'[（(]', strip_notes(s))[0]
+
+
+TRACE_KW = ('备注', '裁决', '素材', '来源', '来自', '说明', '原素', '溯源', '依据')
+
+
+def drop_trace(s):
+    """去掉〔...〕与「含溯源关键词」的括号段（用于开发度百分比判定）。
+    普通说明性括号（如「梦体雄伟，感受男快感」）保留。"""
+    def repl(m):
+        return '' if any(k in m.group(1) for k in TRACE_KW) else m.group(0)
+    s = re.sub(r'〔[^〕]*〕', '', s)
+    s = re.sub(r'（([^）]*)）', repl, s)
+    s = re.sub(r'\(([^)]*)\)', repl, s)
+    return s
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--verbose', action='store_true')
     args = ap.parse_args()
-    exceptions = parse_exceptions('C5')   # 仅 C5 类例外豁免印记检查
+    exceptions = parse_exceptions('C5')     # 仅 C5 类例外豁免印记检查
+    exc_c11 = parse_exceptions('C11')       # C11 类例外豁免部位统计重复键检查
 
     main_file = os.path.join(P, 'panel-records.md')
     if not os.path.isfile(main_file):
@@ -168,7 +195,7 @@ def main():
         dev = re.search(r'- 开发度[:：](.+)', txt)
         mark = re.search(r'- 印记[:：](.+)', txt)
         if dev and mark:
-            dev_v, mark_v = strip_notes(dev.group(1)), strip_notes(mark.group(1))
+            dev_v, mark_v = drop_trace(dev.group(1)), strip_notes(mark.group(1))
             pcts = [int(x) for x in re.findall(r'(\d+)%', dev_v)]
             all100 = bool(pcts) and all(p == 100 for p in pcts)
             awakened = '完全觉醒' in mark_v
@@ -185,6 +212,17 @@ def main():
             bad = [s for s in segs if not re.match(r'^[\u4e00-\u9fa5]+[:：]\s*\d+\s*/\s*\d+', s)]
             if bad:
                 warn('C6', f'{name} 部位统计格式异常：{bad[:2]}')
+            # C11 部位统计重复键（一行内同一部位出现多次 = 数据缺陷）
+            keys = [s.split('：')[0].split(':')[0].strip() for s in segs if (':' in s or '：' in s)]
+            dups = {k: v for k, v in Counter(keys).items() if v > 1 and k}
+            if dups:
+                if name in exc_c11:
+                    warn('C11', f'{name} 部位统计重复键 {dups}（已登记例外 EX-05，待裁决）')
+                else:
+                    fail('C11', f'{name} 部位统计重复键 {dups} → 每部位只能出现一次')
+        # C12 Eos 不得出现在任何 maids/*.md 正文
+        if re.search(r'^##\s*Eos', body, re.M) or 'Eos（最小妹' in body:
+            fail('C12', f'{name} 面板混入了 Eos 段（Eos 不建档，只存在于总览一览表）')
         # C7
         n_rem = len([l for l in txt.split('\n') if l.startswith('- 备注')])
         if n_rem > KEEP_MAX:
@@ -210,15 +248,23 @@ def main():
     else:
         warn('C8', f'无基线文件 {BASELINE}，跳过归档无损校验')
 
-    # C9 索引完整
+    # C9 索引完整（支持占位符形式的「目录级索引」，如 references/声音档案/<名字>.md）
     skill_txt = open(os.path.join(SKILL, 'SKILL.md'), encoding='utf-8').read()
     indexed = {x.rstrip('.,;') for x in re.findall(r'references/[^\s`\)\|]+\.md', skill_txt)}
+    dir_indexed = set()
+    for x in indexed:
+        if '<' in x:
+            dir_indexed.add(x.split('<')[0].rstrip('/'))
     real = set()
     for r, d, fs in os.walk(os.path.join(SKILL, 'references')):
         for f in fs:
             if f.endswith('.md'):
                 real.add(os.path.relpath(os.path.join(r, f), SKILL).replace('\\', '/'))
-    unindexed = sorted(x for x in real - indexed if not x.startswith('references/面板存档/'))
+    unindexed = sorted(
+        x for x in real - indexed
+        if not x.startswith('references/面板存档/')
+        and not any(x.startswith(d + '/') for d in dir_indexed)
+    )
     if unindexed:
         fail('C9', f'{len(unindexed)} 个 reference 未在 SKILL.md 登记：{unindexed}')
     else:
