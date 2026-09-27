@@ -20,7 +20,8 @@ import sys
 MIN_CHARS = 1000            # SKILL.md 输出规范：正文不少于 1000 中文字
 MAX_MENU = 4
 MIN_MENU = 1
-EMOJI = '❤️💦😈😵🥺'
+EMOJI_PAT = r'[❤💦😈😵🥺♡]️?'   # 带可选变体选择符，避免 ❤ 与 VS16 被算两次
+EMOJI = EMOJI_PAT
 
 AI_WORDS = ['缓缓地', '慢慢地', '不禁', '忍不住地', '仿佛', '好像', '不知过了多久',
             '空气仿佛凝固', '时间仿佛静止', '一丝', '一抹', '一缕', '完美', '极致',
@@ -84,7 +85,7 @@ def check(text, verbose=False):
     else:
         oks.append(f'[C1] 正文 {n} 字（≥{MIN_CHARS}）')
 
-    ne = sum(text.count(e) for e in EMOJI)
+    ne = len(re.findall(EMOJI_PAT, text))
     if ne == 0:
         fails.append('[C2] 全篇零 emoji（规范要求保留 ❤️ 等）')
     elif ne * 60 > n:
