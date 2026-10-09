@@ -159,6 +159,20 @@ Then confirm in logs: `✓ qqbot connected` + `Ready, session_id=...` + **fresh 
 - `hermes gateway restart/stop` are blocked from inside the gateway process tree — kill externally + `--replace` instead.
 - After killing a process, the Desktop GUI logs `render-process-gone reason=killed` but does **NOT** auto-restart the gateway — the Scheduled Task is what brings it back.
 
+## 快速诊断 + 干净重启（2026-10-09 实测）
+
+**用户问「微信网关断了吗」的标准排查序**（别只看微信，整个 gateway 一挂三平台全掉）：
+1. `hermes gateway status` → `✗ No gateway process detected` = 真挂了（此处的 not-running 不是误报）。
+2. `hermes gateway list` → 各档案一览；`powershell Get-CimInstance Win32_Process | where CommandLine -match 'gateway run'` → 有没有真进程（`serve` 不是 gateway）。
+3. 读 `$HERMES_HOME/gateway_state.json`：可能还写着旧 pid + `"gateway_state":"running"`（硬杀时没写退出，**状态文件是过期的**，别信）。
+4. grep `logs/agent.log` 的 `gateway.lifecycle_ledger: ... exited UNCLEANLY (no exit path ran — SIGKILL / OOM / VM death)` 看死因+最后心跳；读 `logs/gateway-exit-diag.log` 尾部（UTC！+8 才是本地时间）看 start/exit 记录。
+
+**干净重启（推荐）**：`hermes gateway start`
+→ 输出 `✓ Gateway started via direct spawn (PID ...)`，是 **detached=true** 的独立进程，不依赖当前会话，session 关掉也不会被带走。比 `run --replace`（前台阻塞、非 detached，父 shell 一关就跟着死）更适合「我就想让它回来」。
+验证闭环：`tail logs/gateway.log` 应出现 `★ weixin connected / qqbot connected / feishu connected` + `Gateway running with 3 platform(s)`；真发一条消息后应出现 `inbound message: platform=weixin ...` → `response ready (...) time=...s` → `[Weixin] Sending response (...)`。
+
+**反复死根因**：本机 gateway 大约每 ~12h 就 UNCLEANLY 死一次（ledger 里连续多天记录），`suspected_oom=False`——典型笔记本休眠/电源事件杀进程。另外见过双网关竞态：`ERROR gateway.run: Another gateway instance (PID xxx) started during our startup. Exiting to avoid double-running.` 与 `kanban dispatcher: another gateway already holds the dispatcher lock; this gateway will NOT dispatch`——同一时刻两个 gateway 抢 singleton。止血：确认无残留 `gateway run` 进程后再 `hermes gateway start`。
+
 ## Profile routing pitfall (gateway.profile_routes)
 
 Hermes supports per-chat routing to independent profiles (`gateway/profile_routes` in config.yaml, see `gateway/profile_routing.py` — hierarchical match on platform + chat_id + thread_id, most specific wins). **Pitfall**: routes are chat_id-bound — one chat routes to exactly one profile. If you route the chat the user is *currently talking in* to another profile, the current persona is replaced instantly (user suddenly talks to a different character). Confirm which chat a chat_id belongs to before adding a route; leave the active conversation un-routed. For switching personas within the SAME chat, use `/personality <name>` (main profile's preset library), not profile routes. Profile routes suit "different chat/group → different profile" setups only.
