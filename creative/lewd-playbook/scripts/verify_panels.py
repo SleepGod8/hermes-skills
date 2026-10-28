@@ -263,6 +263,7 @@ def main():
     unindexed = sorted(
         x for x in real - indexed
         if not x.startswith('references/面板存档/')
+        and not x.startswith('references/_legacy/')
         and not any(x.startswith(d + '/') for d in dir_indexed)
     )
     if unindexed:

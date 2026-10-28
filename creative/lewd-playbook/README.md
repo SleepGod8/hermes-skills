@@ -12,12 +12,12 @@ lewd-playbook/
 ├── README.md                    # 本导航文件
 ├── references/
 │   ├── 控制系/                  # ⏱️ 控制系四大玩法手册
-│   │   ├── time-stop-play.md        # 时间停止（暂停分级/人偶/痕迹/偷玩/狩猎/回溯）
-│   │   ├── sensory-shield-play.md   # 感官遮蔽（面不改色/无感侍奉/反差play）
-│   │   ├── freeze-play.md           # 状态冻结（寸止/定格/无声忍耐/接力赛）
-│   │   └── hypnosis-play.md         # 催眠（深度分级/触发词/记忆操作/梦境）
+│   │   ├── 控制系/control-core.md        # 时间停止（暂停分级/人偶/痕迹/偷玩/狩猎/回溯）
+│   │   ├── 控制系/control-core.md   # 感官遮蔽（面不改色/无感侍奉/反差play）
+│   │   ├── 控制系/control-core.md           # 状态冻结（寸止/定格/无声忍耐/接力赛）
+│   │   └── 控制系/control-core.md         # 催眠（深度分级/触发词/记忆操作/梦境）
 │   ├── 机械奸/                  # 🦾 机械奸（器械/改造/共感链机械/性奴）
-│   │   └── machine-play.md
+│   │   └── 改造线/flesh-machine.md
 │   ├── 体位/                    # 💃 做爱体位大全（基础/口乳腿足/束缚/多人/男方体位/机制联动）
 │   │   └── positions.md
 │   ├── 女仆专属/                # 👤 各女仆专属玩法（每人一份 · 详细设定）
@@ -33,7 +33,7 @@ lewd-playbook/
 │   ├── 跨档案/                  # 👭 跨档案联动（茶会/大乱斗/学院/修罗场/性奴调教）
 │   │   └── cross-maid.md
 │   ├── 装备系统/                # 🎒 道具装备槽（5槽位/4品质/词条/封印）
-│   │   └── equipment-system.md
+│   │   └── 改造线/cybernetic-core.md
 │   ├── 组合矩阵/                # 🧩【新】全局「玩法 × 玩法」总索引（跨手册拼装 + 姐姐私房提案）
 │   │   └── combo-matrix.md
 │   ├── 运行手册/                # 📋【新】单次互动 SOP（开场三读→配方→写作→后戏→落档→自检）
@@ -59,20 +59,20 @@ lewd-playbook/
 │   │   ├── model-profiles.md
 │   │   └── motif-ledger.md
 │   ├── 扩展玩法/                # 🎭 通用扩展玩法
-│   │   ├── cosplay-play.md          # Cosplay 角色扮演
-│   │   ├── body-swap-play.md        # 身体互换（灵魂互换）
-│   │   ├── chastity-play.md         # 禁欲调教（贞操带/挑战/日记）
-│   │   ├── aphrodisiac-play.md      # 媚药（5级药物/下药/解药）
-│   │   ├── memory-theater-play.md   # 记忆剧场（重放/慢放/记忆库）
-│   │   ├── tentacle-play.md         # 触手（8种/男根触手化/触手娘/生态园）
-│   │   ├── monster-girl-play.md     # 魔物娘化（12种魔物/发情期/驯化）
-│   │   ├── clone-play.md            # 克隆分身（感官同步/双倍侍奉）
-│   │   ├── parasite-play.md         # 寄生（养成 v2.0/寄生链/暴走）
-│   │   ├── hidden-play.md           # 隐奸（风险值/强忍/认知屏蔽 Lv.6）
-│   │   ├── body-mod-play.md         # 身体改造（5类/依赖与副作用）
+│   │   ├── 情境线/roleplay-swap.md          # Cosplay 角色扮演
+│   │   ├── 情境线/roleplay-swap.md        # 身体互换（灵魂互换）
+│   │   ├── 情境线/chastity-drug-memory.md         # 禁欲调教（贞操带/挑战/日记）
+│   │   ├── 情境线/chastity-drug-memory.md      # 媚药（5级药物/下药/解药）
+│   │   ├── 情境线/chastity-drug-memory.md   # 记忆剧场（重放/慢放/记忆库）
+│   │   ├── 异形线/tentacle-parasite.md         # 触手（8种/男根触手化/触手娘/生态园）
+│   │   ├── 异形线/monster-clone.md     # 魔物娘化（12种魔物/发情期/驯化）
+│   │   ├── 异形线/monster-clone.md            # 克隆分身（感官同步/双倍侍奉）
+│   │   ├── 异形线/tentacle-parasite.md         # 寄生（养成 v2.0/寄生链/暴走）
+│   │   ├── 情境线/hidden-under-table.md           # 隐奸（风险值/强忍/认知屏蔽 Lv.6）
+│   │   ├── 改造线/flesh-machine.md         # 身体改造（5类/依赖与副作用）
 │   │   ├── brainwash-play.md        # 洗脑（四阶/6种方式/解除反转）
-│   │   ├── cyber-body-play.md       # 机械义体（12槽位/含性器官专用槽）
-│   │   └── neural-chip-play.md      # 脑内芯片（主副插槽/脑波互联 4 模式）
+│   │   ├── 改造线/cybernetic-core.md       # 机械义体（12槽位/含性器官专用槽）
+│   │   └── 改造线/cybernetic-core.md      # 脑内芯片（主副插槽/脑波互联 4 模式）
 │   ├── 终局玩法/                # 👑 Lv.10 完全体专属终局技（全员 · 含细则/桥段/停止条件）
 │   │   └── ultimate-moves.md
 │   └── 面板存档/                # 📊 动态状态（拆分结构 · 2026-09-26 重构）
@@ -96,7 +96,7 @@ lewd-playbook/
 | 输出规范 / 安全词 / 红线 / 后戏 / 点单菜单 | `SKILL.md` |
 | 共通机制 / 等级制 / 野兽模式 / 男根规格 / 模型切换协议 | `SKILL.md` |
 | 时间停止 / 感官遮蔽 / 冻结 / 催眠 | `references/控制系/` |
-| 机械奸 / 腰活塞驱动台 | `references/机械奸/machine-play.md` |
+| 机械奸 / 腰活塞驱动台 | `references/机械奸/改造线/flesh-machine.md` |
 | 体位大全 / 男方体位 / 分类标签 | `references/体位/positions.md` |
 | 某位女仆的专属玩法 | `references/女仆专属/<名字>.md` |
 | 想拼新花样 / 跨手册组合 | `references/组合矩阵/combo-matrix.md` |
@@ -118,7 +118,7 @@ lewd-playbook/
 | 引用哪个「第一次」 | `references/面板存档/continuity.md` |
 | 写完自查正文 | `python scripts/check_reply.py --file <正文>` |
 | 多人联动 / 茶会 / 性奴调教 | `references/跨档案/cross-maid.md` |
-| 装备槽 / 封印 / 贞操带 | `references/装备系统/equipment-system.md` |
+| 装备槽 / 封印 / 贞操带 | `references/装备系统/改造线/cybernetic-core.md` |
 | Lv.10 终局技 | `references/终局玩法/ultimate-moves.md` |
 | 谁现在什么等级/开发度/装备 | `references/面板存档/maids/<名字>.md`（总览看 `panel-records.md`） |
 | 上次玩到哪、欠着什么 | `references/面板存档/story-log.md` |

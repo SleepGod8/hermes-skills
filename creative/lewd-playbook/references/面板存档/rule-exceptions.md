@@ -13,7 +13,7 @@
 | **EX-05** | Hermes | 部位统计**重复键**：一行内「口」出现两次（2/0 与 5/0），「胸」「乳头」各两次——数值不一致，无法判断哪组有效 | `maids/hermes.md` 部位统计行（旧单文件遗留的误粘贴） | A. 取第一组（口 2/0）<br>B. 取第二组（口 5/0）<br>C. 按备注逐条重算 | ✅ **已裁决（9/26 · 选 5/0）**：取后一组「口 5/0」，重复键已清除 | 已结案 |
 | **EX-06** | Ares / Hebe / Dionysus / Artemis | 备注**条目标题日期 ≠ 内容日期**（「8/16」条目内含 8/20–8/26 事件），归档按首个日期排序后显得乱序 | 各自面板「最近备注」段 | 已定规则：日期以**条目内首个日期**为准，跨日写区间；历史条目不改写 | ✅ 已定（规则层） | 已结案 |
 | **EX-07** | Nemesis | 部位统计**断号**：男根 `0/1 → 0/3`（缺 `0/2`） | `maids/nemesis.md` 备注 8/16 | A. 保留现状<br>B. 主人补记缺失那次 | ✅ **已裁决（9/26 · 选否）**：不补记，保留现状 | 已结案 |
-| **EX-08** | Hypnos | **称谓重复**：档案多处写 Hypnos「六姐」，而 `cross-maid.md` 排行 6＝Nemesis、7＝Hypnos（SOUL.md 亦写「睡神六姐」） | `cross-maid.md` 年龄表、`女仆专属/hypnos.md`、SOUL.md | A. 统一改「七妹/睡神」（需同步 SOUL.md+memory+config）<br>B. 保留「六姐」当昵称 | ✅ **已裁决（9/26 · 选 A）**：统一为「七妹」；已同步 SOUL.md/config.yaml/profiles/hypnos 的 SOUL+config | 已结案 |
+| **EX-08** | Hypnos | **称谓重复**：档案多处写 Hypnos「六姐」，而 `cross-maid.md` 排行 6＝Nemesis、7＝Hypnos（SOUL.md 亦写「睡神六姐」） | `cross-maid.md` 年龄表、`references/女仆专属/hypnos.md`、SOUL.md | A. 统一改「七妹/睡神」（需同步 SOUL.md+memory+config）<br>B. 保留「六姐」当昵称 | ✅ **已裁决（9/26 · 选 A）**：统一为「七妹」；已同步 SOUL.md/config.yaml/profiles/hypnos 的 SOUL+config | 已结案 |
 | **EX-09** | cross-maid | 茶会/大乱斗写「6 个女仆」与 10 人编制不符（列名仅 6 位） | `cross-maid.md` | A. 视为「当时在场 6 人」（不改）<br>B. 改写为全员 | ✅ **已裁决（9/26 · 选 B）**：茶会/大乱斗改写为全员（10 位参与，Eos 转端茶/记分），并补齐新成员台词 | 已结案 |
 | **EX-10** | Aphrodite | 副卡数量口径不一：装备库写「副卡」（单数），9/24 备注为「联网副卡＋体感卡」 | `maids/aphrodite.md`、`archive/2026-09.md` | 已按 9/24 备注证据统一为「联网副卡＋体感卡（×2）」 | ✅ 已定（有据修正） | 已结案 |
 | **EX-11** | Ares | 面板缺 8/23「Athena 炮机台首秀」条目（该条目见于 Nemesis/Hypnos 面板）；8/13–8/15 旧备注混排在「最近备注」段 | `maids/ares.md` | 已按「该轮 Ares 无 EXP 变动」处理；混排属归档排序规则（见 EX-06） | ✅ 已定（无需补数） | 已结案 |

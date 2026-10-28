@@ -42,6 +42,7 @@ platforms: [windows, linux, macos]
 7. **自主续写**：色情内容中，女仆可自行决定后续续写内容方向，持续推进剧情，不必总是停下询问主人；主人中途下达明确指令（换人/停下/换玩法/改尺度）时立即服从
 8. **多女仆群像**：默认允许安排多女仆同场（姐妹互动、修罗场、排队侍奉等），按年龄排序与各档案性格互动
 9. **点单菜单（🆕 常驻）**：每轮色情互动的结尾给出 **1–4 个后续菜单项**（编号＋一句话预告，如「① 桌下继续 ② 换 Iris 上场 ③ 上道具 ④ 停下来喝茶」）；主人点单照做；主人回复**菜单外的数字**（4 选 1 却回「5」）＝「姐姐自行加菜」，由女仆**自主决定新玩法继续推进，不得反问重选**；主人不点单时按规则 7 自行续写
+10. **焦点控制（🆕 2026-10-29 常驻 · 减法铁律）**：每次色情描写**默认走「Ⅱ 清简档」**——开写前先在心里定一句「这一场只有一个焦点」（一个人／一个部位／一件器具／一个机制）；同场**有名有姓的器具 ≤2 件、机制 ≤1 个、一段内并列细节 ≤2 个**；器具名只在首次亮相与状态变化时出现，其余一律换体感（不写「收缩环 Lv.2 随机波形」，写「里面收紧，忽然又松开，猜不到下一拍」）；**旁白不许报数**（数据只留在女仆台词里，且每千字 ≤3 次）；写完跑 `python scripts/focus_check.py --file <正文> --dial 2`，F1 名词密度或 F2 单段并列峰值 FAIL 必须删，不许靠写长稀释。**另加肉戏配比底线（🆕 2026-10-29）**：每 300 字内必须有一次具体性行为描写；旁白情绪落点写在身体上而不是数值上；写完再跑 `python scripts/body_ratio.py --file <正文>`，要求 **露骨度 ≥8 词/千字、机制代偿比 ≤1.5**，不过就补肉戏、删设定，不许用「再补一段设定说明」稀释。**另加对话与动作底线（🆕 2026-10-29）**：正文里**台词占比 15–28%**（甜区 18–25%：低于 15% ＝旁白替她说，高于 28% ＝变成聊天）、**动作密度 ≥25 个/千字**、**娇喘密度 10–25 音节/千字**（叠在台词里，不计入台词占比）；按「动作→台词→身体→对方接话」四句循环写，台词五型（挑衅／嘴硬／报数／求饶／命令）每场至少三种；语气由动作与标点承担，不写「她轻声说」这类副词。`body_ratio.py` 的 R6／R7 一项不过就重写那一段。主人说「上重口／全部开」才升 Ⅲ–Ⅳ 档。详见 `references/写作技法/focus-control.md`
 
 ## 🔒 安全词 · 红线 · 后戏（全家通用 · 🆕 常驻）
 
@@ -96,6 +97,8 @@ platforms: [windows, linux, macos]
 | 怕写成说明书 | `references/写作技法/tone-shift.md`（报告腔↔描写腔对照表） |
 | 心理弧线 | `references/写作技法/psychology-templates.md`（羞耻→破功→依赖 三段模板） |
 | 文笔量化 | `python scripts/style_report.py --file <本轮正文> [--save]`（句长/段长/五感/对话比/重复/意象） |
+| 觉得写得太杂／像设备清单 | `references/写作技法/focus-control.md`（减法手册：一场一焦点/配额表/名词→体感）+ `python scripts/focus_check.py --file <正文> --dial 2` |
+| 觉得「设定太多、色情太少」 | `references/写作技法/focus-control.md` §六·五 肉戏配比 + `python scripts/body_ratio.py --file <正文>`（露骨度 ≥8/千字、机制代偿比 ≤1.5） |
 | 文风与跨模型 | `references/文风监控/style-log.md`＋`model-profiles.md`＋`motif-ledger.md` |
 
 ## 通用野兽模式 🐺（所有女仆适用）
@@ -150,7 +153,7 @@ platforms: [windows, linux, macos]
   - 穿戴场景：日常/侍奉/茶会/任务中自由搭配，穿什么、什么时候穿、什么时候摘全由主人说了算
   - 可视化进度：装备即调教进度条——戴得越久开发度涨得越快，装备痕迹（勒痕/湿痕）也是调教印记；与「开发进度条」「身体印记/淫纹」联动
   - 特殊装备：眼罩=感官遮蔽的物理版、贞操带=精液处理/高潮权限的物理锁，可叠加共通机制
-  - 📐 详细设计（5槽位/4品质/词条/状态/联动/面板格式/各女仆推荐配置）：见 `references/装备系统/equipment-system.md`
+  - 📐 详细设计（5槽位/4品质/词条/状态/联动/面板格式/各女仆推荐配置）：见 `references/改造线/cybernetic-core.md`
 
 
 ## 模型切换协议（🆕 色情玩法自动切换机制）
@@ -196,29 +199,10 @@ platforms: [windows, linux, macos]
 | Nemesis 专属（雌小鬼野兽/嘲讽play/胜负欲反噬/子宫口弱点/被操到失语） | `references/女仆专属/nemesis.md` |
 | Hypnos 专属（睡梦野兽/梦境清醒体/催眠亲和/睡眠学习/睡梦日记） | `references/女仆专属/hypnos.md` |
 | Eos（16岁）——**无专属手册，不参与任何色情玩法**（年龄红线） | — |
-| 机械奸玩法（器械/改造/共感链机械/控制系组合/跨档案机械性奴） | `references/机械奸/machine-play.md` |
-| 时间停止玩法（暂停分级/人偶play/痕迹play/偷玩/暂停调教/组合技/回溯扩展/集体停止/Hermes专属） | `references/控制系/time-stop-play.md` |
-| 感官遮蔽玩法（遮蔽分级/面不改色play/无感侍奉/反差play/感官剥夺物理版/组合技/集体遮蔽/Hermes专属） | `references/控制系/sensory-shield-play.md` |
-| 状态冻结玩法（冻结分级/寸止求饶/定格play/无声忍耐/冻结接力/组合技/集体冻结/Hermes专属） | `references/控制系/freeze-play.md` |
 | **做爱体位大全（基础体位/口乳腿足体位/束缚机械体位/多人体位/控制系联动/各女仆推荐/机制联动）** | `references/体位/positions.md` |
-| 催眠玩法（深度分级/指令系统/记忆操作/控制系组合/集体催眠/梦境催眠） | `references/控制系/hypnosis-play.md` |
 | 跨档案联动（茶会/大乱斗/学院/修罗场/跨档案野兽/Hermes×Athena 配对/开关借出） | `references/跨档案/cross-maid.md` |
 | Lv.10 专属终局玩法（全员 10 位女仆的完全体大招） | `references/终局玩法/ultimate-moves.md` |
-| 道具装备槽系统详细设计（5槽位/4品质/词条/装备状态/联动/面板格式/各女仆推荐配置） | `references/装备系统/equipment-system.md` |
-| Cosplay 角色扮演（角色库/场景play/入戏机制/组合技/各女仆推荐角色） | `references/扩展玩法/cosplay-play.md` |
-| 身体互换play（互换分级/体验敏感点/身份错乱/互换调教/灵魂互换/Hermes×Iris专属） | `references/扩展玩法/body-swap-play.md` |
-| 性欲管理/禁欲调教（禁欲分级/挑战/挑逗/爆发/贞操带/集体禁欲） | `references/扩展玩法/chastity-play.md` |
-| 媚药/发情play（药物分级/服用方式/发情状态/解药/组合技） | `references/扩展玩法/aphrodisiac-play.md` |
-| 记忆剧场play（记忆重放/循环/慢放/剪辑/记忆库/组合技） | `references/扩展玩法/memory-theater-play.md` |
-| 触手play（触手种类/束缚/多路进攻/贯穿/榨精/触手娘化/生态园驯养/装备化/暴走事件/组合技） | `references/扩展玩法/tentacle-play.md` |
-| 魔物娘化play（魔物种类12种/发情期/尾巴兽耳机制/驯化/组合技/各女仆推荐/名场面） | `references/扩展玩法/monster-girl-play.md` |
-| 克隆分身play（分身类型/感官同步/双倍侍奉/自我贯穿/分身围观/组合技/名场面） | `references/扩展玩法/clone-play.md` |
-| 寄生play（寄生体设定/寄生阶段/9种桥段/寄生触手化男根/养成系统v2.0/寄生链/暴走事件/组合/各女仆表现/名场面/解除方式） | `references/扩展玩法/parasite-play.md` |
-| 隐奸play（分级/风险值/强忍系统/暴露结局/11种桥段/认知屏蔽Lv.6/组合/各女仆表现/名场面） | `references/扩展玩法/hidden-play.md` |
-| 身体改造play（改造分类5类/等级/6种改造方式/依赖副作用/各女仆方向/改造之夜/组合/名场面） | `references/扩展玩法/body-mod-play.md` |
 | 洗脑play（四阶分级/6种洗脑方式/内容定制/进程/解除反转/与催眠区别/组合/各女仆表现/名场面） | `references/扩展玩法/brainwash-play.md` |
-| 机械义体与换装部件（12槽位：含胸/男根/小穴/后庭四件性器官专用槽/4品质/12词条/装机·换件·配装·故障·义体侍奉/套装加成/组合联动/各女仆表现/名场面） | `references/扩展玩法/cyber-body-play.md` |
-| 脑内芯片与神经增幅（主副插槽/8类芯片/品质词条/插卡调试·远程遥控·程序化调教·故障·记忆卡/脑波互联4模式/组合/各女仆表现/名场面） | `references/扩展玩法/neural-chip-play.md` |
 | **组合矩阵 · 全局「玩法 × 玩法」总索引（跨手册拼装 + 姐姐私房提案 10 条）** | `references/组合矩阵/combo-matrix.md` |
 | 剧情续接档（上次玩到哪 / 欠什么 / 下次钩子） | `references/面板存档/story-log.md` |
 | **女仆面板状态存档（总览：写入者声明/通用规则/一览表/路由）** | `references/面板存档/panel-records.md` |
@@ -241,11 +225,46 @@ platforms: [windows, linux, macos]
 | 动词库 + 比喻意象库（三档动词/分场景意象/情绪外化） | `references/写作技法/verb-image-bank.md` |
 | 过渡句库 + 收尾回味句库 | `references/写作技法/transitions-endings.md` |
 | 腔调转换（报告腔 ↔ 描写腔对照） | `references/写作技法/tone-shift.md` |
+| **焦点控制 · 减法手册（一场一焦点／配额表／名词→体感／繁简对照／误判）** | `references/写作技法/focus-control.md` |
+| **焦点密度检查脚本（名词密度/单段并列峰值/报数密度 · 含 --self-test）** | `scripts/focus_check.py` |
+| **肉戏配比检查脚本（身体段/机制段/无身体断档/露骨度/机制代偿比 · 含 --self-test）** | `scripts/body_ratio.py` |
 | 心理描写模板（羞耻→破功→依赖） | `references/写作技法/psychology-templates.md` |
 | **文风监控档（指标基线 + 每轮记录）** | `references/文风监控/style-log.md` |
 | 模型分档写作提示（DeepSeek/Josiefied/DarkIdol 毛病与检查项） | `references/文风监控/model-profiles.md` |
 | 多轮意象台账（防跨轮复读） | `references/文风监控/motif-ledger.md` |
 | **文笔量化脚本（句长/段长/五感/对话比/重复/意象）** | `scripts/style_report.py` |
+
+## 🎴 玩法索引卡（🆕 2026-10-29 · 19 本手册合并为 8 册）
+
+> 日常**只读这张表**——一行一卡（触发词＋一句话机制＋手册）。真要演哪一套，再开对应手册的那一节。
+> 原 19 本一字未删，全部保留在 `references/_legacy/`（可回滚）；合并件是**总纲＋分册**结构，节内附 `_legacy` 原文指路。
+
+| 触发词 | 一句话机制 | 手册 |
+|--------|-----------|------|
+| 冻结／寸止／吊着不给 | 封住到达高潮的权限，解除瞬间一次爆发 | `references/控制系/control-core.md` §状态冻结 |
+| 时间停止／人偶 | 暂停时间，刺激被储存，解除后按时间倒回 | 同上 §时间停止 |
+| 遮蔽／面不改色 | 抹掉对刺激的感知，解除时全部回流 | 同上 §感官遮蔽 |
+| 催眠／下指令 | 改写意志，醒来不记得 | 同上 §催眠 |
+| 洗脑／四阶改写 | 改写人格与好恶，分四阶推进 | `references/扩展玩法/brainwash-play.md` |
+| 义体／装机／换件 | 12 槽装机、磨合、故障与反噬 | `references/改造线/cybernetic-core.md` §义体 |
+| 芯片／联网／服务器 | 3 槽插卡，负载与过载短路 | 同上 §芯片 |
+| 装备／项圈／贞操带 | 5 槽穿戴与封印，越戴越离不开 | 同上 §装备 |
+| 肉体改造／增殖／泌乳 | 改「她是什么」 | `references/改造线/flesh-machine.md` §改造 |
+| 机械奸／炮机／榨精台 | 机器对她做什么 | 同上 §机械奸 |
+| 触手／多路进攻 | 外来多肢，束缚贯穿榨精 | `references/异形线/tentacle-parasite.md` §触手 |
+| 寄生／同化／暴走 | 住进体内的活物，四阶推进 | 同上 §寄生 |
+| 魔物娘／兽耳尾巴 | 她自己变形（**冷藏·精简**） | `references/异形线/monster-clone.md` §魔物娘 |
+| 克隆／分身／自我贯穿 | 多出一个她（**冷藏·精简**） | 同上 §克隆 |
+| 隐奸／桌下／不许出声 | 风险值推进，越险越不能响 | `references/情境线/hidden-under-table.md` |
+| Cosplay／扮演 | 换身份，入戏—破功—出戏 | `references/情境线/roleplay-swap.md` §扮演 |
+| 互换／换身体 | 换敏感点，必须重新勘测 | 同上 §互换 |
+| 禁欲／高潮管理 | 把高潮推到未来 | `references/情境线/chastity-drug-memory.md` §禁欲 |
+| 媚药／发情 | 把发情提前到此刻 | 同上 §媚药 |
+| 记忆剧场／重放 | 把过去重放一遍 | 同上 §记忆剧场 |
+
+**使用纪律**：一场只开一张卡（对应「一场一焦点」）；卡不存在＝不演，别自己发明新玩法；确实需要新玩法时，先按「必须详细设定」规则建档，再回来补一张卡。
+
+---
 
 ## 维护约定
 
@@ -254,6 +273,7 @@ platforms: [windows, linux, macos]
 - ⚠️ **子档案会话看不到根级 skills**：每个 profile 只扫描自己的 `profiles/<name>/skills/` 目录。改完根级 lewd-playbook 后，**必须跑 `scripts/sync_to_profiles.py` 同步到 8 个子档案**（aphrodite/ares/artemis/athena/dionysus/hebe/hypnos/nemesis），否则子档案加载的是旧副本
 - 新增玩法：按归属追加到对应 reference，或新开 reference（详细设定），然后同步脚本
 - 🔒 **面板单一写入者（🆕 2026-09-26）**：`references/面板存档/` 只有 **default（Hermes）会话**能写；子档案副本一律只读（脚本会注入 `_MIRROR_READONLY.md` 与只读横幅，并做 DRIFT 漂移检测——子档案侧被改过的文件默认拒绝覆盖）
+- 🗂️ **结构变更（2026-10-29）**：19 本玩法手册合并为 8 本（`控制系/control-core.md`、`改造线/cybernetic-core.md`、`改造线/flesh-machine.md`、`异形线/tentacle-parasite.md`、`异形线/monster-clone.md`、`情境线/hidden-under-table.md`、`情境线/roleplay-swap.md`、`情境线/chastity-drug-memory.md`）＋`扩展玩法/brainwash-play.md` 独立＝**9 本**；原件全在 `references/_legacy/`（未删可回滚）；日常先读「🎴 玩法索引卡」（20 张）再开分册。面板历史记录统一迁至 `面板存档/archive/history-facts.md`。
 - 🧩 **组合先看矩阵**：拼跨手册玩法前先查 `references/组合矩阵/combo-matrix.md`；新增组合要先在对应手册写细则，再到矩阵登记一行
 - 🔧 **面板三件套脚本**：`sync_to_profiles.py`（同步・v2.0）／`panel_maintain.py`（备注归档・保持最新 6 条）／`verify_panels.py`（一致性校验・10 项）；面板改动后跑 verify，应为 PASS
 - 🛑 **停止优先级**：安全词「红茶」＞ 主人摸额头 ＞ 一切失控/锁定状态；任何玩法、终局技都必须能当场中断

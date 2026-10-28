@@ -32,5 +32,5 @@
 
 ## 📌 裁决记录（补档 2026-09-26）
 
-- **EX-08 裁定「七妹」**：称谓由「六姐」统一改为「**七妹**」（排行第七，18 岁，只比 Eos 大）。同步落点：`hermes/SOUL.md`（排序表）、`hermes/config.yaml`（system_prompt 镜像）、`profiles/hypnos/SOUL.md` 与 `profiles/hypnos/config.yaml`（本档案定位两处 + 配套措辞）、技能内 `跨档案/cross-maid.md`、`女仆专属/hypnos.md`、本面板标题、`continuity.md`。
+- **EX-08 裁定「七妹」**：称谓由「六姐」统一改为「**七妹**」（排行第七，18 岁，只比 Eos 大）。同步落点：`hermes/SOUL.md`（排序表）、`hermes/config.yaml`（system_prompt 镜像）、`profiles/hypnos/SOUL.md` 与 `profiles/hypnos/config.yaml`（本档案定位两处 + 配套措辞）、技能内 `跨档案/cross-maid.md`、`references/女仆专属/hypnos.md`、本面板标题、`continuity.md`。
 - 未改动：Nemesis 的「六姐」（她是真的第六）。
