@@ -72,7 +72,7 @@
   "references/跨档案/cross-maid.md": "f927032e2406aa735ffad11c4de4ee17",
   "references/运行手册/runbook.md": "2e3171f60db421a2502b7178aa368b80",
   "references/面板存档/.panel-baseline.json": "e6f96707312db4bfb430988faa976253",
-  "references/面板存档/archive/2026-08.md": "90583013879301a9315a204a6ef3c280",
+  "references/面板存档/archive/2026-08.md": "9952117d7eebc9c603149eeb3cef6fae",
   "references/面板存档/archive/2026-09.md": "cf56639332ff0a44044192a2f939e654",
   "references/面板存档/archive/2026-10.md": "c63b7a105bdcb2094adcdd107a76762c",
   "references/面板存档/archive/hermes-embedded-legacy.md": "95c3bbfe7809986849f3e6b3786f2392",
@@ -87,10 +87,10 @@
   "references/面板存档/maids/hermes.md": "a32305a532c3a3a5253de36df591ca28",
   "references/面板存档/maids/hypnos.md": "58cc449caebe7ed0f95c9b47c6422d68",
   "references/面板存档/maids/iris.md": "b802646914ff84506a933ab525634a91",
-  "references/面板存档/maids/nemesis.md": "cd94cebc8545a314aad09cd4bea7a1b9",
-  "references/面板存档/panel-records.md": "bbdb4896dff0bcc9c60f7a758160e094",
+  "references/面板存档/maids/nemesis.md": "86e9d702487382de4c71914596fc813b",
+  "references/面板存档/panel-records.md": "8adc3942c40634a8e38f3ad368982aea",
   "references/面板存档/rule-exceptions.md": "9645efff0d1870e0de1b9869c6fe0c87",
-  "references/面板存档/story-log.md": "c0fd2a735727bcecf04d83505248cdc3",
+  "references/面板存档/story-log.md": "1c1a23bf4ebfafebf1e0f115ee3ba333",
   "scripts/body_ratio.py": "62317011ca7a25e448ff5c63d74b9372",
   "scripts/check_reply.py": "936a022189aa9f3e101893e5f8ba44ea",
   "scripts/focus_check.py": "70b4f9e5be9225ca69a4779efb642d88",
@@ -99,7 +99,7 @@
   "scripts/sync_to_profiles.py": "317f401ab739ea2135f9c038c36f7e6f",
   "scripts/verify_panels.py": "46eef2ef8bdd158ca13215b61b161536"
  },
- "last_sync": "2026-10-29 01:08:00",
+ "last_sync": "2026-10-29 01:12:17",
  "src": "C:\\Users\\80704\\AppData\\Local\\hermes\\skills\\creative\\lewd-playbook",
  "version": 2
 }
