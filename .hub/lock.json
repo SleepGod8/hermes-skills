@@ -16,6 +16,54 @@
       },
       "installed_at": "2026-08-13T07:46:18.681274+00:00",
       "updated_at": "2026-08-13T07:46:18.681274+00:00"
+    },
+    "llama-cpp": {
+      "source": "official",
+      "identifier": "official/mlops/inference/llama-cpp",
+      "trust_level": "builtin",
+      "scan_verdict": "backfilled",
+      "content_hash": "sha256:43a4ec8fb07acce8",
+      "install_path": "mlops/inference/llama-cpp",
+      "files": [
+        "references/advanced-usage.md",
+        "references/hub-discovery.md",
+        "references/optimization.md",
+        "references/quantization.md",
+        "references/server.md",
+        "references/troubleshooting.md",
+        "SKILL.md"
+      ],
+      "metadata": {
+        "backfilled_from": "optional-skills"
+      },
+      "installed_at": "2026-11-03T10:21:56.363250+00:00",
+      "updated_at": "2026-11-03T10:21:56.363250+00:00"
+    },
+    "box": {
+      "source": "official",
+      "identifier": "official/productivity/box",
+      "trust_level": "builtin",
+      "scan_verdict": "backfilled",
+      "content_hash": "sha256:de13336d7d0c5056",
+      "install_path": "productivity/box",
+      "files": [
+        "references/bulk-operations.md",
+        "references/cli-guide.md",
+        "references/content-workflows.md",
+        "references/hubs.md",
+        "references/oauth-setup.md",
+        "references/rest-api.md",
+        "references/sdk-development.md",
+        "references/search-and-ai.md",
+        "references/troubleshooting.md",
+        "references/webhooks-and-events.md",
+        "SKILL.md"
+      ],
+      "metadata": {
+        "backfilled_from": "optional-skills"
+      },
+      "installed_at": "2026-11-03T10:21:56.513162+00:00",
+      "updated_at": "2026-11-03T10:21:56.513162+00:00"
     }
   }
 }
