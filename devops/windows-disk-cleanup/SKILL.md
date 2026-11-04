@@ -38,7 +38,22 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 - 清浏览器/包管理器缓存前先关进程（`Stop-Process -Name msedge`），否则大批文件被占用。
 - `C:\Windows\SoftwareDistribution\Download`、`C:\Windows\Logs` 无管理员必失败，直接标「需提权」跳过，别浪费轮次。
 - 用户数据（微信 `xwechat_files`、Documents、工程资料）只能提示大小，禁止手删目录；微信走「设置→存储空间」自带管理，避免破坏数据库索引。
-- 虚拟机类：Activity/闲置实例要区分（看 vdi 最后写入时间 + 进程是否在跑）；MuMu `data.vdi` 是只增不减的动态盘，长期占用会持续膨胀。
+- 虚拟机/模拟器类：Activity/闲置实例要区分（看 vdi 最后写入时间 + 进程是否在跑）；MuMu `data.vdi` 是只增不减的动态盘，长期占用会持续膨胀。
+
+## MuMu 模拟器磁盘清理（实测）
+- **只能走 GUI**：`nx_main\MuMuManager.exe`（与 `mumu-cli.exe` 同一套）只有 `control/setting/adb/info/...`，**无 disk/compact 子命令**；`setting --all` 里只有 `mini_disk`、`system_disk_readonly`，没有压缩键。别在 CLI 上浪费时间。
+- 入口：主窗口实例卡片右侧 `⋮` → **磁盘清理**。
+- 机制：**设备必须处于可启动状态**（关着的实例点它会弹「请先启动安卓设备」）；点「继续」后 MuMu **自己关闭设备再清理**，期间无法启动。我早期说「必须手动关机」是错的。
+- 实测收益：vdi 95.62 GB → **35.66 GB**（−60 GB），1 分钟内完成，App/账号/存档全保留（清理后重启验证 `pm list packages -3` 15 个包、`/data` 仍 28 GB）。
+- 预估可回收量 = **vdi 文件大小 − 客人机 `/data` 实际用量**（`adb shell df -h /data`）；实例 0/1 的 ADB 端口分别是 16384/16416。
+- 清醒认识：清理后 vdi 仍会继续涨，是长期运维问题（定期清或迁盘）。
+
+## 驱动 GUI 应用的可靠姿势（无 computer_use 工具时）
+- 坐标系三套（虚拟屏/物理屏/窗口客户区）必须先统一：进程开头调 `SetProcessDpiAwarenessContext(-4)`（或 `SetProcessDPIAware`），之后 `GetWindowRect` 与像素坐标才一致。
+- **不要用 `CopyFromScreen` 截图**：目标窗口被前台窗口遮挡时只能拍到遮挡物，会误判「菜单没弹出」。
+- 正确做法：`PrintWindow(hwnd, hdc, 2)`（PW_RENDERFULLCONTENT）**只截目标窗口**；Qt 的下拉菜单/弹窗是**独立顶层窗口**，用 `EnumWindows` 按 pid 过滤 + 取窗口矩形，再对弹窗 hwnd 单独 `PrintWindow`。
+- 点击：`SetForegroundWindow` 常被 Windows 前台锁拒绝（越点越把别的窗口提到前面）。改用 **`PostMessage(hwnd, WM_LBUTTONDOWN/UP, 1, lParam=(y<<16)|x)` 打客户区坐标**——不抢焦点、不动真实鼠标，Qt 应用响应良好；先用 `ClientToScreen` 求客户区原点把窗口坐标换算成客户区坐标。
+- 每步都截图 + 识图确认，再决定下一步；弹窗确认文案要看清楚（本次就是靠读弹窗才发现「需先启动设备」）。
 - 删除时对目录型目标只清子项、保留父目录；不做通配符批量删除。
 - 大目录删除用 `cmd /c rd /s /q "<dir>"`，比 `Remove-Item -Recurse -Force` 快一个量级（几十 GB 分钟级 vs 十几 GB 十几分钟）；`Remove-Item` 只留作单个被占用文件的回退手段。删完 `Test-Path` 复核该路径是否真的消失。
 - `Export-Csv` / 重定向**不会自动建目录**，`-Out` 路径写错会静默失败：产物写完立即用 `search_files(target='files')` 或 `Test-Path` 核验文件存在，报告里引用的产物必须先确认能列出。
