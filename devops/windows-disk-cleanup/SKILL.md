@@ -9,6 +9,7 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 
 ## 五阶段
 1. **探测**：容量/已用/剩余/使用率 + 系统版本/用户/是否管理员 + 一级目录归属表 + 紧张度判断（空闲 <15% = 偏紧）。
+   - 读数与上一轮记录差几十 GB 时，先查根目录 `pagefile.sys`（系统托管、随内存压力伸缩）和动态盘（模拟器 vdi），确认是「没人删东西、只是页面文件缩了」再下结论；这个解释要写进报告，否则用户会怀疑有隐情。
 2. **扫描标注**：每项标 `路径/类型/用途/大小/最后修改/优先级/理由/建议操作`。优先级：一级=缓存临时残留（可自动重建）；二级=需确认（旧安装包、闲置实例、未完成下载、可重下运行时）；三级=用户数据/程序数据；不可清理=Windows、Program Files、ProgramData、驱动、运行依赖。
 3. **分块汇总+菜单**：每块给「项目数/合计/建议清理量」，然后让用户选「仅一级 / 一+二级 / 指定编号 / 暂不清理」。不执行删除。
 4. **最终清单+二次确认**：逐项列出路径/大小/清理方式/风险/前置条件 + 预计释放量，等用户回「确认清理」。
@@ -25,6 +26,7 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
   ```
   必须**保留** job summary（不要加 `/NJS`，加了就没有 Bytes 行，全是 0）。
 - 特殊目录（WinSxS、Windows\Temp、Windows\Logs）普通权限读不到，按约束记录「扫描失败/需管理员」跳过。
+- 现成脚本：`scripts/scan-dir-sizes.ps1`（robocopy 快扫 + 根目录散落文件合计 + CSV，自带 `/XJ`、Bytes 解析与「CSV 没写出来就报错」检查）。直接 `-Root 'D:/' -Out '<绝对路径>.csv'` 调用，别每次重写。
 
 ## 高危误判（务必逐一核验再列入清单）
 - `AppData\Local\hermes\installs\<hash>\environments` = **活动 Python 环境**（十几万文件），不是安装包缓存，删了 Hermes 工具全废。
@@ -38,6 +40,8 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 - 清浏览器/包管理器缓存前先关进程（`Stop-Process -Name msedge`），否则大批文件被占用。
 - `C:\Windows\SoftwareDistribution\Download`、`C:\Windows\Logs` 无管理员必失败，直接标「需提权」跳过，别浪费轮次。
 - 用户数据（微信 `xwechat_files`、Documents、工程资料）只能提示大小，禁止手删目录；微信走「设置→存储空间」自带管理，避免破坏数据库索引。
+- 私密/成人向收藏目录（盘符下以人名缩写命名的 `ZSC` 类目录）：只读展开到二级结构即停，表格里中性写「个人收藏 + 大小」，**不复述内部文件名、不做价值评价、不主动建议删**，一律三级。
+- 回收站里可能出现**不是本次删除**的东西（应用自动更新会把旧版丢进 `$RECYCLE.BIN`，文件名形如 `$R<随机>.<版本后缀>`）：报告里点明归属，别把别人的删除算进本次战果。
 - 虚拟机/模拟器类：Activity/闲置实例要区分（看 vdi 最后写入时间 + 进程是否在跑）；MuMu `data.vdi` 是只增不减的动态盘，长期占用会持续膨胀。
 
 ## MuMu 模拟器磁盘清理（实测）
@@ -63,9 +67,16 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 - **基线在执行时实测**：阶段 5 的报告口径用执行脚本自己打印的 `FREEBEFORE`/`FREEAFTER`，不要复用阶段 1 或上一轮会话的剩余值。动态盘（模拟器 vdi）、日志、下载会在数小时内吃掉几十 GB，跨时段复用旧值必被用户发现对不上。
 - 解析扫描 CSV 用 execute_code（内核 python），不要在 bash 里 `python -c`：shell 的 `python` 可能解析到项目桩解释器，直接报 `did not find executable`。
 
+## 本机磁盘布局（2026-11 实测；量级会漂移，别当固定值）
+
+- **C:** 300 GB 系统盘 —— 可清的全在 `Users\80704\AppData`（缓存/安装包/浏览器），`Windows`+`Program Files` 约 82 GB 不动。
+- **D:** 651 GB —— `Program Files\Netease\MuMu`（两套安卓实例）、`宝深`/`坪深`（工程资料 zip，仅提示）、`xwechat_files`（msg\file 最肥）、`Steam`（常有未完成下载）。
+- **E:** 1863 GB —— `SteamLibrary`、`ZSC`（私密收藏）、`leidian\LDPlayer9\vms`（2 实例、长期闲置）、`Hypergryph Launcher`、`docker-data\DockerDesktopWSL\disk\docker_data.vhdx`、`迅雷下载`/`BaiduNetdiskDownload`/`quark`/`迅雷云盘`、`bandzip\BNZ.*`（解压残留，藏十几 GB）、`pagefile.sys`。
+- 挂机归属：MAA/MaaEnd 连 `127.0.0.1:16384`（MuMu 实例 0）；实例 1（16416）闲置但保有 WC3/WC4/方舟账号 —— 这类实例优先「压缩」而不是「删除」。
+
 ## 大占用项识别
 
-按类型快速判定「这是不是能清的」；深度明细见 `references/big-consumer-identification.md`（Steam 未完成下载、模拟器多开 vdi、微信 file/attach/business 拆分、工程资料 zip、VM vmdk、安装包集合、驱动备份的判定法与优先级）。
+按类型快速判定「这是不是能清的」；深度明细见 `references/big-consumer-identification.md`（Steam 未完成下载/工坊、模拟器多开 vdi、微信 file/attach/business 拆分、WSL/Docker vhdx、解压软件临时目录、pagefile、工程资料 zip、VM vmdk、安装包集合、驱动备份的判定法与优先级，附模拟器与 WSL 虚拟磁盘压缩配方）。
 
 - 先扫一级目录拿到 Top 10 再往下钻，**不要一上来全盘递归**；钻到第 2~3 层就能定性时立即停手。
 - **盘位预期不同**：C 盘以缓存为主，清缓存能出几十 GB；数据盘（D/E）一级可清量常常 ≈0，大头全是实体数据（工程资料、微信文件、虚拟磁盘、未完成下载、安装包集合）。别承诺「清垃圾」能救数据盘，结论要落到「处理大件 or 迁移」。
