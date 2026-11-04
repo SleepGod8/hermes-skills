@@ -52,14 +52,44 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 - 预估可回收量 = **vdi 文件大小 − 客人机 `/data` 实际用量**（`adb shell df -h /data`）；实例 0/1 的 ADB 端口分别是 16384/16416。
 - 清醒认识：清理后 vdi 仍会继续涨，是长期运维问题（定期清或迁盘）。
 
+## 雷电模拟器（LDPlayer 9.x）：没有磁盘压缩功能
+- 三处确认均无：`ldconsole.exe` 全命令表无 compact（只有 launch/quit/backup/restore/installapp…）、多开器 GUI（实例设置→磁盘页、批量操作菜单、多开设置窗）无入口、对所有 exe 做 UTF-16/UTF-8/GBK 关键字搜索（磁盘清理/磁盘压缩/Compact）**零命中**。
+- 目录里只有 `vbox64\*.dll`，**没有 VBoxManage.exe**，无法用 `modifymedium --compact` 压 VMDK。
+- 结论：遇到雷电只给两条路——**要么保留，要么删实例**（删除会丢该实例内安卓数据）。别像我一样把 GUI 翻一遍才发现功能不存在；先 grep 二进制关键字再点界面更省时间。
+- 删实例用官方命令，别手删 `vms\<实例>` 目录：
+  ```powershell
+  ldconsole.exe list2                      # 删前：编号,名称,状态
+  ldconsole.exe remove --index 0           # 逐个删（0/1/...）
+  ldconsole.exe list2                      # 删后应为空
+  ```
+  实测两实例 104.45 GB，删完卷剩余立即 +104.47 GB，**没有 VSS 差额**（实例删除是直接回收，与逐文件删除不同）。删后安装目录只剩程序本体约 3 GB，仍可新建实例。
+
+## WSL2 / Docker 虚拟磁盘（docker_data.vhdx）压缩的三条路
+- `wsl --manage <distro> --set-sparse true`：WSL 2.7.x **主动拒绝**（“由于潜在的数据损坏，目前已禁用稀疏 VHD 支持”），需 `--allow-unsafe` 才强开——官方标注有数据损坏风险，含 Docker 卷数据时不要擅自开，先问用户。
+- `diskpart select vdisk → compact vdisk`：**必须管理员**，普通权限直接报“请求的操作需要提升”。
+- `Optimize-VHD`：仅在装了 Hyper-V 模块时存在，家用版通常没有。
+- 无管理员时的可行替代：`wsl --export` + `--unregister` + `--import` 重建（数据保留、自动紧凑），代价是需要临时空间与时间。
+
+## 窗口被遮挡时 PostMessage 点击失灵 → 临时置顶
+- 症状：目标窗口被别的窗口（如 Hermes 自身）盖住时，PostMessage(WM_LBUTTONDOWN) 对某些按钮“没反应”（同坐标换个时间又有效）。
+- 解法：先 `SetWindowPos(hwnd, HWND_TOPMOST=-1, …, SWP_NOSIZE|SWP_NOMOVE)` 置顶，再发消息；完事后 `HWND_NOTOPMOST=-2` 恢复。比 `SetForegroundWindow`（常被前台锁拒绝）可靠得多。
+- 弹窗可能属于**另一个窗口类名**（本机 MuMu 是 `Q`、雷电弹窗是 `L`/`l` 小写），枚举时按 **pid** 过滤最稳。
+
+## 删除量 ≫ 卷剩余增量：卷影副本
+- 实测多次出现：C 盘一次正常，D 盘删除 96.82 GB 只回 87.23 GB，E 盘删除 31.00 GB 只回 17.87 GB。
+- 现象稳定、有规律，疑为**卷影副本（VSS）以写时复制保留了被删数据块**；注册表 `SystemRestore\RPSessionInterval=1` 可作为系统保护开启的侧证。
+- 普通权限查不了 `vssadmin list shadowstorage /for=<盘>:`，报告中要如实标注差额与验证命令，不要宣称已释放全部。
+
 ## 驱动 GUI 应用的可靠姿势（无 computer_use 工具时）
 - 坐标系三套（虚拟屏/物理屏/窗口客户区）必须先统一：进程开头调 `SetProcessDpiAwarenessContext(-4)`（或 `SetProcessDPIAware`），之后 `GetWindowRect` 与像素坐标才一致。
 - **不要用 `CopyFromScreen` 截图**：目标窗口被前台窗口遮挡时只能拍到遮挡物，会误判「菜单没弹出」。
 - 正确做法：`PrintWindow(hwnd, hdc, 2)`（PW_RENDERFULLCONTENT）**只截目标窗口**；Qt 的下拉菜单/弹窗是**独立顶层窗口**，用 `EnumWindows` 按 pid 过滤 + 取窗口矩形，再对弹窗 hwnd 单独 `PrintWindow`。
 - 点击：`SetForegroundWindow` 常被 Windows 前台锁拒绝（越点越把别的窗口提到前面）。改用 **`PostMessage(hwnd, WM_LBUTTONDOWN/UP, 1, lParam=(y<<16)|x)` 打客户区坐标**——不抢焦点、不动真实鼠标，Qt 应用响应良好；先用 `ClientToScreen` 求客户区原点把窗口坐标换算成客户区坐标。
 - 每步都截图 + 识图确认，再决定下一步；弹窗确认文案要看清楚（本次就是靠读弹窗才发现「需先启动设备」）。
+- 现成脚本：`scripts/win-gui-probe.ps1`（DPI 感知 + 按 pid 枚举窗口含矩形 + `PrintWindow` 单窗截图 + `PostMessage` 左/右键 + 临时置顶/恢复），`-Action list|shot|click|top|untop`，别再每次手写 Add-Type 那套 P/Invoke。
 - 删除时对目录型目标只清子项、保留父目录；不做通配符批量删除。
 - 大目录删除用 `cmd /c rd /s /q "<dir>"`，比 `Remove-Item -Recurse -Force` 快一个量级（几十 GB 分钟级 vs 十几 GB 十几分钟）；`Remove-Item` 只留作单个被占用文件的回退手段。删完 `Test-Path` 复核该路径是否真的消失。
+- **自己的 shell 会锁住待删目录**：如果之前的 `cd` 还停在目标目录（或其子目录），`rd /s /q` 会把文件删干净却报「另一个程序正在使用此文件」，只剩下空壳目录。删前先 `cd` 回工作区；撞上这个报错时第一步怀疑自己的 cwd，而不是去翻 Explorer / 杀软，隔十几秒重试一般就过（句柄释放有延迟）。
 - `Export-Csv` / 重定向**不会自动建目录**，`-Out` 路径写错会静默失败：产物写完立即用 `search_files(target='files')` 或 `Test-Path` 核验文件存在，报告里引用的产物必须先确认能列出。
 - Steam 的 `steamapps\downloading\<appid>` 是**未完成下载**（体积可达几十 GB，随下载持续增长）：先用 `steamapps\appmanifest_<appid>.acf` 判断该游戏是否真的已安装，删前必须 `Stop-Process -Name steam,steamwebhelper`，否则边写边删必然 PARTIAL。报告要写清「删=放弃本次进度，再装需重下」。
 - 模拟器多开：`vms\<实例目录>` 一个子目录 = 一个安卓实例，每个实例一份 ~100 GB 级 `data.vdi`。判定活动性看 `data.vdi` 最后写入时间 + 是否有对应进程；**闲置实例是单块最大可回收项**，但它属于「该实例内所有 App/游戏进度」，只能列为二级需确认。
@@ -83,6 +113,24 @@ description: Use when 清理 Windows 磁盘空间. 五阶段确认制+实测扫�
 - 模拟器实例归属判定（决定「删了会不会断挂机」）：读 `vms\<实例>\configs\vm_config.json` 的 `port_forward` 拿该实例 ADB 端口（典型 16384/16416…），`adb devices` 看当前实际连的是哪个端口，再 grep 挂机工具（MAA/MaaEnd）配置里的 `127.0.0.1:<port>`——三处一对就知道哪台在跑、哪台闲置。
 - 「程序安装目录」整体只是 ⛔，但里面常藏可回收子项（模拟器实例、下载中的 depot、旧版本目录）——拆开看，别因为父目录是 Program Files 就整块放过。
 - 二级里凡是「删了要重新下载」的（未完成下载、安装包、驱动备份、闲置实例、旧运行时），风险一律写成「可重下/可重建 + 代价」，不要写成「无风险」。
+
+## 单件删除请求（「X 可以删了吗」）
+
+用户在流程外单独问某个目录能不能删时，仍按「先看后答」：
+
+1. **只读盘点内容并分类**：按扩展名统计数量+合计大小（`for ext in yrm SAV ini exe mix; do ls -l *.$ext | awk ...`），把内容分成三类——可重下的本体（`.mix`/`.bin`/安装包/程序主体）、**私人数据**（存档 `.sav`、自攒的自定义地图/角色卡、键位与配置 ini）、可重建缓存。
+2. **先确认是不是唯一副本**（`ls -d <盘>/<同名>*`），唯一副本要在答复里点明「删了只能重下本体，私人数据回不来」。
+3. **量化收益**：给出 GB 数 + 占该盘剩余空间的百分比。空间宽松时如实说「删它只多 0.8%，不解决任何问题」——不要让用户以为在解决空间危机。
+4. **给三选项**：备份私人数据后删（推荐，往往只有几十 MB）/ 直接删 / 保留。技术上先说清可行性（绿色版=删目录即卸载；装了服务/注册表的程序另说；桌面快捷方式会失效）。
+5. 用户回「直接删」就不再走五阶段，一条命令删掉、`Test-Path` 复核、报前后剩余，并在报告里明确写「未备份的私人数据已随之删除」。
+
+## Steam 卸载后的残留排查
+
+用户说「我从 Steam 卸载了 X，还有没有相关文件残留」时，**全部只读查完、汇总成表再问，排查过程中不删任何东西**。固定按七处扫：`steamapps\common\<游戏>`（先 `find` 找 exe 区分「本体真删了只剩 mod」与「本体还在」）→ `appmanifest_<appid>.acf` → `workshop\content\<appid>` → `shadercache` / `downloading` / `compatdata` → `Steam\userdata\<id>\<appid>` → 模组管理器暂存（`%APPDATA%\Vortex\<game>`、`Vortex Mods`、Fluffy Mod Manager）→ `%LOCALAPPDATA%\<发行商>` / `Documents\<Game>`。
+
+两条硬规则：① 游戏目录里的 `savedata_backup` / `*.sav` 是玩家存档，**先 Copy-Item 到 `E:\Hermes workspace\game-backups\<Game>\` 并用大小+SHA256 双校验，通过后才删父目录**；用户说「存档留着、其他删了」就是这个意思，不是把整个目录留着。② **不要手删 `appmanifest`**（库状态会乱），提醒用户在 Steam 内卸载。
+
+清单、量级参考与报告口径见 `references/steam-uninstall-leftovers.md`。
 
 ## 阶段推进纪律
 
