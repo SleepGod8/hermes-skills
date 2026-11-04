@@ -28,6 +28,7 @@ cannot be patched by the agent; keep overlap notes there, full detail here).
 - `Evicting idle profile backend` / `Reaping idle profile backend` in desktop.log
 - chat-run session ids (`gc_run_<room>_<profile>_<Agent>_*`) being reclaimed as orphans
 - Room chat works for some Agents but not others
+- 「重启以完成更新」banner keeps coming back after every restart
 
 ## Core mechanism you must know: profile backend lifecycle
 
@@ -64,6 +65,56 @@ room actually used (e.g. deepseek-v4-flash) vs. what timed out.
 Also verify the target profile's config is sane:
 `~/AppData/Local/hermes/profiles/<name>/config.yaml` (model/provider/base_url) and
 that SOUL.md exists — a missing SOUL.md surfaces as IO errors during backend boot.
+
+## Stale「重启以完成更新」banner that no restart clears
+
+Popup text is the zh i18n key `bundleSwapPending` (`apps/desktop/src/i18n/zh.ts`);
+**not** the boot update gate, and not the `bundleOutOfSync` banner (that one says
+「应用版本过旧」and links to the installer).
+
+Its source (`electron/main.ts` handler `hermes:version`):
+
+```
+bundleSwapPending = IS_PACKAGED && detectBundleSwap(INSTALL_STAMP,
+                       readBundleSwapStamp(process.resourcesPath))
+```
+
+- `INSTALL_STAMP` is **baked into the bundle at build time**
+  (`__HERMES_INSTALL_STAMP__` global, from `apps/desktop/build/install-stamp.json`).
+  It is a constant of the artifact — a restart can never change it.
+- `readBundleSwapStamp()` re-reads `apps/desktop/release/win-unpacked/resources/install-stamp.json`
+  at every call.
+- `detectBundleSwap` (`electron/bundle-swap.ts`) returns true when `commit` differs
+  **or** `builtAt` differs at the same commit.
+
+So if the packaged `resources/install-stamp.json` was never refreshed when the
+bundle was rebuilt (typical after a manual `app.asar` repair: unpack asar into
+`resources/app/` and rebuild `dist/`, but forget the stamp), the file says the old
+commit while the binary says the new one → **true forever, banner after every
+restart.**
+
+Diagnose:
+
+```bash
+cd ~/AppData/Local/hermes/hermes-agent/apps/desktop
+cat build/install-stamp.json                                # stamp baked into the bundle
+cat release/win-unpacked/resources/install-stamp.json       # stale? old commit/builtAt
+grep -a -o -E '"[0-9a-f]{40}"' release/win-unpacked/resources/app/dist/electron-main.mjs | sort -u   # baked commit (unpacked layout)
+```
+
+Fix — make the resources stamp equal the baked stamp, keeping a backup:
+
+```bash
+R=release/win-unpacked/resources
+cp "$R/install-stamp.json" "$R/install-stamp.json.bak-$(date +%Y%m%d-%H%M%S)"
+cp build/install-stamp.json "$R/install-stamp.json"
+```
+
+Verify with the pure predicate (no need to boot Electron): rebuild
+`detectBundleSwap(baked, disk)` in node and confirm it prints `false`; the renderer
+re-queries `hermes:version` when the About/Updates panel opens, so a restart or
+reopening that panel clears the banner. Never "fix" this by relaunching again —
+the mismatch is file-vs-binary, not memory-vs-disk.
 
 ## Fix priority
 
